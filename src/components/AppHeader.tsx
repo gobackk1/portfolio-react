@@ -2,8 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import store from '@/store'
-import { logout } from '@/actions'
+import { logout } from '@/actions/user'
 import Modal from '@/components/Modal'
+import LoginForm from '@/components/LoginForm'
 
 interface Props {
   user: any
@@ -51,7 +52,7 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
       return (
         <>
           <li>
-            <Modal>ログイン</Modal>
+            <Modal content={<LoginForm></LoginForm>}>ログイン</Modal>
           </li>
         </>
       )

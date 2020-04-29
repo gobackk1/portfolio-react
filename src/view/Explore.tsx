@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { logout, login } from '@/actions'
+import { logout, login } from '@/actions/user'
 import axios from '@/axios'
 import { Link, Switch, Route } from 'react-router-dom'
 

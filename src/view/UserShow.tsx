@@ -1,11 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { logout, login } from '@/actions'
 import axios from '@/axios'
-import { AxiosBasicCredentials } from 'axios'
-import store from '@/store'
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
-import user from '@/reducers/user'
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, FormSection, reduxForm, InjectedFormProps } from 'redux-form'
-import { login, register } from '@/actions'
+import { login, register } from '@/actions/user'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
 

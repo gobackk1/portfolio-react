@@ -21,8 +21,12 @@ const styles = {
   }
 }
 
+interface Props {
+  content: any
+}
+
 Modal.setAppElement('#root')
-class ModalWindow extends React.Component {
+class ModalWindow extends React.Component<Props, {}> {
   state = {
     modalIsOpen: false
   }
@@ -47,8 +51,7 @@ class ModalWindow extends React.Component {
           style={styles}
           contentLabel="modal"
         >
-          <LoginForm></LoginForm>
-          {/* <LoginForm closeModal={this.closeModal}></LoginForm> */}
+          {this.props.content}
           <button type="button" onClick={this.closeModal}>
             Close
           </button>

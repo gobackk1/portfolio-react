@@ -1,11 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getStudyRecord } from '@/actions'
-import axios from '@/axios'
-import { AxiosBasicCredentials } from 'axios'
-import store from '@/store'
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
-import user from '@/reducers/user'
+import Modal from '@/components/Modal'
+import CommentForm from '@/components/CommentForm'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   getStudyRecord: any
@@ -59,6 +57,7 @@ class UserShow extends React.Component<Props, {}> {
         </ul>
         <Link to="/record">戻る</Link>
         <Link to={`/record/${this.props.match.params.id}/edit`}>編集</Link>
+        <Modal content={<CommentForm></CommentForm>}>コメント</Modal>
       </>
     )
   }

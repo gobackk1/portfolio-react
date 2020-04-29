@@ -1,5 +1,5 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import { login, register, logout } from '@/actions'
+import { login, register, logout } from '@/actions/user'
 import ServerResponse from '@/interfaces/ServerResponse'
 import UserState from '@/interfaces/UserState'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'

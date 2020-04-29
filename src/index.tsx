@@ -12,7 +12,7 @@ import UserShow from '@/view/UserShow'
 import RecordShow from '@/view/RecordShow'
 
 // 開発用ログインスキップ
-import { login } from '@/actions'
+import { login } from '@/actions/user'
 import RecordEdit from './view/RecordEdit'
 store.dispatch(login({ email: 'example@test.com', password: 'foobar' }))
 
