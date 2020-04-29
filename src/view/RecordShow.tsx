@@ -8,6 +8,7 @@ import {
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import Modal from '@/components/Modal'
 import CommentForm from '@/components/CommentForm'
+import IfCorrectUser from '@/components/IfCorrectUser'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   getStudyRecord: any
@@ -37,15 +38,6 @@ class UserShow extends React.Component<Props, {}> {
     this.props.deleteComment({ id, study_record_id: this.id })
   }
 
-  renderIfUser = comment => {
-    console.log(this.props.user)
-
-    console.log(comment.user_id, this.props.user.id)
-
-    if (comment.user_id !== this.props.user.id) return
-    return <button onClick={() => this.deleteComment(comment.id)}>削除</button>
-  }
-
   render() {
     this.id = this.props.match.params.id
 
@@ -66,7 +58,11 @@ class UserShow extends React.Component<Props, {}> {
               (comment, index) => (
                 <li key={index}>
                   {comment.comment_body}
-                  {this.renderIfUser(comment)}
+                  <IfCorrectUser userId={comment.user_id}>
+                    <button onClick={() => this.deleteComment(comment.id)}>
+                      削除
+                    </button>
+                  </IfCorrectUser>
                 </li>
               )
             )}

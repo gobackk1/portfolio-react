@@ -5,6 +5,8 @@ import store from '@/store'
 import { logout } from '@/actions/user'
 import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
+import IfLogin from '@/components/IfLogin'
+import IfLogout from '@/components/IfLogout'
 
 interface Props {
   user: any
@@ -22,50 +24,37 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
     store.dispatch(logout())
     console.log(store.getState().user.isLogin, 'islogin')
   }
-  renderIfLogin() {
-    if (this.props.user.isLogin) {
-      return (
-        <>
-          <li>
-            <Link to="/explore">探す</Link>
-          </li>
-          <li>
-            <Link to="/record">記録する</Link>
-          </li>
-          <li>
-            <Link to="/report">レポート</Link>
-          </li>
-          <li>
-            <Link to="/profile">プロフィール</Link>
-          </li>
-          <li>
-            <button onClick={this.onClickLogout} type="button">
-              ログアウト
-            </button>
-          </li>
-        </>
-      )
-    }
-  }
-  renderIfLogout() {
-    if (!this.props.user.isLogin) {
-      return (
-        <>
-          <li>
-            <Modal content={<LoginForm></LoginForm>}>ログイン</Modal>
-          </li>
-        </>
-      )
-    }
-  }
+
   render() {
     return (
       <header>
         <Link to="/">アプリ名</Link>
         <nav>
           <ul>
-            {this.renderIfLogin()}
-            {this.renderIfLogout()}
+            <IfLogin>
+              <li>
+                <Link to="/explore">探す</Link>
+              </li>
+              <li>
+                <Link to="/record">記録する</Link>
+              </li>
+              <li>
+                <Link to="/report">レポート</Link>
+              </li>
+              <li>
+                <Link to="/profile">プロフィール</Link>
+              </li>
+              <li>
+                <button onClick={this.onClickLogout} type="button">
+                  ログアウト
+                </button>
+              </li>
+            </IfLogin>
+            <IfLogout>
+              <li>
+                <Modal content={<LoginForm></LoginForm>}>ログイン</Modal>
+              </li>
+            </IfLogout>
           </ul>
         </nav>
       </header>
