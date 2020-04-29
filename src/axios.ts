@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { Service } from 'axios-middleware'
 import store from '@/store'
 
@@ -18,5 +18,9 @@ service.register({
     return config
   }
 })
+
+export const auth = {
+  auth: true as any
+}
 
 export default axios

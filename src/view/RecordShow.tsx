@@ -1,39 +1,27 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getStudyRecord } from '@/actions'
+import {
+  getStudyRecord,
+  readStudyRecords,
+  deleteComment
+} from '@/actions/studyRecords'
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import Modal from '@/components/Modal'
 import CommentForm from '@/components/CommentForm'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   getStudyRecord: any
+  readStudyRecords: any
+  studyRecords: any
+  deleteComment: any
 }
 
 class UserShow extends React.Component<Props, {}> {
-  state = {
-    record: {
-      id: 0,
-      user_id: 0,
-      comment: '',
-      teaching_material: '',
-      study_hours: 0
-    }
-  }
+  id: string = '1'
 
   async fetchData(): Promise<void> {
     try {
-      // TODO: 'axios-middleware'で追加したconfigを型安全にする
-      // 'redux-axios-middleware'使えばできそう
-      const auth = {
-        auth: true as any
-      }
-      const { id } = this.props.match.params
-
-      const res = await this.props.getStudyRecord(id)
-
-      this.setState({
-        record: res.data
-      })
+      await this.props.getStudyRecord(this.id)
     } catch (e) {
       console.log(e)
       this.props.history.push('/')
@@ -44,28 +32,52 @@ class UserShow extends React.Component<Props, {}> {
     this.fetchData()
   }
 
+  deleteComment = (id: number) => {
+    this.props.deleteComment({ id, study_record_id: this.id })
+  }
+
   render() {
-    return (
-      <>
-        <h3>Record detail</h3>
-        <ul>
-          <li>{this.state.record.id}</li>
-          <li>{this.state.record.user_id}</li>
-          <li>{this.state.record.comment}</li>
-          <li>{this.state.record.teaching_material}</li>
-          <li>{this.state.record.study_hours}</li>
-        </ul>
-        <Link to="/record">戻る</Link>
-        <Link to={`/record/${this.props.match.params.id}/edit`}>編集</Link>
-        <Modal content={<CommentForm></CommentForm>}>コメント</Modal>
-      </>
-    )
+    this.id = this.props.match.params.id
+
+    try {
+      return (
+        <>
+          <h3>Record detail</h3>
+          <ul>
+            <li>{this.props.studyRecords[this.id].id}</li>
+            <li>{this.props.studyRecords[this.id].user_id}</li>
+            <li>{this.props.studyRecords[this.id].comment}</li>
+            <li>{this.props.studyRecords[this.id].teaching_material}</li>
+            <li>{this.props.studyRecords[this.id].study_hours}</li>
+          </ul>
+          <h4>comment</h4>
+          <ul>
+            {this.props.studyRecords[this.id].study_record_comments.map(
+              (comment, index) => (
+                <li key={index}>
+                  {comment.comment_body}
+                  <button onClick={() => this.deleteComment(comment.id)}>
+                    削除
+                  </button>
+                </li>
+              )
+            )}
+          </ul>
+          <Link to="/record">戻る</Link>
+          <Link to={`/record/${this.id}/edit`}>編集</Link>
+          <Modal content={<CommentForm recordId={this.id}></CommentForm>}>
+            コメント
+          </Modal>
+        </>
+      )
+    } catch (e) {
+      this.props.history.push('/')
+      return <div></div>
+    }
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  user: state.user
-})
-const mapDispatchToProps = { getStudyRecord }
+const mapStateToProps = state => ({ studyRecords: state.studyRecords })
+const mapDispatchToProps = { getStudyRecord, readStudyRecords, deleteComment }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserShow)

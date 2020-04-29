@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { connect } from 'react-redux'
-import { readStudyRecords, postStudyRecord } from '@/actions'
+import { readStudyRecords, postStudyRecord } from '@/actions/studyRecords.ts'
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
 
@@ -18,6 +18,7 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
   async fetchData() {
     await this.props.readStudyRecords()
     console.log('fetched records')
+    console.log(this.props.studyRecords, 'props.study')
   }
   renderTextarea = field => {
     const {
@@ -54,16 +55,19 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
   }
   render() {
     const { handleSubmit, pristine, submitting, invalid } = this.props
+    console.log(this.props.studyRecords)
+
     return (
       <>
         <ul>
-          {_.map(this.props.studyRecords, record => (
-            <li key={record.id}>
+          {_.map(this.props.studyRecords, (record, index) => (
+            <li key={index}>
               <Link to={`/record/${record.id}`}>記録詳細ページへ</Link>
               <div>{record.user_id}</div>
               <div>{record.comment}</div>
               <div>{record.teaching_material}</div>
               <div>{record.study_hours}</div>
+              <div>コメント数：{record.study_record_comments.length}</div>
             </li>
           ))}
         </ul>

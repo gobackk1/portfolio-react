@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { putStudyRecord, deleteStudyRecord } from '@/actions'
+import { putStudyRecord, deleteStudyRecord } from '@/actions/studyRecords'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { reduxForm, Field, InjectedFormProps } from 'redux-form'
 

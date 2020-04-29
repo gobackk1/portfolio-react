@@ -1,28 +1,25 @@
 import React from 'react'
-import { Field, FormSection, reduxForm, InjectedFormProps } from 'redux-form'
+import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { postComment } from '@/actions/studyRecords'
-import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
+import { RouteComponentProps } from 'react-router'
 
 interface Props {
+  recordId: string
   postComment: any
 }
-interface State {
-  isLoginForm: boolean
-}
-interface FormValue {
-  [key: string]: AuthReqParams
-}
 
-class LoginForm extends React.Component<
+class CommentForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
-  State
+  {}
 > {
-  state: State = {
-    isLoginForm: true
-  }
-  onSubmit: any = (values: FormValue) => {
-    this.props.postComment({ ...values })
+  onSubmit: any = async (values: any) => {
+    await this.props.postComment({
+      ...values,
+      study_record_id: this.props.recordId
+    })
+    const overlay = document.querySelector('.ReactModal__Overlay')
+    if (overlay) (overlay as HTMLElement).click()
   }
 
   renderField = field => {
@@ -48,8 +45,8 @@ class LoginForm extends React.Component<
         <p>コメントする</p>
         <Field
           type="text"
-          name="comment"
-          label="comment"
+          name="comment_body"
+          label="comment_body"
           component={this.renderField}
         ></Field>
         <button disabled={pristine || submitting || invalid}>送信</button>
@@ -76,5 +73,5 @@ export default connect(
     validate,
     form: 'commentForm',
     enableReinitialize: true
-  })(LoginForm)
+  })(CommentForm)
 )
