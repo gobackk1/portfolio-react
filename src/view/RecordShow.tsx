@@ -14,6 +14,7 @@ interface Props extends RouteComponentProps<{ id: string }> {
   readStudyRecords: any
   studyRecords: any
   deleteComment: any
+  user: any
 }
 
 class UserShow extends React.Component<Props, {}> {
@@ -36,6 +37,15 @@ class UserShow extends React.Component<Props, {}> {
     this.props.deleteComment({ id, study_record_id: this.id })
   }
 
+  renderIfUser = comment => {
+    console.log(this.props.user)
+
+    console.log(comment.user_id, this.props.user.id)
+
+    if (comment.user_id !== this.props.user.id) return
+    return <button onClick={() => this.deleteComment(comment.id)}>削除</button>
+  }
+
   render() {
     this.id = this.props.match.params.id
 
@@ -56,9 +66,7 @@ class UserShow extends React.Component<Props, {}> {
               (comment, index) => (
                 <li key={index}>
                   {comment.comment_body}
-                  <button onClick={() => this.deleteComment(comment.id)}>
-                    削除
-                  </button>
+                  {this.renderIfUser(comment)}
                 </li>
               )
             )}
@@ -77,7 +85,10 @@ class UserShow extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = state => ({ studyRecords: state.studyRecords })
+const mapStateToProps = state => ({
+  studyRecords: state.studyRecords,
+  user: state.user
+})
 const mapDispatchToProps = { getStudyRecord, readStudyRecords, deleteComment }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserShow)

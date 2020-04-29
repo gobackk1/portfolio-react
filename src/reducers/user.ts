@@ -10,6 +10,7 @@ type AuthDoneParams = {
 }
 
 const initialState: UserState = {
+  id: 0,
   name: '',
   email: '',
   created_at: '',
@@ -21,14 +22,12 @@ const initialState: UserState = {
 
 export default reducerWithInitialState(initialState)
   .cases([login.async.started, register.async.started], state => {
-    console.log(state, 'started')
     return {
       ...state,
       loggingIn: true
     }
   })
   .cases([login.async.failed, register.async.failed], (state, error) => {
-    console.log(error, 'failed')
     return {
       ...state,
       loggingIn: false,
@@ -38,7 +37,6 @@ export default reducerWithInitialState(initialState)
   .cases(
     [login.async.done, register.async.done],
     (state, { params, result }: AuthDoneParams) => {
-      console.log(result, 'done')
       return {
         ...state,
         ...result.data,

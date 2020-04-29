@@ -25,15 +25,7 @@ class LoginForm extends React.Component<
   onSubmit: any = (values: FormValue) => {
     this.state.isLoginForm
       ? this.props.login({ ...values.login })
-      : this.props.register({
-          name: 'testtest22222',
-          email: 'test22222@test.com',
-          password: 'foobar',
-          //@ts-ignore
-          test: 'foobar2'
-        })
-    // : this.props.register({ ...values.register })
-    // this.props.closeModal()
+      : this.props.register({ ...values.register })
   }
 
   toggleForm = () => {

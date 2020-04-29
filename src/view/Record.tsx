@@ -17,8 +17,6 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
   }
   async fetchData() {
     await this.props.readStudyRecords()
-    console.log('fetched records')
-    console.log(this.props.studyRecords, 'props.study')
   }
   renderTextarea = field => {
     const {
