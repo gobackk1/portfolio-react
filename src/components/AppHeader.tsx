@@ -52,7 +52,9 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
             </IfLogin>
             <IfLogout>
               <li>
-                <Modal content={<LoginForm></LoginForm>}>ログイン</Modal>
+                <Modal openButtonText="ログイン">
+                  <LoginForm></LoginForm>
+                </Modal>
               </li>
             </IfLogout>
           </ul>

@@ -69,8 +69,8 @@ class UserShow extends React.Component<Props, {}> {
           </ul>
           <Link to="/record">戻る</Link>
           <Link to={`/record/${this.id}/edit`}>編集</Link>
-          <Modal content={<CommentForm recordId={this.id}></CommentForm>}>
-            コメント
+          <Modal openButtonText="コメント">
+            <CommentForm recordId={this.id}></CommentForm>
           </Modal>
         </>
       )

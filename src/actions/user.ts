@@ -11,8 +11,7 @@ export const login = asyncCreator<AuthReqParams, ServerResponse, Error>(
   'LOGIN',
   async params => {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
-      email: params.email,
-      password: params.password
+      ...params
     })
 
     if (res.statusText !== 'OK') {
@@ -27,9 +26,7 @@ export const register = asyncCreator<AuthReqParams, ServerResponse, Error>(
   'REGISTER',
   async params => {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/users`, {
-      name: params.name,
-      email: params.email,
-      password: params.password
+      ...params
     })
 
     if (res.statusText !== 'OK') {

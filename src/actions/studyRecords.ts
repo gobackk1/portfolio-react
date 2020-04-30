@@ -40,13 +40,10 @@ export const getStudyRecord = asyncCreator<any, any, Error>(
 export const postStudyRecord = asyncCreator<any, any, Error>(
   'POST_STUDY_RECORD',
   async params => {
-    const { comment, teaching_material, study_hours } = params
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/study_records`,
       {
-        comment,
-        teaching_material,
-        study_hours
+        ...params
       },
       auth
     )
@@ -62,13 +59,10 @@ export const postStudyRecord = asyncCreator<any, any, Error>(
 export const putStudyRecord = asyncCreator<any, any, Error>(
   'PUT_STUDY_RECORD',
   async params => {
-    const { comment, teaching_material, study_hours, id } = params
     const res = await axios.put(
-      `${process.env.REACT_APP_API_URL}/study_records/${id}`,
+      `${process.env.REACT_APP_API_URL}/study_records/${params.id}`,
       {
-        comment,
-        teaching_material,
-        study_hours
+        ...params
       },
       auth
     )
@@ -103,8 +97,7 @@ export const postComment = asyncCreator<any, any, Error>(
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/study_record_comments/`,
       {
-        comment_body: params.comment_body,
-        study_record_id: params.study_record_id
+        ...params
       },
       auth
     )
