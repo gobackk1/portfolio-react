@@ -5,7 +5,7 @@ interface Props {
   user: any
 }
 
-class IfLogin extends React.Component<Props, {}> {
+class RenderIfLogout extends React.Component<Props, {}> {
   static defaultProps = {
     user: {}
   }
@@ -13,7 +13,7 @@ class IfLogin extends React.Component<Props, {}> {
     return (
       <>
         {(() => {
-          if (this.props.user.token) {
+          if (!this.props.user.token) {
             return <>{this.props.children}</>
           }
         })()}
@@ -26,4 +26,4 @@ const mapStateToProps = state => ({
   user: state.user
 })
 
-export default connect(mapStateToProps, null)(IfLogin)
+export default connect(mapStateToProps, null)(RenderIfLogout)

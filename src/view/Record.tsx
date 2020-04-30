@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { readStudyRecords, postStudyRecord } from '@/actions/studyRecords.ts'
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
+import LikeCounter from '@/components/LikeCounter'
 
 interface Props {
   readStudyRecords: any
@@ -65,7 +66,15 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
               <div>{record.comment}</div>
               <div>{record.teaching_material}</div>
               <div>{record.study_hours}</div>
-              <div>コメント数：{record.study_record_comments.length}</div>
+              <div>
+                コメント数：
+                {record.study_record_comments
+                  ? record.study_record_comments.length
+                  : 0}
+              </div>
+              <div>
+                <LikeCounter record={record}></LikeCounter>
+              </div>
             </li>
           ))}
         </ul>

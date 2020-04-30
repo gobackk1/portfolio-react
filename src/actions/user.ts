@@ -7,12 +7,13 @@ import { AuthReqParams } from '@/interfaces/AuthReqParams'
 const actionCreator = actionCreatorFactory()
 const asyncCreator = asyncFactory(actionCreator)
 
+const loginUrl = `${process.env.REACT_APP_API_URL}/login`
+const usersUrl = `${process.env.REACT_APP_API_URL}/users`
+
 export const login = asyncCreator<AuthReqParams, ServerResponse, Error>(
   'LOGIN',
   async params => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
-      ...params
-    })
+    const res = await axios.post(loginUrl, { ...params })
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -25,9 +26,7 @@ export const login = asyncCreator<AuthReqParams, ServerResponse, Error>(
 export const register = asyncCreator<AuthReqParams, ServerResponse, Error>(
   'REGISTER',
   async params => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/users`, {
-      ...params
-    })
+    const res = await axios.post(usersUrl, { ...params })
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)

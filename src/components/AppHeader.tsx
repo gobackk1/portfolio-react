@@ -5,8 +5,8 @@ import store from '@/store'
 import { logout } from '@/actions/user'
 import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
-import IfLogin from '@/components/IfLogin'
-import IfLogout from '@/components/IfLogout'
+import RenderIfLogin from '@/components/RenderIfLogin'
+import RenderIfLogout from '@/components/RenderIfLogout'
 
 interface Props {
   user: any
@@ -31,7 +31,7 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
         <Link to="/">アプリ名</Link>
         <nav>
           <ul>
-            <IfLogin>
+            <RenderIfLogin>
               <li>
                 <Link to="/explore">探す</Link>
               </li>
@@ -49,14 +49,14 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
                   ログアウト
                 </button>
               </li>
-            </IfLogin>
-            <IfLogout>
+            </RenderIfLogin>
+            <RenderIfLogout>
               <li>
                 <Modal openButtonText="ログイン">
                   <LoginForm></LoginForm>
                 </Modal>
               </li>
-            </IfLogout>
+            </RenderIfLogout>
           </ul>
         </nav>
       </header>

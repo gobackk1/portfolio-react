@@ -8,7 +8,7 @@ import {
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import Modal from '@/components/Modal'
 import CommentForm from '@/components/CommentForm'
-import IfCorrectUser from '@/components/IfCorrectUser'
+import RenderIfCorrectUser from '@/components/RenderIfCorrectUser'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   getStudyRecord: any
@@ -23,6 +23,7 @@ class UserShow extends React.Component<Props, {}> {
 
   async fetchData(): Promise<void> {
     try {
+      console.log('test')
       await this.props.getStudyRecord(this.id)
     } catch (e) {
       console.log(e)
@@ -36,6 +37,24 @@ class UserShow extends React.Component<Props, {}> {
 
   deleteComment = (id: number) => {
     this.props.deleteComment({ id, study_record_id: this.id })
+  }
+
+  renderIfRecordHasComment = ({ study_record_comments }) => {
+    if (!study_record_comments) return
+    return (
+      <ul>
+        {study_record_comments.map((comment, index) => (
+          <li key={index}>
+            {comment.comment_body}
+            <RenderIfCorrectUser userId={comment.user_id}>
+              <button onClick={() => this.deleteComment(comment.id)}>
+                削除
+              </button>
+            </RenderIfCorrectUser>
+          </li>
+        ))}
+      </ul>
+    )
   }
 
   render() {
@@ -53,20 +72,8 @@ class UserShow extends React.Component<Props, {}> {
             <li>{this.props.studyRecords[this.id].study_hours}</li>
           </ul>
           <h4>comment</h4>
-          <ul>
-            {this.props.studyRecords[this.id].study_record_comments.map(
-              (comment, index) => (
-                <li key={index}>
-                  {comment.comment_body}
-                  <IfCorrectUser userId={comment.user_id}>
-                    <button onClick={() => this.deleteComment(comment.id)}>
-                      削除
-                    </button>
-                  </IfCorrectUser>
-                </li>
-              )
-            )}
-          </ul>
+          {this.renderIfRecordHasComment(this.props.studyRecords[this.id])}
+
           <Link to="/record">戻る</Link>
           <Link to={`/record/${this.id}/edit`}>編集</Link>
           <Modal openButtonText="コメント">

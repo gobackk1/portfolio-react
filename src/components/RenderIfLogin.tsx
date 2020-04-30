@@ -3,11 +3,9 @@ import { connect } from 'react-redux'
 
 interface Props {
   user: any
-  userId: number
-  children?: any
 }
 
-class IfCorrectUser extends React.Component<Props, {}> {
+class RenderIfLogin extends React.Component<Props, {}> {
   static defaultProps = {
     user: {}
   }
@@ -15,7 +13,7 @@ class IfCorrectUser extends React.Component<Props, {}> {
     return (
       <>
         {(() => {
-          if (this.props.user.id === this.props.userId) {
+          if (this.props.user.token) {
             return <>{this.props.children}</>
           }
         })()}
@@ -28,4 +26,4 @@ const mapStateToProps = state => ({
   user: state.user
 })
 
-export default connect(mapStateToProps, null)(IfCorrectUser)
+export default connect(mapStateToProps, null)(RenderIfLogin)
