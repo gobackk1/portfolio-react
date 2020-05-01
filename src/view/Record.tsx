@@ -49,6 +49,12 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
       </>
     )
   }
+  renderIfRecordHasTag = record => {
+    if (!record.study_genre_list) return ''
+    return record.study_genre_list.map((genre, index) => (
+      <li key={index}>{genre}</li>
+    ))
+  }
   onSubmit = (values: any) => {
     this.props.postStudyRecord({ ...values })
   }
@@ -75,6 +81,8 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
               <div>
                 <LikeCounter record={record}></LikeCounter>
               </div>
+              <h3>tags</h3>
+              <ul>{this.renderIfRecordHasTag(record)}</ul>
             </li>
           ))}
         </ul>
@@ -95,6 +103,12 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
             label="study_hours"
             name="study_hours"
             type="number"
+            component={this.renderField}
+          ></Field>
+          <Field
+            label="study_genre_list"
+            name="study_genre_list"
+            type="text"
             component={this.renderField}
           ></Field>
           <button disabled={pristine || submitting || invalid}>送信</button>
