@@ -54,7 +54,7 @@ class Explore extends React.Component<Props, {}> {
           {this.state.users.map((user, index) => {
             return (
               <li key={index}>
-                <Link to={`/users/${user.id}`}>{user.name}</Link>
+                <Link to={`/profile/${user.id}`}>{user.name}</Link>
               </li>
             )
           })}

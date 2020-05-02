@@ -71,7 +71,6 @@ export default connect(
 )(
   reduxForm<{}, Props>({
     validate,
-    form: 'commentForm',
-    enableReinitialize: true
+    form: 'commentForm'
   })(CommentForm)
 )

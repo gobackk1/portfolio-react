@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { readStudyRecords, postStudyRecord } from '@/actions/studyRecords.ts'
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
-import LikeCounter from '@/components/LikeCounter'
+import StudyRecord from '@/components/StudyRecord'
 
 interface Props {
   readStudyRecords: any
@@ -49,12 +49,7 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
       </>
     )
   }
-  renderIfRecordHasTag = record => {
-    if (!record.study_genre_list) return ''
-    return record.study_genre_list.map((genre, index) => (
-      <li key={index}>{genre}</li>
-    ))
-  }
+
   onSubmit = (values: any) => {
     this.props.postStudyRecord({ ...values })
   }
@@ -67,22 +62,7 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
         <ul>
           {_.map(this.props.studyRecords, (record, index) => (
             <li key={index}>
-              <Link to={`/record/${record.id}`}>記録詳細ページへ</Link>
-              <div>{record.user_id}</div>
-              <div>{record.comment}</div>
-              <div>{record.teaching_material}</div>
-              <div>{record.study_hours}</div>
-              <div>
-                コメント数：
-                {record.study_record_comments
-                  ? record.study_record_comments.length
-                  : 0}
-              </div>
-              <div>
-                <LikeCounter record={record}></LikeCounter>
-              </div>
-              <h3>tags</h3>
-              <ul>{this.renderIfRecordHasTag(record)}</ul>
+              <StudyRecord record={record}></StudyRecord>
             </li>
           ))}
         </ul>

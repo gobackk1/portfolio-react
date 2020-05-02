@@ -138,7 +138,6 @@ export default connect(
 )(
   reduxForm<{}, Props>({
     validate,
-    form: 'loginForm',
-    enableReinitialize: true
+    form: 'loginForm'
   })(LoginForm)
 )
