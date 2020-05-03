@@ -5,8 +5,7 @@ import store from '@/store'
 import { logout } from '@/actions/user'
 import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
-import RenderIfLogin from '@/components/RenderIfLogin'
-import RenderIfLogout from '@/components/RenderIfLogout'
+import Render from '@/components/Render'
 
 interface Props {
   user: any
@@ -18,20 +17,19 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
     this.setState({
       isLogin: store.getState().user.isLogin
     })
-    console.log(store.getState().user.isLogin, 'islogin')
   }
   onClickLogout() {
     store.dispatch(logout())
-    console.log(store.getState().user.isLogin, 'islogin')
   }
 
   render() {
+    const { token } = this.props.user
     return (
       <header>
         <Link to="/">アプリ名</Link>
         <nav>
           <ul>
-            <RenderIfLogin>
+            <Render if={token}>
               <li>
                 <Link to="/explore">探す</Link>
               </li>
@@ -49,14 +47,14 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
                   ログアウト
                 </button>
               </li>
-            </RenderIfLogin>
-            <RenderIfLogout>
+            </Render>
+            <Render if={!token}>
               <li>
                 <Modal openButtonText="ログイン">
                   <LoginForm></LoginForm>
                 </Modal>
               </li>
-            </RenderIfLogout>
+            </Render>
           </ul>
         </nav>
       </header>
