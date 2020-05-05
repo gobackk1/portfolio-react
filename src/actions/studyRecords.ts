@@ -17,6 +17,23 @@ export const readStudyRecords = asyncActionCreator<any, any, Error>(
   }
 )
 
+export const searchStudyRecords = asyncActionCreator<any, any, Error>(
+  'SEARCH_STUDY_RECORDS',
+  async keyword => {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/study_records/search`,
+      { keyword },
+      auth
+    )
+
+    if (res.statusText !== 'OK') {
+      throw new Error(`Error ${res}`)
+    }
+
+    return res
+  }
+)
+
 export const getStudyRecord = asyncActionCreator<any, any, Error>(
   'READ_STUDY_RECORD',
   async id => {

@@ -6,7 +6,8 @@ import {
   putStudyRecord,
   deleteStudyRecord,
   postComment,
-  deleteComment
+  deleteComment,
+  searchStudyRecords
 } from '@/actions/studyRecords'
 import ServerResponse from '@/interfaces/ServerResponse'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'
@@ -36,14 +37,15 @@ export default reducerWithInitialState(initialState)
   //     }
   //   }
   // )
-  .case(readStudyRecords.async.done, (state, done) => {
-    //@ts-ignore
-    return _.mapKeys(done.result.data, 'id')
-  })
+  .cases(
+    [readStudyRecords.async.done, searchStudyRecords.async.done],
+    (state, done) => {
+      return _.mapKeys(done.result.data, 'id')
+    }
+  )
   .cases(
     [getStudyRecord.async.done, putStudyRecord.async.done],
     (state, done) => {
-      //@ts-ignore
       const data = done.result.data
       return {
         ...state,
@@ -52,11 +54,9 @@ export default reducerWithInitialState(initialState)
     }
   )
   .case(postStudyRecord.async.done, (state, done) => {
-    //@ts-ignore
     console.log(done.result.data, 'done.result.data')
     return {
       ...state,
-      //@ts-ignore
       [done.result.data.id]: done.result.data
     }
   })

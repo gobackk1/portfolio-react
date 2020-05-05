@@ -31,7 +31,7 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
           <ul>
             <Render if={token}>
               <li>
-                <Link to="/explore">探す</Link>
+                <Link to="/explore/users">探す</Link>
               </li>
               <li>
                 <Link to="/record">記録する</Link>

@@ -59,13 +59,6 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
 
     return (
       <>
-        <ul>
-          {_.map(this.props.studyRecords, (record, index) => (
-            <li key={index}>
-              <StudyRecord record={record}></StudyRecord>
-            </li>
-          ))}
-        </ul>
         <form onSubmit={handleSubmit(this.onSubmit)}>
           <Field
             label="comment"
@@ -93,6 +86,13 @@ class Record extends React.Component<Props & InjectedFormProps<{}, Props>, {}> {
           ></Field>
           <button disabled={pristine || submitting || invalid}>送信</button>
         </form>
+        <ul>
+          {_.map(this.props.studyRecords, (record, index) => (
+            <li key={index}>
+              <StudyRecord record={record}></StudyRecord>
+            </li>
+          ))}
+        </ul>
       </>
     )
   }
