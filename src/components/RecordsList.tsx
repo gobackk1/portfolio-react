@@ -16,10 +16,9 @@ class RecordsList extends React.Component<Props> {
   render() {
     return (
       <>
-        <h3>記録一覧</h3>
-        <ul>
+        <ul className="record-list">
           {_.map(this.props.studyRecords, (record, index) => (
-            <li key={index}>
+            <li key={index} className="record-list__item">
               <StudyRecord record={record}></StudyRecord>
             </li>
           ))}

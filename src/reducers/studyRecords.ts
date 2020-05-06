@@ -20,11 +20,18 @@ type AuthDoneParams = {
 
 const initialState: any = {
   0: {
-    user_id: 0,
-    comment: '',
-    teaching_material: '',
-    study_hours: 0,
-    study_record_comments: []
+    user: {
+      name: '',
+      image_name: 'default.jpg'
+    },
+    date: '01/01',
+    record: {
+      user_id: 0,
+      comment: '',
+      teaching_material: '',
+      study_hours: 0,
+      study_record_comments: []
+    }
   }
 }
 

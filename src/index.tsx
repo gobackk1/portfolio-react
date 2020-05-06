@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import './index.scss'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
@@ -28,16 +28,18 @@ import RecordEdit from './view/RecordEdit'
     <Provider store={store}>
       <BrowserRouter>
         <AppHeader></AppHeader>
-        <Switch>
-          <Route path="/explore" component={Explore}></Route>
-          <Route path="/users/:id" component={UserShow}></Route>
-          <Route path="/record/:id/edit" component={RecordEdit}></Route>
-          <Route path="/record/:id" component={RecordShow}></Route>
-          <Route path="/record" component={Record}></Route>
-          <Route path="/profile/:id" component={Profile}></Route>
-          <Route path="/profile" component={Profile}></Route>
-          <Route path="/report" component={Report}></Route>
-        </Switch>
+        <div className="l-container">
+          <Switch>
+            <Route path="/explore" component={Explore}></Route>
+            <Route path="/users/:id" component={UserShow}></Route>
+            <Route path="/record/:id/edit" component={RecordEdit}></Route>
+            <Route path="/record/:id" component={RecordShow}></Route>
+            <Route path="/record" component={Record}></Route>
+            <Route path="/profile/:id" component={Profile}></Route>
+            <Route path="/profile" component={Profile}></Route>
+            <Route path="/report" component={Report}></Route>
+          </Switch>
+        </div>
       </BrowserRouter>
     </Provider>,
     document.getElementById('root')

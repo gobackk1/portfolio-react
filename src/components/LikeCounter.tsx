@@ -1,5 +1,6 @@
 import React from 'react'
 import axios, { auth } from '@/axios'
+import classNames from 'classnames'
 
 interface Props {
   record: any
@@ -42,14 +43,24 @@ class LikeCounter extends React.Component<Props, {}> {
 
   render() {
     const { id } = this.props.record
+    const { isLiked, disabled, count } = this.state
+    const likeCounterClass = classNames({
+      'like-counter': !isLiked,
+      'like-counter--liked': isLiked
+    })
     return (
       <>
         <button
           onClick={() => this.onClickLike(id)}
-          disabled={this.state.disabled}
+          disabled={disabled}
+          className={likeCounterClass}
         >
-          {this.state.isLiked ? 'いいね済み' : 'いいねする'}
-          {this.state.count}
+          {isLiked ? (
+            <i className="fas fa-heart"></i>
+          ) : (
+            <i className="far fa-heart"></i>
+          )}
+          <span className="counter">{count}</span>
         </button>
       </>
     )

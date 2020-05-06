@@ -25,7 +25,22 @@ class Profile extends React.Component<Props, State> {
       user_bio: '',
       image_name: 'default.png'
     },
-    study_records: [{ comment: '', teaching_material: '', study_hours: 0 }],
+    study_records: [
+      {
+        user: {
+          name: '',
+          image_name: 'default.jpg'
+        },
+        date: '01/01',
+        record: {
+          user_id: 0,
+          comment: '',
+          teaching_material: '',
+          study_hours: 0,
+          study_record_comments: []
+        }
+      }
+    ],
     total_study_hours: 0,
     followings_count: 0,
     followers_count: 0,
@@ -44,7 +59,6 @@ class Profile extends React.Component<Props, State> {
       `${process.env.REACT_APP_API_URL}/users/${id}`,
       auth
     )
-    console.log(res.data, 'profile.setAnotherUserProfile')
 
     this.setState({
       ...res.data,
@@ -58,7 +72,7 @@ class Profile extends React.Component<Props, State> {
 
   updateFollowerCount = (i: number) => {
     this.setState({
-      followers_count: i
+      followers_count: this.state.followers_count + i
     })
   }
 
@@ -70,6 +84,8 @@ class Profile extends React.Component<Props, State> {
 
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
+    console.log(this.state, 'test')
+
     return (
       <>
         <h2>プロフィール</h2>

@@ -1,0 +1,13 @@
+$color_primary: #ff6249;
+$color_primary_light: lighten($color_primary, 30%);
+$color_primary_dark: darken($color_primary, 20%);
+$color_accent: #49e4ff;
+$color_accent_light: lighten($color_accent, 30%);
+$color_accent_dark: darken($color_accent, 20%);
+$color_gray: #c3c3c3;
+$color_text: #333;
+$color_header_text: #fff;
+$color_app_bg: #e6e6e6;
+$color_container_bg: #fff;
+$color_liked: #ff5876;
+$color_unliked: #666;

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { readUsers, searchUsers } from '@/actions/users'
 import { searchStudyRecords } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
+import classNames from 'classnames'
 import axios, { auth } from '@/axios'
 import {
   Link,
@@ -22,6 +23,9 @@ interface Props extends RouteComponentProps {
 
 class Explore extends React.Component<Props, {}> {
   searchQueue: number | null = null
+  isUsersPage: () => boolean = () => /users/.test(window.location.pathname)
+  isRecordsPage: () => boolean = () =>
+    /studyrecords/.test(window.location.pathname)
 
   componentWillMount() {
     this.props.readUsers()
@@ -33,7 +37,7 @@ class Explore extends React.Component<Props, {}> {
       this.searchQueue = null
     }
     const queue = window.setTimeout(() => {
-      if (/users/.test(window.location.pathname)) {
+      if (this.isUsersPage()) {
         this.props.searchUsers(nativeEvent.target.value)
       } else {
         this.props.searchStudyRecords(nativeEvent.target.value)
@@ -44,21 +48,43 @@ class Explore extends React.Component<Props, {}> {
 
   render() {
     const { match } = this.props
+    const userTabClassName = classNames({
+      'tab__list-item': !this.isUsersPage(),
+      'tab__list-item--active': this.isUsersPage()
+    })
+    const recordTabClassName = classNames({
+      'tab__list-item': !this.isRecordsPage(),
+      'tab__list-item--active': this.isRecordsPage()
+    })
     return (
-      <>
-        <input type="text" onChange={this.onChange} />
-        <Link to={`${match.url}/users`}>ユーザーリスト</Link>
-        <Link to={`${match.url}/studyrecords`}>勉強記録</Link>
-
-        <Switch>
-          <Route path={`${match.url}/users`}>
-            <UsersList></UsersList>
-          </Route>
-          <Route path={`${match.url}/studyrecords`}>
-            <RecordsList></RecordsList>
-          </Route>
-        </Switch>
-      </>
+      <div className="tab">
+        <div className="tab__list">
+          <Link to={`${match.url}/users`} className={userTabClassName}>
+            ユーザー
+          </Link>
+          <Link to={`${match.url}/studyrecords`} className={recordTabClassName}>
+            勉強記録
+          </Link>
+        </div>
+        <div className="search">
+          <input
+            type="text"
+            onChange={this.onChange}
+            className="search__input"
+            placeholder="検索"
+          />
+        </div>
+        <div className="tab__body">
+          <Switch>
+            <Route path={`${match.url}/users`}>
+              <UsersList></UsersList>
+            </Route>
+            <Route path={`${match.url}/studyrecords`}>
+              <RecordsList></RecordsList>
+            </Route>
+          </Switch>
+        </div>
+      </div>
     )
   }
 }

@@ -25,31 +25,37 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
   render() {
     const { token } = this.props.user
     return (
-      <header>
-        <Link to="/">アプリ名</Link>
+      <header className="app-header">
+        <Link to="/" className="app-header__title">
+          アプリ名
+        </Link>
         <nav>
-          <ul>
+          <ul className="app-header__menu menu-list">
             <Render if={token}>
-              <li>
+              <li className="menu-list__item">
                 <Link to="/explore/users">探す</Link>
               </li>
-              <li>
+              <li className="menu-list__item">
                 <Link to="/record">記録する</Link>
               </li>
-              <li>
+              <li className="menu-list__item">
                 <Link to="/report">レポート</Link>
               </li>
-              <li>
+              <li className="menu-list__item">
                 <Link to="/profile">プロフィール</Link>
               </li>
-              <li>
-                <button onClick={this.onClickLogout} type="button">
+              <li className="menu-list__item">
+                <button
+                  onClick={this.onClickLogout}
+                  type="button"
+                  className="menu-list__item"
+                >
                   ログアウト
                 </button>
               </li>
             </Render>
             <Render if={!token}>
-              <li>
+              <li className="button-login">
                 <Modal openButtonText="ログイン">
                   <LoginForm></LoginForm>
                 </Modal>
