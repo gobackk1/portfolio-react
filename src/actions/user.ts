@@ -15,15 +15,7 @@ export const register = asyncActionCreator<
   AuthReqParams,
   ServerResponse,
   Error
->('REGISTER', async params => {
-  const res = await axios.post(usersUrl, params)
-
-  if (res.statusText !== 'OK') {
-    throw new Error(`Error ${res}`)
-  }
-
-  return res
-})
+>('REGISTER', async params => await axios.post(usersUrl, params))
 
 export const logout = actionCreator('LOGOUT')
 export const clearError = actionCreator('CLEAR_ERROR')

@@ -18,6 +18,11 @@
   color: $color_white;
   background: $color_accent;
   font-weight: bold;
+  border-color: $color_accent;
+  &[disabled] {
+    background: $color_gray_1;
+    border-color: $color_gray_1;
+  }
 }
 
 .button-login-or-register {

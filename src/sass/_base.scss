@@ -29,7 +29,8 @@ img {
 body {
   background: $color_app_bg;
   color: $color_text;
-  line-height: 1.8;
+  line-height: $base_line_height;
+  font-size: $base_font_size + px;
 }
 
 input {
@@ -37,10 +38,15 @@ input {
   outline: none;
   appearance: none;
   border: none;
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px $color_input_bg inset;
+  }
 }
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px $color_input_bg inset;
+
+small {
+  font-size: 75%;
 }
+
 // @keyframes onAutoFillStart {
 //   from {
 //   }
