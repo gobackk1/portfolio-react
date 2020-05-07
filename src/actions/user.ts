@@ -8,15 +8,7 @@ const usersUrl = `${process.env.REACT_APP_API_URL}/users`
 
 export const login = asyncActionCreator<AuthReqParams, ServerResponse, Error>(
   'LOGIN',
-  async params => {
-    const res = await axios.post(loginUrl, params)
-
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
-
-    return res
-  }
+  async params => await axios.post(loginUrl, params)
 )
 
 export const register = asyncActionCreator<
@@ -34,3 +26,4 @@ export const register = asyncActionCreator<
 })
 
 export const logout = actionCreator('LOGOUT')
+export const clearError = actionCreator('CLEAR_ERROR')

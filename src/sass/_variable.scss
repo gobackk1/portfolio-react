@@ -1,0 +1,30 @@
+// base color
+$color_primary: #2794aa;
+$color_primary_light: lighten($color_primary, 30%);
+$color_primary_dark: darken($color_primary, 20%);
+$color_accent: #ff6249;
+$color_accent_light: lighten($color_accent, 30%);
+$color_accent_dark: darken($color_accent, 20%);
+$color_gray_1: #c3c3c3;
+$color_gray_2: #9c9c9c;
+$color_white: #fff;
+$color_success: #7d9950;
+$color_info: #e1e2ef;
+$color_danger: #f44336;
+$color_warning: #fa8918;
+//
+$color_text: #333;
+$color_header_text: $color_white;
+$color_app_bg: rgb(225, 226, 239);
+$color_container_bg: $color_white;
+$color_liked: #ff5876;
+$color_unliked: #666;
+// form
+$color_input_bg: $color_white;
+
+// variable
+$container_width: 1000;
+$login_form_width: 300;
+
+// layer
+$layer_modal: 10;

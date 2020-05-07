@@ -3,10 +3,10 @@ import { Field, FormSection, reduxForm, InjectedFormProps } from 'redux-form'
 import { login, register } from '@/actions/user'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
+import store from '@/store'
 
 interface Props {
-  login: any
-  register: any
+  user?: any
 }
 interface State {
   isLoginForm: boolean
@@ -24,8 +24,8 @@ class LoginForm extends React.Component<
   }
   onSubmit: any = (values: FormValue) => {
     this.state.isLoginForm
-      ? this.props.login({ ...values.login })
-      : this.props.register({ ...values.register })
+      ? store.dispatch(login({ ...values.login }))
+      : store.dispatch(register({ ...values.register }))
   }
 
   toggleForm = () => {
@@ -41,30 +41,27 @@ class LoginForm extends React.Component<
     } = field
 
     return (
-      <>
-        <input
-          placeholder={label}
-          type={type}
-          // errorText={touched && error}
-          {...input}
-        />
-        <div>{touched && error}</div>
-      </>
+      <div className="form__input">
+        <input placeholder={label} type={type} {...input} className="input" />
+        <div className="error-msg">{touched && error}</div>
+      </div>
     )
   }
 
   renderIfLoginForm = () => {
     if (!this.state.isLoginForm) return
     return (
-      <FormSection name="login">
+      <FormSection name="login" className="form__section">
+        メール
         <Field
-          label="email"
+          label="例/ example@example.com"
           name="email"
           type="text"
           component={this.renderField}
         ></Field>
+        パスワード
         <Field
-          label="password"
+          label="パスワードを入力してください"
           name="password"
           type="password"
           component={this.renderField}
@@ -99,42 +96,66 @@ class LoginForm extends React.Component<
   }
 
   render() {
-    const { handleSubmit, pristine, submitting, invalid } = this.props
+    const {
+      handleSubmit,
+      pristine,
+      submitting,
+      invalid,
+      user: { error }
+    } = this.props
+
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
-        <p>{this.state.isLoginForm ? 'ログイン' : '新規登録'}</p>
+      <form onSubmit={handleSubmit(this.onSubmit)} className="form">
+        <p className="form__title">
+          {this.state.isLoginForm ? 'ログイン' : '新規登録'}
+        </p>
+        {error && <p className="error-msg">{error.response.data.message}</p>}
         {this.renderIfLoginForm()}
         {this.renderIfRegisterForm()}
-        <button disabled={pristine || submitting || invalid}>送信</button>
-        <button type="button" onClick={this.toggleForm}>
-          {this.state.isLoginForm ? '新規登録' : 'ログイン'}
-        </button>
+        <div className="form__buttons">
+          <button
+            disabled={pristine || submitting || invalid}
+            className="button-submit"
+          >
+            送信
+          </button>
+          <button
+            type="button"
+            onClick={this.toggleForm}
+            className="button-login-or-register"
+          >
+            {this.state.isLoginForm ? '新規登録' : 'ログイン'}
+          </button>
+        </div>
       </form>
     )
   }
 }
 
 const validate = (values: any) => {
-  const errors: any = {}
-  console.log('validates')
-
-  if (!values.email) {
-    errors.email = 'メールアドレスを入力してください'
-  } else {
-    if (values.email.length <= 6) errors.email = 'メールアドレスが短すぎます'
+  if (!values.login) return
+  const errors: any = {
+    login: {},
+    register: {}
   }
-  if (!values.password) errors.password = 'パスワードを入力してください'
-  if (!values.name) errors.name = 'ユーザー名を入力してください'
-  console.log(errors)
+
+  if (!values.login.email) {
+    errors.login.email = 'メールアドレスが未入力です'
+  }
+  if (!values.login.password) {
+    errors.login.password = 'パスワードを入力してください'
+  } else if (values.login.password.length < 6) {
+    errors.login.password = 'パスワードは6文字以上で入力してください'
+  }
 
   return errors
 }
 
-const mapDispatchToProps = { login, register }
+const mapStateToProps = state => ({ user: state.user })
 
 export default connect(
-  null,
-  mapDispatchToProps
+  mapStateToProps,
+  null
 )(
   reduxForm<{}, Props>({
     validate,

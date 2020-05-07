@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import store from '@/store'
 import { logout } from '@/actions/user'
@@ -7,8 +7,8 @@ import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
 import Render from '@/components/Render'
 
-interface Props {
-  user: any
+interface Props extends RouteComponentProps {
+  user?: any
 }
 
 class AppHeader extends React.Component<Props, { isLogin: boolean }> {
@@ -18,8 +18,11 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
       isLogin: store.getState().user.isLogin
     })
   }
-  onClickLogout() {
+  onClickLogout = () => {
+    // if (window.confirm('本当にログアウトしますか？')) {
     store.dispatch(logout())
+    //   this.props.history.push('/')
+    // }
   }
 
   render() {
@@ -45,17 +48,13 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
                 <Link to="/profile">プロフィール</Link>
               </li>
               <li className="menu-list__item">
-                <button
-                  onClick={this.onClickLogout}
-                  type="button"
-                  className="menu-list__item"
-                >
+                <button onClick={this.onClickLogout} type="button">
                   ログアウト
                 </button>
               </li>
             </Render>
             <Render if={!token}>
-              <li className="button-login">
+              <li className="menu-list__login">
                 <Modal openButtonText="ログイン">
                   <LoginForm></LoginForm>
                 </Modal>
@@ -72,4 +71,4 @@ const mapStateToProps = (state: any) => ({
   user: state.user
 })
 
-export default connect(mapStateToProps, null)(AppHeader)
+export default connect(mapStateToProps, null)(withRouter(AppHeader))

@@ -1,5 +1,5 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import { login, register, logout } from '@/actions/user'
+import { login, register, logout, clearError } from '@/actions/user'
 import ServerResponse from '@/interfaces/ServerResponse'
 import UserState from '@/interfaces/UserState'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'
@@ -27,7 +27,7 @@ export default reducerWithInitialState(initialState)
       loggingIn: true
     }
   })
-  .cases([login.async.failed, register.async.failed], (state, error) => {
+  .cases([login.async.failed, register.async.failed], (state, { error }) => {
     return {
       ...state,
       loggingIn: false,
@@ -49,5 +49,11 @@ export default reducerWithInitialState(initialState)
   .case(logout, () => {
     return {
       ...initialState
+    }
+  })
+  .case(clearError, state => {
+    delete state.error
+    return {
+      ...state
     }
   })

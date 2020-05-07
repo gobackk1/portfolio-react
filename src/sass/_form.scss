@@ -1,0 +1,36 @@
+.form {
+  padding: 20px;
+  font-size: 18px;
+  &__title {
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: center;
+  }
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__input {
+    margin-bottom: 20px;
+  }
+  &__section {
+    max-width: $login_form_width + px;
+  }
+}
+
+.input {
+  width: $login_form_width + px;
+  height: 40px;
+  background-color: $color_input_bg;
+  padding: 10px;
+  display: block;
+  &::placeholder {
+    font-size: 15px;
+  }
+}
+
+.error-msg {
+  font-size: 14px;
+  color: $color_danger;
+  max-width: $login_form_width + px;
+}

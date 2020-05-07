@@ -1,5 +1,7 @@
 import React from 'react'
 import Modal from 'react-modal'
+import store from '@/store'
+import { clearError } from '@/actions/user'
 
 const styles = {
   overlay: {
@@ -36,12 +38,13 @@ class ModalWindow extends React.Component<Props, {}> {
 
   closeModal = () => {
     this.setState({ modalIsOpen: false })
+    store.dispatch(clearError())
   }
 
   render() {
     return (
       <>
-        <button type="button" onClick={this.openModal}>
+        <button type="button" onClick={this.openModal} className="button-login">
           {this.props.openButtonText}
         </button>
         <Modal
@@ -51,9 +54,11 @@ class ModalWindow extends React.Component<Props, {}> {
           contentLabel="modal"
         >
           {this.props.children}
-          <button type="button" onClick={this.closeModal}>
-            Close
-          </button>
+          <button
+            type="button"
+            onClick={this.closeModal}
+            className="modal__close button-close"
+          ></button>
         </Modal>
       </>
     )
