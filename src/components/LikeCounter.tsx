@@ -14,31 +14,49 @@ class LikeCounter extends React.Component<Props, {}> {
     count: 0,
     disabled: false
   }
+  _isMounted: boolean = false
+
+  get isMounted(): boolean {
+    return this._isMounted
+  }
+
+  set isMounted(boolean: boolean) {
+    this._isMounted = boolean
+  }
 
   fetchCount = async id => {
     this.setState({ disabled: true })
     const res = await axios.get(`${likeUrl}/${id}/all`, auth)
+    if (!this.isMounted) return
     this.setState({ ...res.data, disabled: false })
   }
 
   createLike = async study_record_id => {
     this.setState({ disabled: true })
     const res = await axios.post(likeUrl, { study_record_id }, auth)
+    if (!this.isMounted) return
     this.setState({ ...res.data, disabled: false })
   }
 
   destroyLike = async id => {
     this.setState({ disabled: true })
     const res = await axios.delete(`${likeUrl}/${id}`, auth)
+    if (!this.isMounted) return
     this.setState({ ...res.data, disabled: false })
   }
 
-  onClickLike = id => {
+  onClickLike: ((id: number) => void) | null = id => {
     this.state.isLiked ? this.destroyLike(id) : this.createLike(id)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.fetchCount(this.props.record.id)
+    this.isMounted = true
+  }
+
+  componentWillUnmount = () => {
+    this.onClickLike = null
+    this.isMounted = false
   }
 
   render() {
@@ -51,7 +69,7 @@ class LikeCounter extends React.Component<Props, {}> {
     return (
       <>
         <button
-          onClick={() => this.onClickLike(id)}
+          onClick={() => this.onClickLike!(id)}
           disabled={disabled}
           className={likeCounterClass}
         >
