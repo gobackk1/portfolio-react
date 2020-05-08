@@ -47,6 +47,11 @@ small {
   font-size: 75%;
 }
 
+i {
+  user-select: none;
+  pointer-events: none;
+}
+
 // @keyframes onAutoFillStart {
 //   from {
 //   }

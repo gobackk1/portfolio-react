@@ -18,9 +18,7 @@ import { initProfile } from '@/actions/userProfile'
 import RecordEdit from './view/RecordEdit'
 ;(async () => {
   // 開発用ログインスキップ
-  await store.dispatch(
-    login({ email: 'example1@test.com', password: 'foobar' })
-  )
+  await store.dispatch(login({ email: 'auth@example.com', password: 'foobar' }))
 
   await store.dispatch(initProfile(store.getState().user.id))
 

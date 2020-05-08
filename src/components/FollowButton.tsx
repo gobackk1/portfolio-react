@@ -29,6 +29,7 @@ class FollowButton extends React.Component<Props, {}> {
   }
 
   destroyFollow = async id => {
+    if (!window.confirm('本当にフォローを解除しますか？')) return
     this.setState({ disabled: true })
     await this.props.unFollowUser(id)
     if (this.props.updateFollowerCount) {

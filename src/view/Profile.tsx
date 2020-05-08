@@ -44,7 +44,8 @@ class Profile extends React.Component<Props, State> {
     total_study_hours: 0,
     followings_count: 0,
     followers_count: 0,
-    is_following: false
+    is_following: false,
+    registered_date: ''
   }
 
   userId: number = this.props.match.params.id
@@ -52,18 +53,12 @@ class Profile extends React.Component<Props, State> {
     : this.props.user.id
 
   setAnotherUserProfile = async (id: number) => {
-    this.setState({
-      loaded: false
-    })
+    this.setState({ loaded: false })
     const res = await axios.get(
       `${process.env.REACT_APP_API_URL}/users/${id}`,
       auth
     )
-
-    this.setState({
-      ...res.data,
-      loaded: true
-    })
+    this.setState({ ...res.data, loaded: true })
   }
 
   setCurrentUserProfile = () => {
@@ -84,49 +79,57 @@ class Profile extends React.Component<Props, State> {
 
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
-    console.log(this.state, 'test')
 
     return (
-      <>
-        <h2>プロフィール</h2>
-        <Render if={correctUser}>
-          <Modal openButtonText="編集">
-            <ProfileForm></ProfileForm>
-          </Modal>
-        </Render>
-        <Render if={!correctUser && this.state.loaded}>
-          <FollowButton
-            followId={this.state.user.id}
-            isFollowing={this.state.is_following}
-            updateFollowerCount={isFollowing =>
-              this.updateFollowerCount(isFollowing)
-            }
-          ></FollowButton>
-        </Render>
-        <h3>プロフィール</h3>
-        <img
-          src={`${process.env.REACT_APP_API_URL}/images/user_images/${this.state.user.image_name}`}
-          width="300"
-          alt="ユーザープロフィール画像"
-        />
-        <ul>
-          <li>ユーザーID:{this.state.user.id}</li>
-          <li>ユーザーネーム:{this.state.user.name}</li>
-          <li>参加:{this.state.user.created_at}</li>
-          <li>自己紹介:{this.state.user.user_bio}</li>
-          <li>総勉強時間:{this.state.total_study_hours}</li>
-          <li>フォロー:{this.state.followings_count}</li>
-          <li>フォロワー:{this.state.followers_count}</li>
-        </ul>
-        <h3>勉強記録</h3>
-        <ul>
+      <div className="l-inner">
+        <div className="profile">
+          <div className="profile__head">
+            <img
+              src={`${process.env.REACT_APP_API_URL}/images/user_images/${this.state.user.image_name}`}
+              width="120"
+              height="120"
+              alt="ユーザープロフィール画像"
+            />
+            <Render if={correctUser}>
+              <Modal openButtonText="編集" buttonClassName="button-edit">
+                <ProfileForm></ProfileForm>
+              </Modal>
+            </Render>
+            <Render if={!correctUser && this.state.loaded}>
+              <FollowButton
+                followId={this.state.user.id}
+                isFollowing={this.state.is_following}
+                updateFollowerCount={isFollowing =>
+                  this.updateFollowerCount(isFollowing)
+                }
+              ></FollowButton>
+            </Render>
+          </div>
+          <div className="profile__name">{this.state.user.name}</div>
+          <div className="profile__registered">
+            {this.state.registered_date} 登録
+          </div>
+          <div className="profile__bio">{this.state.user.user_bio}</div>
+          <div className="profile__footer">
+            <span className="profile__footer-item">
+              フォロー {this.state.followings_count}
+            </span>
+            <span className="profile__footer-item">
+              フォロワー {this.state.followers_count}
+            </span>
+            <span className="profile__footer-item">
+              総勉強時間 {this.state.total_study_hours}時間
+            </span>
+          </div>
+        </div>
+        <ul className="record-list">
           {this.state.study_records.map((record, index) => (
-            <li key={index}>
+            <li key={index} className="record-list__item">
               <StudyRecord record={record}></StudyRecord>
             </li>
           ))}
         </ul>
-      </>
+      </div>
     )
   }
 }

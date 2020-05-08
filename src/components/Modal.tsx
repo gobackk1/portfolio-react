@@ -24,6 +24,7 @@ const styles = {
 
 interface Props {
   openButtonText: string
+  buttonClassName: string
 }
 
 Modal.setAppElement('#root')
@@ -42,9 +43,14 @@ class ModalWindow extends React.Component<Props, {}> {
   }
 
   render() {
+    const buttonClassName = this.props.buttonClassName
     return (
       <>
-        <button type="button" onClick={this.openModal} className="button-login">
+        <button
+          type="button"
+          onClick={this.openModal}
+          className={buttonClassName}
+        >
           {this.props.openButtonText}
         </button>
         <Modal

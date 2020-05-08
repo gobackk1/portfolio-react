@@ -54,11 +54,6 @@
 .users-list {
   &__item {
     margin-bottom: 30px;
-    cursor: pointer;
-    transition: background 0.3s;
-    &:hover {
-      background: $color_primary_light;
-    }
   }
 }
 
@@ -116,29 +111,30 @@
 .tag-list {
   display: flex;
   &__item {
-    margin-right: 30px;
+    margin-right: 10px;
   }
 }
 
 .tag {
   position: relative;
+  padding-left: 20px;
   &__body {
     position: relative;
     padding: 3px 10px;
-    background: $color_gray_1;
+    background: $color_info;
     z-index: 1;
   }
   &::after {
     content: '';
     display: block;
-    width: 24px;
-    height: 24px;
+    width: 21px;
+    height: 21px;
     position: absolute;
-    left: -12px;
+    left: 9px;
     top: 0;
     bottom: 0;
     margin: auto;
-    background: $color_gray_1;
+    background: $color_info;
     transform: rotate(45deg);
     z-index: 0;
   }
@@ -157,8 +153,16 @@
   }
 }
 
+%like-counter {
+  span {
+    pointer-events: none;
+  }
+}
+
 .like-counter {
+  @extend %like-counter;
   &--liked {
+    @extend %like-counter;
     i {
       color: $color_liked;
     }
@@ -172,6 +176,29 @@
   text-align: center;
 }
 
+.profile {
+  margin-bottom: 30px;
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+  }
+  &__name {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  &__registered {
+    margin-bottom: 10px;
+  }
+  &__bio {
+    margin-bottom: 10px;
+  }
+  &__footer-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+
 // Card
 
 .card-user {
@@ -180,9 +207,26 @@
   padding: 15px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: background 0.3s;
 
+  &:hover {
+    background: $color_accent_light;
+  }
   &__profile {
     flex: auto;
+    display: flex;
+  }
+  &__profile-head {
+    display: flex;
+    align-items: center;
+  }
+  &__profile-body {
+    padding: 0 15px;
+  }
+  &__profile-name {
+    font-size: 18px;
+    font-weight: bold;
   }
   &__follow {
     display: flex;
@@ -192,24 +236,17 @@
   }
 }
 
-.profile {
-  display: flex;
-  &__name {
-    // padding-bottom: 10px;
-  }
-  &__head {
-    display: flex;
-    align-items: center;
-  }
-  &__body {
-    padding: 0 15px;
-  }
-}
-
 .card-record {
   display: flex;
-  padding-bottom: 30px;
+  padding: 30px;
   border-bottom: 1px solid $color_gray_1;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: background 0.3s;
+  &:hover {
+    background: $color_accent_light;
+  }
   &__img {
     min-width: 120px;
   }
@@ -222,15 +259,16 @@
   &__title {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+  }
+  &__title-name {
+    font-size: 18px;
+    font-weight: bold;
   }
   &__comment {
     margin-bottom: 20px;
   }
-  &__material {
-    margin-bottom: 20px;
-  }
-  &__hours {
+  &__list {
     margin-bottom: 20px;
   }
   &__footer {
@@ -243,8 +281,22 @@
   }
 }
 
+.material-list {
+  dt {
+    display: inline-block;
+    min-width: 100px;
+    margin-right: 10px;
+    i {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  }
+  dd {
+    display: inline-block;
+  }
+}
+
 .modal {
-  // position: relative;
   &__close {
     position: absolute;
     top: 15px;
@@ -255,5 +307,9 @@
 }
 
 .ReactModal__Content {
-  background: rgb(225, 226, 239) !important;
+  background: $color_light_shade !important;
+}
+
+.ReactModal__Overlay {
+  z-index: $layer_modal;
 }

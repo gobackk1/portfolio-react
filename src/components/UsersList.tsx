@@ -23,8 +23,8 @@ class UsersList extends React.Component<Props, any> {
                 className="users-list__item card-user"
                 onClick={e => this.onClickUserList(user.id, e)}
               >
-                <div className="card-user__profile profile">
-                  <div className="profile__head">
+                <div className="card-user__profile">
+                  <div className="card-user__profile-head">
                     <img
                       src={`${process.env.REACT_APP_API_URL}/images/user_images/${user.image_name}`}
                       width="80"
@@ -32,8 +32,8 @@ class UsersList extends React.Component<Props, any> {
                       alt={user.name}
                     />
                   </div>
-                  <div className="profile__body">
-                    <div className="profile__name">{user.name}</div>
+                  <div className="card-user__profile-body">
+                    <div className="card-user__profile-name">{user.name}</div>
                     {user.user_bio}
                   </div>
                 </div>

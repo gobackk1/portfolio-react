@@ -83,7 +83,6 @@ class ProfileForm extends React.Component<
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <p>プロフィール編集</p>
-        {/* <input type="file" /> */}
         <Field
           name="image_select"
           label="image_select"

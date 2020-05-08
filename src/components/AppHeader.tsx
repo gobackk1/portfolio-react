@@ -55,7 +55,7 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
             </Render>
             <Render if={!token}>
               <li className="menu-list__login">
-                <Modal openButtonText="ログイン">
+                <Modal openButtonText="ログイン" buttonClassName="button-login">
                   <LoginForm></LoginForm>
                 </Modal>
               </li>

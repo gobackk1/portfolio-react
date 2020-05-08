@@ -1,9 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import LikeCounter from '@/components/LikeCounter'
 import Render from './Render'
 
-interface Props {
+interface Props extends RouteComponentProps {
   record: any
 }
 
@@ -16,6 +16,19 @@ class StudyRecord extends React.Component<Props, {}> {
       </li>
     ))
   }
+
+  onClickCardRecord: ((id: number, any) => void) | null = (
+    id,
+    { nativeEvent }
+  ) => {
+    if (nativeEvent.target.tagName.toLowerCase() === 'button') return
+    this.props.history.push(`/record/${id}`)
+  }
+
+  componentWillUnmount = () => {
+    this.onClickCardRecord = null
+  }
+
   render() {
     const {
       id,
@@ -30,9 +43,11 @@ class StudyRecord extends React.Component<Props, {}> {
       date,
       user
     } = this.props.record
-    console.log(user)
     return (
-      <div className="card-record">
+      <div
+        className="card-record"
+        onClick={e => this.onClickCardRecord!(id, e)}
+      >
         <div className="card-record__img">
           <img
             src={`${process.env.REACT_APP_API_URL}/images/user_images/${user.image_name}`}
@@ -43,18 +58,22 @@ class StudyRecord extends React.Component<Props, {}> {
         </div>
         <div className="card-record__body record">
           <div className="record__title">
-            <div>{user.name}</div>
+            <div className="record__title-name">{user.name}</div>
             <div>{date}</div>
           </div>
           <div className="record__comment">{comment}</div>
-          <div className="record__material">
-            教材: <br />
-            {teaching_material}
-          </div>
-          <div className="record__hours">
-            勉強時間: <br />
-            {study_hours}時間
-          </div>
+          <dl className="record__list material-list">
+            <dt>
+              <i className="fas fa-book large"></i>教材:
+            </dt>
+            <dd>{teaching_material}</dd>
+          </dl>
+          <dl className="record__list material-list">
+            <dt>
+              <i className="far fa-clock large"></i>勉強時間:
+            </dt>
+            <dd>{study_hours}時間</dd>
+          </dl>
           <div className="record__footer">
             <div className="record__tags">
               <ul className="tag-list">
@@ -68,7 +87,6 @@ class StudyRecord extends React.Component<Props, {}> {
                   {study_record_comments ? study_record_comments.length : 0}
                 </span>
               </div>
-              {/* <Link to={`/record/${id}`}></Link> */}
               <div>
                 <LikeCounter record={record}></LikeCounter>
               </div>
@@ -80,4 +98,4 @@ class StudyRecord extends React.Component<Props, {}> {
   }
 }
 
-export default StudyRecord
+export default withRouter(StudyRecord)

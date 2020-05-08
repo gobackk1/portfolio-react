@@ -25,6 +25,12 @@
   }
 }
 
+.button-edit {
+  @extend %button-cmn-1;
+  background: $color_header_text;
+  color: $color_primary;
+}
+
 .button-login-or-register {
   text-decoration: underline;
 }
