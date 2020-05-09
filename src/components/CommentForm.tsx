@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 
 interface Props {
-  recordId: string
+  recordId: number
   postComment: any
+  closeModal?: () => void
 }
 
 class CommentForm extends React.Component<
@@ -14,12 +15,11 @@ class CommentForm extends React.Component<
   {}
 > {
   onSubmit: any = async (values: any) => {
-    await this.props.postComment({
+    const res = await this.props.postComment({
       ...values,
       study_record_id: this.props.recordId
     })
-    const overlay = document.querySelector('.ReactModal__Overlay')
-    if (overlay) (overlay as HTMLElement).click()
+    if (res.status === 200) this.props.closeModal!()
   }
 
   renderField = field => {

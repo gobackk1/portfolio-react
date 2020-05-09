@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Children, ReactElement } from 'react'
 import Modal from 'react-modal'
 import store from '@/store'
 import { clearError } from '@/actions/user'
@@ -44,6 +44,18 @@ class ModalWindow extends React.Component<Props, {}> {
 
   render() {
     const buttonClassName = this.props.buttonClassName
+    const providedProps = { closeModal: this.closeModal }
+    const childrenWithProps = Children.map(this.props.children, child => {
+      switch (typeof child) {
+        case 'string':
+          return child
+        case 'object':
+          return React.cloneElement(child as ReactElement, providedProps)
+        default:
+          return child
+      }
+    })
+
     return (
       <>
         <button
@@ -59,7 +71,7 @@ class ModalWindow extends React.Component<Props, {}> {
           style={styles}
           contentLabel="modal"
         >
-          {this.props.children}
+          {childrenWithProps}
           <button
             type="button"
             onClick={this.closeModal}

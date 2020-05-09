@@ -7,6 +7,7 @@ import { RouteComponentProps } from 'react-router'
 interface Props {
   updateProfile: any
   userProfile: any
+  closeModal?: () => void
 }
 
 class ProfileForm extends React.Component<
@@ -18,14 +19,12 @@ class ProfileForm extends React.Component<
   onSubmit: any = async (values: any) => {
     console.log(values, 'values')
 
-    await this.props.updateProfile({
+    const res = await this.props.updateProfile({
       ...values,
       id: this.props.userProfile.user.id,
       image: this.encodedImage
     })
-
-    const overlay = document.querySelector('.ReactModal__Overlay')
-    if (overlay) (overlay as HTMLElement).click()
+    if (res.status === 200) this.props.closeModal!()
   }
 
   renderField = field => {

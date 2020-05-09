@@ -4,9 +4,11 @@ import { login, register, clearError } from '@/actions/user'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
 import store from '@/store'
+import Render from '@/components/Render'
 
 interface Props {
   user?: any
+  closeModal?: () => void
 }
 interface State {
   isLoginForm: boolean
@@ -23,10 +25,14 @@ class LoginForm extends React.Component<
     isLoginForm: true
   }
 
-  onSubmit: any = (values: FormValue) => {
-    this.state.isLoginForm
-      ? store.dispatch(login({ ...values.login }))
-      : store.dispatch(register({ ...values.register }))
+  onSubmit: any = async (values: FormValue) => {
+    const res = this.state.isLoginForm
+      ? await store.dispatch(login(values.login))
+      : await store.dispatch(register(values.register))
+    // XXX: LoginFormだけ、ログイン成功時に閉じるが、理由がわからない
+    // if (res.status === 200) {
+    //   this.props.closeModal!()
+    // }
   }
 
   toggleForm = () => {
@@ -46,57 +52,6 @@ class LoginForm extends React.Component<
         <input placeholder={label} type={type} {...input} className="input" />
         <div className="error-msg">{touched && error}</div>
       </div>
-    )
-  }
-
-  renderIfLoginForm = () => {
-    if (!this.state.isLoginForm) return
-    return (
-      <FormSection name="login" className="form__section">
-        メール
-        <Field
-          label="例/ example@example.com"
-          name="email"
-          type="text"
-          component={this.renderField}
-        ></Field>
-        パスワード
-        <Field
-          label="パスワードを入力してください"
-          name="password"
-          type="password"
-          component={this.renderField}
-        ></Field>
-      </FormSection>
-    )
-  }
-
-  renderIfRegisterForm = () => {
-    if (this.state.isLoginForm) return
-    return (
-      <FormSection name="register" className="form__section">
-        ユーザー名
-        <Field
-          label="半角英数字6文字以上"
-          name="name"
-          type="text"
-          component={this.renderField}
-        ></Field>
-        メール
-        <Field
-          label="例/ example@example.com"
-          name="email"
-          type="text"
-          component={this.renderField}
-        ></Field>
-        パスワード
-        <Field
-          label="半角英数字6文字以上"
-          name="password"
-          type="password"
-          component={this.renderField}
-        ></Field>
-      </FormSection>
     )
   }
 
@@ -120,16 +75,56 @@ class LoginForm extends React.Component<
       reset,
       user: { error }
     } = this.props
-    // console.log(this.props)
 
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)} className="form">
+      <form onSubmit={handleSubmit(this.onSubmit)} className="form--login">
         <p className="form__title">
           {this.state.isLoginForm ? 'ログイン' : '新規登録'}
         </p>
         {this.renderErrorMessages(error)}
-        {this.renderIfLoginForm()}
-        {this.renderIfRegisterForm()}
+        <Render if={this.state.isLoginForm}>
+          <FormSection name="login" className="form__section">
+            メール
+            <Field
+              label="例/ example@example.com"
+              name="email"
+              type="text"
+              component={this.renderField}
+            ></Field>
+            パスワード
+            <Field
+              label="パスワードを入力してください"
+              name="password"
+              type="password"
+              component={this.renderField}
+            ></Field>
+          </FormSection>
+        </Render>
+        <Render if={!this.state.isLoginForm}>
+          <FormSection name="register" className="form__section">
+            ユーザー名
+            <Field
+              label="半角英数字6文字以上"
+              name="name"
+              type="text"
+              component={this.renderField}
+            ></Field>
+            メール
+            <Field
+              label="例/ example@example.com"
+              name="email"
+              type="text"
+              component={this.renderField}
+            ></Field>
+            パスワード
+            <Field
+              label="半角英数字6文字以上"
+              name="password"
+              type="password"
+              component={this.renderField}
+            ></Field>
+          </FormSection>
+        </Render>
         <div className="form__buttons">
           <button
             disabled={pristine || submitting || invalid}
@@ -189,26 +184,13 @@ const validate = (values: any) => {
   return errors
 }
 
-const initialValues = {
-  login: {
-    email: '',
-    password: ''
-  },
-  logout: {
-    name: '',
-    password: '',
-    email: ''
-  }
-}
-
-const mapStateToProps = state => ({ user: state.user, initialValues })
+const mapStateToProps = state => ({ user: state.user })
 
 export default connect(
   mapStateToProps,
   null
 )(
   reduxForm<{}, Props>({
-    initialValues,
     validate,
     form: 'loginForm'
   })(LoginForm)
