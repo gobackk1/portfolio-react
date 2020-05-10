@@ -3,6 +3,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import FollowButton from '@/components/FollowButton'
+import classNames from 'classnames'
 
 interface Props extends RouteComponentProps {
   users?: any
@@ -12,6 +13,7 @@ class UsersList extends React.Component<Props, any> {
     if (nativeEvent.target.tagName.toLowerCase() === 'button') return
     this.props.history.push(`/profile/${id}`)
   }
+
   render() {
     return (
       <>
@@ -20,7 +22,7 @@ class UsersList extends React.Component<Props, any> {
             return (
               <li
                 key={index}
-                className="users-list__item card-user"
+                className="users-list__item card-user card-user--enable-link"
                 onClick={e => this.onClickUserList(user.id, e)}
               >
                 <div className="card-user__profile">

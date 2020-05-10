@@ -33,7 +33,8 @@ body {
   font-size: $base_font_size + px;
 }
 
-input {
+input,
+textarea {
   font-size: inherit;
   outline: none;
   appearance: none;
@@ -41,6 +42,10 @@ input {
   &:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px $color_input_bg inset;
   }
+}
+
+textarea {
+  resize: none;
 }
 
 small {

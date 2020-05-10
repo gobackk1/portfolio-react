@@ -1,0 +1,21 @@
+$props: (
+  p: padding,
+  pt: padding-top,
+  pr: padding-right,
+  pb: padding-bottom,
+  pl: padding-left,
+  m: margin,
+  mt: margin-top,
+  mr: margin-right,
+  mb: margin-bottom,
+  ml: margin-left
+);
+$values: 10, 15, 20, 30, 40, 50;
+
+@each $key, $prop in $props {
+  @each $value in $values {
+    .#{$key}#{$value} {
+      #{$prop}: $value + px;
+    }
+  }
+}

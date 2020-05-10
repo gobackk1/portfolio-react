@@ -90,6 +90,8 @@ class UserShow extends React.Component<
 }
 
 const mapStateToProps = (state: any, ownProps: any) => {
+  console.log(ownProps)
+
   const studyRecord = state.studyRecords[ownProps.match.params.id]
   return {
     initialValues: studyRecord,

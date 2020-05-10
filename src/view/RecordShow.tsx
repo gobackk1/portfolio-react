@@ -9,82 +9,91 @@ import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import Modal from '@/components/Modal'
 import CommentForm from '@/components/CommentForm'
 import Render from '@/components/Render'
+import StudyRecord from '@/components/StudyRecord'
+import store from '@/store'
+import RecordForm from '@/components/RecordForm'
+import Comment from '@/components/Comment'
 
 interface Props extends RouteComponentProps<{ id: string }> {
-  getStudyRecord: any
-  readStudyRecords: any
   studyRecords: any
   deleteComment: any
   user: any
 }
 
 class UserShow extends React.Component<Props, {}> {
-  id: string = '1'
+  id!: number
 
-  async fetchData(): Promise<void> {
-    try {
-      console.log('test')
-      await this.props.getStudyRecord(this.id)
-    } catch (e) {
-      console.log(e)
-      this.props.history.push('/')
+  constructor(props) {
+    super(props)
+    this.id = Number(this.props.match.params.id)
+  }
+
+  async componentDidMount() {
+    if (!this.props.studyRecords.loaded) {
+      await store.dispatch(readStudyRecords())
     }
+    await store.dispatch(getStudyRecord(this.id))
   }
 
-  componentDidMount() {
-    this.fetchData()
-  }
+  renderIfRecordHasComment = comments => {
+    if (!comments) return
+    console.log(comments, 'comments')
 
-  deleteComment = (id: number) => {
-    this.props.deleteComment({ id, study_record_id: this.id })
-  }
-
-  renderIfRecordHasComment = ({ study_record_comments }) => {
-    if (!study_record_comments) return
     return (
       <ul>
-        {study_record_comments.map((comment, index) => (
+        {comments.map((comment, index) => (
           <li key={index}>
-            {comment.comment_body}
-            <Render if={comment.user_id === this.props.user.id}>
-              <button onClick={() => this.deleteComment(comment.id)}>
-                削除
-              </button>
-            </Render>
+            <Comment data={comment} recordId={this.id}></Comment>
           </li>
         ))}
       </ul>
     )
   }
 
-  render() {
-    this.id = this.props.match.params.id
+  onClickBack: (() => void) | null = () => {
+    this.props.history.goBack()
+  }
 
-    try {
-      return (
-        <>
-          <h3>Record detail</h3>
-          <ul>
-            <li>{this.props.studyRecords[this.id].id}</li>
-            <li>{this.props.studyRecords[this.id].user_id}</li>
-            <li>{this.props.studyRecords[this.id].comment}</li>
-            <li>{this.props.studyRecords[this.id].teaching_material}</li>
-            <li>{this.props.studyRecords[this.id].study_hours}</li>
-          </ul>
-          <h4>comment</h4>
-          {this.renderIfRecordHasComment(this.props.studyRecords[this.id])}
+  renderIfLoaded = () => {
+    const { loaded, records } = this.props.studyRecords
+    if (!loaded) return
 
-          <Link to="/record">戻る</Link>
-          <Link to={`/record/${this.id}/edit`}>編集</Link>
-          <Modal openButtonText="コメント" buttonClassName="mock">
-            <CommentForm recordId={this.id}></CommentForm>
+    const index = records.findIndex(r => r.id === this.id)
+    const {
+      record: { user_id },
+      comments
+    } = records[index]
+
+    return (
+      <>
+        <button
+          onClick={() => this.onClickBack!()}
+          type="button"
+          className="button-back mb20 mr15"
+        >
+          戻る
+        </button>
+        <Modal
+          openButtonText="コメントする"
+          buttonClassName="button-comment mb20 mr15"
+        >
+          <CommentForm recordId={this.id}></CommentForm>
+        </Modal>
+        <Render if={user_id === this.props.user.id}>
+          <Modal openButtonText="編集" buttonClassName="button-edit">
+            <RecordForm type="edit"></RecordForm>
           </Modal>
-        </>
-      )
-    } catch (e) {
-      this.props.history.push('/')
-      return <div></div>
-    }
+        </Render>
+        <div className="mb40">
+          <StudyRecord record={records[index]} link={false}></StudyRecord>
+        </div>
+        {this.renderIfRecordHasComment(comments)}
+      </>
+    )
+  }
+
+  render() {
+    return <div className="l-inner">{this.renderIfLoaded()}</div>
   }
 }
 

@@ -1,13 +1,12 @@
 import axios, { auth } from '@/axios'
 import { asyncActionCreator } from '@/actions'
 
+const studyRecordUrl = `${process.env.REACT_APP_API_URL}/study_records`
+
 export const readStudyRecords = asyncActionCreator<any, any, Error>(
   'READ_STUDY_RECORDS',
   async () => {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/study_records`,
-      auth
-    )
+    const res = await axios.get(studyRecordUrl, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -20,11 +19,7 @@ export const readStudyRecords = asyncActionCreator<any, any, Error>(
 export const searchStudyRecords = asyncActionCreator<any, any, Error>(
   'SEARCH_STUDY_RECORDS',
   async keyword => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/study_records/search`,
-      { keyword },
-      auth
-    )
+    const res = await axios.post(`${studyRecordUrl}/search`, { keyword }, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -37,10 +32,7 @@ export const searchStudyRecords = asyncActionCreator<any, any, Error>(
 export const getStudyRecord = asyncActionCreator<any, any, Error>(
   'READ_STUDY_RECORD',
   async id => {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/study_records/${id}`,
-      auth
-    )
+    const res = await axios.get(`${studyRecordUrl}/${id}`, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -53,11 +45,7 @@ export const getStudyRecord = asyncActionCreator<any, any, Error>(
 export const postStudyRecord = asyncActionCreator<any, any, Error>(
   'POST_STUDY_RECORD',
   async params => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/study_records`,
-      params,
-      auth
-    )
+    const res = await axios.post(studyRecordUrl, params, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -70,11 +58,8 @@ export const postStudyRecord = asyncActionCreator<any, any, Error>(
 export const putStudyRecord = asyncActionCreator<any, any, Error>(
   'PUT_STUDY_RECORD',
   async params => {
-    const res = await axios.put(
-      `${process.env.REACT_APP_API_URL}/study_records/${params.id}`,
-      params,
-      auth
-    )
+    console.log(params, 'PUT_STUDY_RECORD')
+    const res = await axios.put(`${studyRecordUrl}/${params.id}`, params, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -87,10 +72,7 @@ export const putStudyRecord = asyncActionCreator<any, any, Error>(
 export const deleteStudyRecord = asyncActionCreator<any, any, Error>(
   'DELETE_STUDY_RECORD',
   async id => {
-    const res = await axios.delete(
-      `${process.env.REACT_APP_API_URL}/study_records/${id}`,
-      auth
-    )
+    const res = await axios.delete(`${studyRecordUrl}/${id}`, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -103,8 +85,10 @@ export const deleteStudyRecord = asyncActionCreator<any, any, Error>(
 export const postComment = asyncActionCreator<any, any, Error>(
   'POST_STUDY_RECORD_COMMENT',
   async params => {
+    const { study_record_id } = params
+    console.log(params, 'POST_STUDY_RECORD_COMMENT')
     const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/study_record_comments/`,
+      `${studyRecordUrl}/${study_record_id}/study_record_comments/`,
       params,
       auth
     )
@@ -119,9 +103,9 @@ export const postComment = asyncActionCreator<any, any, Error>(
 
 export const deleteComment = asyncActionCreator<any, any, Error>(
   'DELETE_COMMENT',
-  async params => {
+  async ({ id, study_record_id }) => {
     const res = await axios.delete(
-      `${process.env.REACT_APP_API_URL}/study_record_comments/${params.id}`,
+      `${studyRecordUrl}/${study_record_id}/study_record_comments/${id}`,
       auth
     )
 

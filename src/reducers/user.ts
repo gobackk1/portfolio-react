@@ -36,7 +36,7 @@ export default reducerWithInitialState(initialState)
   })
   .cases(
     [login.async.done, register.async.done],
-    (state, { params, result }: AuthDoneParams) => {
+    (state, { params, result }) => {
       return {
         ...state,
         ...result.data,

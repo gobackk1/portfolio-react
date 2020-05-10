@@ -7,6 +7,8 @@ import Modal from '@/components/Modal'
 import StudyRecord from '@/components/StudyRecord'
 import ProfileForm from '@/components/ProfileForm'
 import FollowButton from '@/components/FollowButton'
+import store from '@/store'
+import { initProfile } from '@/actions/userProfile'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   user: any
@@ -41,6 +43,24 @@ class Profile extends React.Component<Props, State> {
         }
       }
     ],
+    // study_records: {
+    //   records: [
+    //     {
+    //       user: {
+    //         name: '',
+    //         image_name: 'default.jpg'
+    //       },
+    //       date: '01/01',
+    //       record: {
+    //         user_id: 0,
+    //         comment: '',
+    //         teaching_material: '',
+    //         study_hours: 0,
+    //         study_record_comments: []
+    //       }
+    //     }
+    //   ]
+    // },
     total_study_hours: 0,
     followings_count: 0,
     followers_count: 0,
@@ -58,10 +78,12 @@ class Profile extends React.Component<Props, State> {
       `${process.env.REACT_APP_API_URL}/users/${id}`,
       auth
     )
+
     this.setState({ ...res.data, loaded: true })
   }
 
-  setCurrentUserProfile = () => {
+  setCurrentUserProfile = async () => {
+    await store.dispatch(initProfile(store.getState().user.id))
     this.setState(this.props.userProfile)
   }
 

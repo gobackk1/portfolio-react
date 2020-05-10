@@ -17,7 +17,7 @@ class RecordsList extends React.Component<Props> {
     return (
       <>
         <ul className="record-list">
-          {_.map(this.props.studyRecords, (record, index) => (
+          {this.props.studyRecords.records.map((record, index) => (
             <li key={index} className="record-list__item">
               <StudyRecord record={record}></StudyRecord>
             </li>

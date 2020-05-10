@@ -1,13 +1,18 @@
 import React from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import LikeCounter from '@/components/LikeCounter'
-import Render from './Render'
+import classNames from 'classnames'
 
 interface Props extends RouteComponentProps {
   record: any
+  link?: boolean
 }
 
 class StudyRecord extends React.Component<Props, {}> {
+  static defaultProps = {
+    link: true
+  }
+
   renderIfRecordHasTag = study_genre_list => {
     if (!study_genre_list) return ''
     return study_genre_list.map((genre, index) => (
@@ -21,6 +26,7 @@ class StudyRecord extends React.Component<Props, {}> {
     id,
     { nativeEvent }
   ) => {
+    if (!this.props.link) return
     if (nativeEvent.target.tagName.toLowerCase() === 'button') return
     this.props.history.push(`/record/${id}`)
   }
@@ -33,19 +39,22 @@ class StudyRecord extends React.Component<Props, {}> {
     const {
       id,
       record,
-      record: {
-        comment,
-        teaching_material,
-        study_hours,
-        study_record_comments,
-        study_genre_list
-      },
+      record: { comment, teaching_material, study_hours, study_genre_list },
+      comments,
       date,
       user
     } = this.props.record
+
+    const cardRecordClass = classNames({
+      'card-record': true,
+      'card-record--enable-link': this.props.link
+    })
+
+    console.log(record, 'record')
+
     return (
       <div
-        className="card-record"
+        className={cardRecordClass}
         onClick={e => this.onClickCardRecord!(id, e)}
       >
         <div className="card-record__img">
@@ -84,7 +93,7 @@ class StudyRecord extends React.Component<Props, {}> {
               <div className="comment-counter">
                 <i className="far fa-comment"></i>
                 <span className="counter">
-                  {study_record_comments ? study_record_comments.length : 0}
+                  {comments ? comments.length : 0}
                 </span>
               </div>
               <div>

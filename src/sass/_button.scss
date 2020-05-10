@@ -31,6 +31,15 @@
   color: $color_primary;
 }
 
+.button-back {
+  @extend %button-cmn-1;
+}
+
+.button-comment {
+  @extend %button-cmn-1;
+  color: $color_sub;
+}
+
 .button-login-or-register {
   text-decoration: underline;
 }

@@ -43,14 +43,14 @@ class UserShow extends React.Component<Props, {}> {
   render() {
     return (
       <>
-        <h3>Users detail</h3>
+        {/* <h3>Users detail</h3>
         <ul>
           <li>{this.state.user.id}</li>
           <li>{this.state.user.name}</li>
           <li>{this.state.user.email}</li>
           <li>{this.state.user.created_at}</li>
         </ul>
-        <Link to="/explore">戻る</Link>
+        <Link to="/explore">戻る</Link> */}
       </>
     )
   }

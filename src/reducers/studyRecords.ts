@@ -19,83 +19,79 @@ type AuthDoneParams = {
 }
 
 const initialState: any = {
-  0: {
-    user: {
-      name: '',
-      image_name: 'default.jpg'
-    },
-    date: '01/01',
-    record: {
-      user_id: 0,
-      comment: '',
-      teaching_material: '',
-      study_hours: 0,
-      study_record_comments: []
+  loaded: false,
+  records: [
+    {
+      user: {
+        name: '',
+        image_name: 'default.jpg'
+      },
+      date: '01/01',
+      record: {
+        user_id: 0,
+        comment: '',
+        teaching_material: '',
+        study_hours: 0,
+        study_record_comments: []
+      }
     }
-  }
+  ]
 }
 
 export default reducerWithInitialState(initialState)
-  // .cases(
-  //   [postStudyRecord.async.failed, readStudyRecords.async.failed],
-  //   state => {
-  //     return {
-  //       ...state
-  //     }
-  //   }
-  // )
   .cases(
     [readStudyRecords.async.done, searchStudyRecords.async.done],
-    (state, done) => {
-      return _.mapKeys(done.result.data, 'id')
+    (state, { result }) => {
+      console.log(state, 'readStudyRecords')
+      return {
+        loaded: true,
+        records: [...result.data]
+      }
     }
   )
   .cases(
     [getStudyRecord.async.done, putStudyRecord.async.done],
-    (state, done) => {
-      const data = done.result.data
-      return {
-        ...state,
-        [data.id]: data
-      }
+    (state, { result }) => {
+      const data = result.data
+      const index = state.records.findIndex(r => r.id === data.id)
+      if (index !== -1) state.records[index] = data
+
+      console.log(state, 'getStudyRecord or putStudyRecord')
+      return { ...state }
     }
   )
-  .case(postStudyRecord.async.done, (state, done) => {
-    console.log(done.result.data, 'done.result.data')
-    return {
-      ...state,
-      [done.result.data.id]: done.result.data
-    }
-  })
-  .case(deleteStudyRecord.async.done, (state, done) => {
-    delete state[done.result.data]
+  .case(postStudyRecord.async.done, (state, { result }) => {
+    const data = result.data
+    state.records.unshift(data)
+
     return { ...state }
   })
-  .case(postComment.async.done, (state, done) => {
-    const study_record_id = done.result.data.study_record_id
-    const data = done.result.data
+  .case(deleteStudyRecord.async.done, (state, { result }) => {
+    const id = result.data
+    const index = state.records.findIndex(r => r.id === id)
+    state.records.splice(index, 1)
+
+    console.log(state, 'deleteStudyRecord')
     return {
-      ...state,
-      [study_record_id]: {
-        ...state[study_record_id],
-        study_record_comments: [
-          ...state[study_record_id].study_record_comments,
-          data
-        ]
-      }
+      ...state
     }
   })
-  .case(deleteComment.async.done, (state, done) => {
-    const data = done.result.data
-    const study_record_id = done.params.study_record_id
-    const array = state[study_record_id].study_record_comments.filter(
-      comment => comment.id !== data
-    )
-    return {
-      ...state,
-      [study_record_id]: {
-        ...state[study_record_id],
-        study_record_comments: [...array]
-      }
-    }
+  .case(postComment.async.done, (state, { result }) => {
+    const study_record_id = result.data.comment.study_record_id
+    const data = result.data
+    const index = state.records.findIndex(r => r.id === study_record_id)
+    state.records[index].comments.push(data)
+
+    console.log(state, 'postComment')
+    return { ...state }
+  })
+  .case(deleteComment.async.done, (state, { result }) => {
+    const { id, study_record_id } = result.data
+    const rindex = state.records.findIndex(r => r.id === study_record_id)
+    const { comments } = state.records[rindex]
+    const cindex = comments.findIndex(c => c.id === id)
+    comments.splice(cindex, 1)
+
+    console.log(state, 'deleteComment')
+    return { ...state }
   })

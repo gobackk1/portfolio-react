@@ -5,4 +5,10 @@ import users from '@/reducers/users'
 import userProfile from '@/reducers/userProfile'
 import studyRecords from '@/reducers/studyRecords'
 
-export default combineReducers({ user, users, userProfile, studyRecords, form })
+export default combineReducers({
+  user,
+  users,
+  userProfile,
+  studyRecords,
+  form
+})

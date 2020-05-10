@@ -2,6 +2,9 @@
 $color_primary: #2794aa;
 $color_primary_light: lighten($color_primary, 30%);
 $color_primary_dark: darken($color_primary, 20%);
+$color_sub: #2f3c53;
+$color_sub_light: lighten($color_sub, 30%);
+$color_sub_dark: darken($color_sub, 20%);
 $color_accent: #ff6249;
 $color_accent_light: lighten($color_accent, 30%);
 $color_accent_dark: darken($color_accent, 20%);
@@ -30,6 +33,8 @@ $base_line_height: 1.5;
 // variable
 $container_width: 1000;
 $login_form_width: 300;
+$record_form_width: 400;
+$comment_form_width: $record_form_width;
 
 // layer
 $layer_modal: 10;

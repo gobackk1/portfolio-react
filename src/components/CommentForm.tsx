@@ -32,8 +32,13 @@ class CommentForm extends React.Component<
 
     return (
       <>
-        <textarea placeholder={label} type={type} {...input} />
-        <div>{touched && error}</div>
+        <textarea
+          placeholder={label}
+          type={type}
+          {...input}
+          className="textarea"
+        />
+        <div className="error-msg">{touched && error}</div>
       </>
     )
   }
@@ -41,15 +46,22 @@ class CommentForm extends React.Component<
   render() {
     const { handleSubmit, pristine, submitting, invalid } = this.props
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
-        <p>コメントする</p>
-        <Field
-          type="text"
-          name="comment_body"
-          label="comment_body"
-          component={this.renderField}
-        ></Field>
-        <button disabled={pristine || submitting || invalid}>送信</button>
+      <form onSubmit={handleSubmit(this.onSubmit)} className="form--comment">
+        <p className="form__title">コメントする</p>
+        <div className="form__input">
+          <Field
+            type="text"
+            name="comment_body"
+            label="コメントを返信する。（100字以内）"
+            component={this.renderField}
+          ></Field>
+        </div>
+        <button
+          disabled={pristine || submitting || invalid}
+          className="button-submit"
+        >
+          送信
+        </button>
       </form>
     )
   }
@@ -57,8 +69,13 @@ class CommentForm extends React.Component<
 
 const validate = (values: any) => {
   const errors: any = {}
-  if (!values.comment) {
-    errors.comment = 'コメントを入力してください'
+  if (!values.comment_body) {
+    errors.comment_body = 'コメントを入力してください'
+  }
+  if (values.comment_body) {
+    if (values.comment_body.length > 100) {
+      errors.comment_body = 'コメントは100字以内にしてください'
+    }
   }
   return errors
 }

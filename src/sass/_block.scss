@@ -207,11 +207,12 @@
   padding: 15px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  cursor: pointer;
   transition: background 0.3s;
-
-  &:hover {
-    background: $color_accent_light;
+  &--enable-link {
+    cursor: pointer;
+    &:hover {
+      background: $color_accent_light;
+    }
   }
   &__profile {
     flex: auto;
@@ -234,6 +235,19 @@
     align-items: center;
     min-width: 150px;
   }
+  &__tail {
+    min-width: 150px;
+    text-align: right;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__tail-date {
+    width: 100%;
+  }
+  &__tail-button {
+    width: 100%;
+    align-self: flex-end;
+  }
 }
 
 .card-record {
@@ -242,10 +256,12 @@
   border-bottom: 1px solid $color_gray_1;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  cursor: pointer;
   transition: background 0.3s;
-  &:hover {
-    background: $color_accent_light;
+  &--enable-link {
+    cursor: pointer;
+    &:hover {
+      background: $color_accent_light;
+    }
   }
   &__img {
     min-width: 120px;
@@ -307,9 +323,18 @@
 }
 
 .ReactModal__Content {
+  padding: 40px !important;
   background: $color_light_shade !important;
 }
 
 .ReactModal__Overlay {
   z-index: $layer_modal;
+}
+
+.caution {
+  color: $color_danger;
+}
+
+.font-sm {
+  font-size: 75%;
 }

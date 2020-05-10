@@ -2,7 +2,8 @@
   padding: 20px;
   font-size: 18px;
   &__title {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
   }
@@ -13,20 +14,38 @@
   &__input {
     margin-bottom: 20px;
   }
-  &__section {
-    max-width: $login_form_width + px;
+  &__notice {
+    margin-bottom: 20px;
+  }
+  &--login {
+    width: $login_form_width + px;
+  }
+  &--record {
+    width: $record_form_width + px;
+  }
+  &--comment {
+    width: $comment_form_width + px;
   }
 }
 
-.input {
-  width: $login_form_width + px;
-  height: 40px;
+%input {
+  width: 100%;
   background-color: $color_input_bg;
   padding: 10px;
   display: block;
   &::placeholder {
     font-size: 15px;
   }
+}
+
+.input {
+  @extend %input;
+  height: 40px;
+}
+
+.textarea {
+  @extend %input;
+  height: 140px;
 }
 
 .error-msg {
