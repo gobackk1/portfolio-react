@@ -121,7 +121,8 @@
   &__body {
     position: relative;
     padding: 3px 10px;
-    background: $color_info;
+    color: $color_white;
+    background: $color_sub_light;
     z-index: 1;
   }
   &::after {
@@ -134,7 +135,7 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    background: $color_info;
+    background: $color_sub_light;
     transform: rotate(45deg);
     z-index: 0;
   }
@@ -196,6 +197,17 @@
   &__footer-item {
     display: inline-block;
     margin-right: 10px;
+  }
+}
+
+.table-report {
+  margin: 0 auto 30px;
+  text-align: center;
+  font-size: 22px;
+  th,
+  td {
+    padding: 10px 30px;
+    border: 1px solid $color_gray_1;
   }
 }
 
@@ -322,6 +334,8 @@
   }
 }
 
+// react-modalのオーバーライド
+
 .ReactModal__Content {
   padding: 40px !important;
   background: $color_light_shade !important;
@@ -331,13 +345,7 @@
   z-index: $layer_modal;
 }
 
-.caution {
-  color: $color_danger;
-}
-
-.font-sm {
-  font-size: 75%;
-}
+// recharts.js
 
 .custom-tooltip {
   background: $color_info;

@@ -30,13 +30,14 @@ class Report extends React.Component {
   }
   render() {
     return (
-      <>
-        <table>
+      <div className="l-inner">
+        <h2 className="title-l mb40">総勉強時間</h2>
+        <table className="table-report">
           <thead>
             <tr>
               <th>今日</th>
               <th>今週</th>
-              <th>総計</th>
+              <th>今までの総計</th>
             </tr>
           </thead>
           <tbody>
@@ -47,11 +48,15 @@ class Report extends React.Component {
             </tr>
           </tbody>
         </table>
-        <BarChartGraph data={this.state.study_time_per_week}></BarChartGraph>
+        <h2 className="title-l mb40">今週のレポート</h2>
+        <div className="mb30">
+          <BarChartGraph data={this.state.study_time_per_week}></BarChartGraph>
+        </div>
+        <h3 className="title-m mb40">教材別</h3>
         <PieChartGraph
           data={this.state.report_by_teaching_material}
         ></PieChartGraph>
-      </>
+      </div>
     )
   }
 }

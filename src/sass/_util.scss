@@ -19,3 +19,25 @@ $values: 10, 15, 20, 30, 40, 50;
     }
   }
 }
+
+.caution {
+  color: $color_danger;
+}
+
+.font-sm {
+  font-size: 75%;
+}
+
+.title-l {
+  padding: 10px 20px;
+  // background: $color_sub_light;
+  font-size: 24px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.title-m {
+  padding: 4px 5px 4px 15px;
+  font-size: 20px;
+  border-left: 5px solid $color_primary;
+}
