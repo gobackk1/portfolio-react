@@ -4,11 +4,13 @@ import user from '@/reducers/user'
 import users from '@/reducers/users'
 import userProfile from '@/reducers/userProfile'
 import studyRecords from '@/reducers/studyRecords'
+import teachingMaterials from '@/reducers/teachingMaterials'
 
 export default combineReducers({
   user,
   users,
   userProfile,
   studyRecords,
-  form
+  form,
+  teachingMaterials
 })
