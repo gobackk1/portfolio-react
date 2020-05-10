@@ -2,7 +2,6 @@ import React from 'react'
 import {
   BarChart,
   Bar,
-  ResponsiveContainer,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -33,7 +32,7 @@ class BarChartGraph extends React.Component<Props, {}> {
         <XAxis dataKey="date" />
         <YAxis />
         <Tooltip content={CustomTooltip} />
-        <Legend />
+        {/* <Legend /> */}
         <Bar dataKey="study_hour" name="勉強時間" fill="#8884d8" barSize={50} />
       </BarChart>
     )
