@@ -3,6 +3,7 @@ import StudyRecord from '@/components/StudyRecord'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { readStudyRecords } from '@/actions/studyRecords'
+import store from '@/store'
 
 interface Props {
   studyRecords: any
@@ -11,7 +12,7 @@ interface Props {
 
 class RecordsList extends React.Component<Props> {
   componentDidMount() {
-    this.props.readStudyRecords()
+    this.props.readStudyRecords(store.getState().user.id)
   }
   render() {
     return (

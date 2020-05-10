@@ -14,12 +14,14 @@ class RecordForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
   {}
 > {
-  onSubmit = async ({ title }: any) => {
+  onSubmit = async (values: any) => {
     const {
       user: { id },
       closeModal
     } = this.props
-    const res = await store.dispatch(postTeachingMaterial({ title, id }))
+    const res = await store.dispatch(
+      postTeachingMaterial({ ...values, userId: id })
+    )
     if (res.status === 200) closeModal!()
   }
 

@@ -15,13 +15,19 @@ const initialState = {
   ]
 }
 
-export default reducerWithInitialState(initialState).case(
-  readTeachingMaterial.async.done,
-  (state, { result: { data } }) => {
+export default reducerWithInitialState(initialState)
+  .case(readTeachingMaterial.async.done, (state, { result: { data } }: any) => {
     console.log(data, 'readTeachingMaterial.async.done')
     return {
       loaded: true,
       materials: [...data]
     }
-  }
-)
+  })
+  .case(postTeachingMaterial.async.done, (state, { result }) => {
+    console.log(result, 'postTeachingMaterial.async.done')
+    state.materials.push(result.data)
+    return {
+      ...state,
+      materials: [...state.materials]
+    }
+  })
