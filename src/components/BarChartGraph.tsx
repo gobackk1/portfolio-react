@@ -2,7 +2,7 @@ import React from 'react'
 import {
   BarChart,
   Bar,
-  Cell,
+  ResponsiveContainer,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -15,11 +15,13 @@ interface Props {
 }
 class BarChartGraph extends React.Component<Props, {}> {
   render() {
+    const { data } = this.props
+
     return (
       <BarChart
         width={800}
         height={300}
-        data={this.props.data}
+        data={data}
         margin={{
           top: 5,
           right: 30,
@@ -30,12 +32,24 @@ class BarChartGraph extends React.Component<Props, {}> {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis />
-        <Tooltip />
+        <Tooltip content={CustomTooltip} />
         <Legend />
-        <Bar dataKey="study_hour" fill="#8884d8" />
+        <Bar dataKey="study_hour" name="勉強時間" fill="#8884d8" barSize={50} />
       </BarChart>
     )
   }
+}
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active) {
+    return (
+      <div className="custom-tooltip">
+        <p className="label">{`${label} : ${payload[0].value}時間`}</p>
+      </div>
+    )
+  }
+
+  return null
 }
 
 export default BarChartGraph

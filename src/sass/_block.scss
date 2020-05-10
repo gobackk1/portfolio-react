@@ -338,3 +338,9 @@
 .font-sm {
   font-size: 75%;
 }
+
+.custom-tooltip {
+  background: $color_info;
+  padding: 5px;
+  border: 1px solid;
+}

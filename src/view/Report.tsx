@@ -10,18 +10,8 @@ class Report extends React.Component {
       week: 0,
       total: 0
     },
-    study_time_per_week: [
-      {
-        date: '1/1',
-        study_hour: 0
-      }
-    ],
-    report_by_teaching_material: [
-      {
-        teaching_material: 'genre',
-        study_hour: 0
-      }
-    ]
+    study_time_per_week: [],
+    report_by_teaching_material: []
   }
   fetchData = async () => {
     const res = await axios.get(
