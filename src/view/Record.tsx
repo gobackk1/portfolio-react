@@ -2,20 +2,32 @@ import React from 'react'
 import Modal from '@/components/Modal'
 import RecordForm from '@/components/RecordForm'
 import MaterialForm from '@/components/MaterialForm'
-import { readTeachingMaterial } from '@/actions/teachingMaterials'
+import {
+  readTeachingMaterial,
+  deleteTeachingMaterial
+} from '@/actions/teachingMaterials'
 import store from '@/store'
 import { connect } from 'react-redux'
 
 interface Props {
   teachingMaterials: any
+  user: any
 }
 
 class Record extends React.Component<Props, {}> {
   componentDidMount() {
     store.dispatch(readTeachingMaterial(store.getState().user.id))
   }
+
+  onClickDelete = (userId: number, id: number) => {
+    store.dispatch(deleteTeachingMaterial({ userId, id }))
+  }
+
   render() {
-    const { materials } = this.props.teachingMaterials
+    const {
+      teachingMaterials: { materials },
+      user
+    } = this.props
     return (
       <>
         <Modal openButtonText="教材なしで記録する" buttonClassName="mock">
@@ -24,8 +36,16 @@ class Record extends React.Component<Props, {}> {
         <Modal openButtonText="新しい教材を登録する" buttonClassName="mock">
           <MaterialForm></MaterialForm>
         </Modal>
-        {materials.map(({ title }, i) => (
-          <div key={i}>{title}</div>
+        {materials.map(({ title, id }, i) => (
+          <div key={i}>
+            {title}
+            <button
+              onClick={() => this.onClickDelete(user.id, id)}
+              type="button"
+            >
+              削除
+            </button>
+          </div>
         ))}
       </>
     )
@@ -33,7 +53,8 @@ class Record extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = state => ({
-  teachingMaterials: state.teachingMaterials
+  teachingMaterials: state.teachingMaterials,
+  user: state.user
 })
 
 export default connect(mapStateToProps, null)(Record)

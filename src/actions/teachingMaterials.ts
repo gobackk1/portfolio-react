@@ -20,7 +20,8 @@ export const postTeachingMaterial = asyncActionCreator<any, any, Error>(
 
 export const deleteTeachingMaterial = asyncActionCreator<any, any, Error>(
   'DELETE_TEACHING_MATERIAL',
-  async ({ id, userId }) => {
+  async ({ userId, id }) => {
+    console.log(userId, id, 'DELETE_TEACHING_MATERIAL')
     return await axios.delete(
       `${usersUrl}/${userId}/teaching_materials/${id}`,
       auth

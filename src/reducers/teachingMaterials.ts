@@ -9,6 +9,7 @@ const initialState = {
   loaded: false,
   materials: [
     {
+      id: 0,
       userId: 0,
       title: ''
     }
@@ -29,5 +30,14 @@ export default reducerWithInitialState(initialState)
     return {
       ...state,
       materials: [...state.materials]
+    }
+  })
+  .case(deleteTeachingMaterial.async.done, (state, { result }) => {
+    console.log(result, 'deleteTeachingMaterial.async.done')
+    const id = result.data
+    const index = state.materials.findIndex(m => m.id === id)
+    state.materials.splice(index, 1)
+    return {
+      ...state
     }
   })
