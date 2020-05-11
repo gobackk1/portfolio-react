@@ -9,6 +9,7 @@ interface Props {
   user?: any
   closeModal?: () => void
   type: 'post' | 'edit'
+  material?: any
 }
 
 class RecordForm extends React.Component<
@@ -30,7 +31,15 @@ class RecordForm extends React.Component<
   }
 
   private dispatchPostStudyRecord = async values => {
-    const res = await store.dispatch(postStudyRecord(values))
+    const { material } = this.props
+    const teaching_material = material
+      ? material.title
+      : values.teaching_material
+
+    const res = await store.dispatch(
+      postStudyRecord({ ...values, teaching_material })
+    )
+
     if (res.status === 200) this.props.closeModal!()
   }
 
@@ -66,8 +75,10 @@ class RecordForm extends React.Component<
       input,
       label,
       type,
+      value,
       meta: { touched, error }
     } = field
+    console.log(field, 'field')
 
     return (
       <>
@@ -79,6 +90,25 @@ class RecordForm extends React.Component<
         ></input>
         <div className="error-msg">{touched && error}</div>
       </>
+    )
+  }
+
+  renderMaterial = () => {
+    const { material } = this.props
+
+    if (material) {
+      return <div>{material.title}</div>
+    }
+    return (
+      <div className="form__input">
+        教材<span className="caution">*</span>
+        <Field
+          label="何を利用して学びましたか？"
+          name="teaching_material"
+          type="text"
+          component={this.renderField}
+        ></Field>
+      </div>
     )
   }
 
@@ -107,15 +137,7 @@ class RecordForm extends React.Component<
       <form onSubmit={handleSubmit(this.onSubmit)} className="form--record">
         <p className="form__title">{this.formTitle}</p>
 
-        <div className="form__input">
-          教材<span className="caution">*</span>
-          <Field
-            label="何を利用して学びましたか？"
-            name="teaching_material"
-            type="text"
-            component={this.renderField}
-          ></Field>
-        </div>
+        {this.renderMaterial()}
         <div className="form__input">
           勉強時間<span className="caution">*</span>
           <Field

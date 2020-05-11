@@ -23,6 +23,8 @@ class Record extends React.Component<Props, {}> {
     store.dispatch(deleteTeachingMaterial({ userId, id }))
   }
 
+  onClickRecord = () => {}
+
   render() {
     const {
       teachingMaterials: { materials },
@@ -36,17 +38,23 @@ class Record extends React.Component<Props, {}> {
         <Modal openButtonText="新しい教材を登録する" buttonClassName="mock">
           <MaterialForm></MaterialForm>
         </Modal>
-        {materials.map(({ title, id }, i) => (
-          <div key={i}>
-            {title}
-            <button
-              onClick={() => this.onClickDelete(user.id, id)}
-              type="button"
-            >
-              削除
-            </button>
-          </div>
-        ))}
+        {materials.map((material, i) => {
+          const { title, id } = material
+          return (
+            <div key={i}>
+              {title}
+              <button
+                onClick={() => this.onClickDelete(user.id, id)}
+                type="button"
+              >
+                削除
+              </button>
+              <Modal openButtonText="記録する" buttonClassName="mock">
+                <RecordForm type="post" material={material}></RecordForm>
+              </Modal>
+            </div>
+          )
+        })}
       </>
     )
   }
