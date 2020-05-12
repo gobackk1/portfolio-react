@@ -2,8 +2,7 @@ import React from 'react'
 import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { updateProfile } from '@/actions/userProfile'
 import { connect } from 'react-redux'
-import { RouteComponentProps } from 'react-router'
-
+import { renderFile, renderField } from '@/util'
 interface Props {
   updateProfile: any
   userProfile: any
@@ -17,64 +16,13 @@ class ProfileForm extends React.Component<
   encodedImage!: string
 
   onSubmit: any = async (values: any) => {
-    console.log(values, 'values')
-
+    console.log(this.encodedImage)
     const res = await this.props.updateProfile({
       ...values,
       id: this.props.userProfile.user.id,
       image: this.encodedImage
     })
     if (res.status === 200) this.props.closeModal!()
-  }
-
-  renderField = field => {
-    const {
-      input,
-      label,
-      type,
-      meta: { touched, error }
-    } = field
-
-    return (
-      <>
-        <input placeholder={label} type={type} {...input} />
-        <div>{touched && error}</div>
-      </>
-    )
-  }
-  renderFile = field => {
-    let {
-      input: { value, name, onChange },
-      label,
-      type,
-      onFieldChange,
-      meta: { touched, error }
-    } = field
-
-    return (
-      <>
-        <input
-          placeholder={label}
-          type="file"
-          onChange={e => {
-            e.preventDefault()
-            if (!e.target.files) return
-            const reader = new FileReader()
-            reader.onloadend = () => {
-              if (!reader.result) return
-              const result = reader.result as string
-              const base64 = result.slice(result.indexOf(',') + 1)
-              this.encodedImage = base64
-            }
-            reader.readAsDataURL(e.target.files[0])
-
-            onChange(e.target.files[0])
-            onFieldChange && onFieldChange(e.target.files[0])
-          }}
-        />
-        <div>{touched && error}</div>
-      </>
-    )
   }
 
   render() {
@@ -86,13 +34,13 @@ class ProfileForm extends React.Component<
           name="image_select"
           label="image_select"
           type="file"
-          component={this.renderFile}
+          component={renderFile}
         ></Field>
         <Field
           name="user_bio"
           label="user_bio"
           type="text"
-          component={this.renderField}
+          component={renderField}
         ></Field>
         <button disabled={pristine || submitting || invalid}>送信</button>
       </form>

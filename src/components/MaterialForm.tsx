@@ -3,8 +3,12 @@ import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { connect } from 'react-redux'
 import store from '@/store'
 import { postTeachingMaterial } from '@/actions/teachingMaterials'
-import { withRouter } from 'react-router'
-
+import {
+  renderTextarea,
+  renderErrorMessages,
+  renderFile,
+  renderField
+} from '@/util'
 interface Props {
   user?: any
   closeModal?: () => void
@@ -14,6 +18,7 @@ class RecordForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
   {}
 > {
+  encodedImage!: string
   onSubmit = async (values: any) => {
     const {
       user: { id },
@@ -23,60 +28,6 @@ class RecordForm extends React.Component<
       postTeachingMaterial({ ...values, userId: id })
     )
     if (res.status === 200) closeModal!()
-  }
-
-  renderTextarea = field => {
-    const {
-      input,
-      label,
-      type,
-      meta: { touched, error }
-    } = field
-
-    return (
-      <div className="form__input">
-        <textarea
-          {...input}
-          cols="20"
-          rows="10"
-          placeholder={label}
-          className="textarea"
-        ></textarea>
-        <div className="error-msg">{touched && error}</div>
-      </div>
-    )
-  }
-
-  renderField = field => {
-    const {
-      input,
-      label,
-      type,
-      meta: { touched, error }
-    } = field
-
-    return (
-      <>
-        <input
-          {...input}
-          placeholder={label}
-          type={type}
-          className="input"
-        ></input>
-        <div className="error-msg">{touched && error}</div>
-      </>
-    )
-  }
-
-  renderErrorMessages = error => {
-    if (!error) return
-    return error.response.data.messages.map((msg, index) => {
-      return (
-        <p className="error-msg" key={index}>
-          *{msg}
-        </p>
-      )
-    })
   }
 
   render() {
@@ -98,7 +49,15 @@ class RecordForm extends React.Component<
             label="教材名を入力してください"
             name="title"
             type="text"
-            component={this.renderField}
+            component={renderField}
+          ></Field>
+        </div>
+        <div className="form__input">
+          <Field
+            name="image_select"
+            label="画像を選んでください"
+            type="file"
+            component={renderFile}
           ></Field>
         </div>
         <button

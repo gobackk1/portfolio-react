@@ -5,6 +5,7 @@ import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
 import store from '@/store'
 import Render from '@/components/Render'
+import { renderField, renderErrorMessages } from '@/util'
 
 interface Props {
   user?: any
@@ -40,32 +41,6 @@ class LoginForm extends React.Component<
     store.dispatch(clearError())
   }
 
-  renderField = field => {
-    const {
-      input,
-      label,
-      type,
-      meta: { touched, error }
-    } = field
-    return (
-      <div className="form__input">
-        <input placeholder={label} type={type} {...input} className="input" />
-        <div className="error-msg">{touched && error}</div>
-      </div>
-    )
-  }
-
-  renderErrorMessages = error => {
-    if (!error) return
-    return error.response.data.messages.map((msg, index) => {
-      return (
-        <p className="error-msg" key={index}>
-          *{msg}
-        </p>
-      )
-    })
-  }
-
   render() {
     const {
       handleSubmit,
@@ -81,48 +56,58 @@ class LoginForm extends React.Component<
         <p className="form__title">
           {this.state.isLoginForm ? 'ログイン' : '新規登録'}
         </p>
-        {this.renderErrorMessages(error)}
+        {renderErrorMessages(error)}
         <Render if={this.state.isLoginForm}>
           <FormSection name="login" className="form__section">
-            メール
-            <Field
-              label="例/ example@example.com"
-              name="email"
-              type="text"
-              component={this.renderField}
-            ></Field>
-            パスワード
-            <Field
-              label="パスワードを入力してください"
-              name="password"
-              type="password"
-              component={this.renderField}
-            ></Field>
+            <div className="form__input">
+              メール
+              <Field
+                label="例/ example@example.com"
+                name="email"
+                type="text"
+                component={renderField}
+              ></Field>
+            </div>
+            <div className="form__input">
+              パスワード
+              <Field
+                label="パスワードを入力してください"
+                name="password"
+                type="password"
+                component={renderField}
+              ></Field>
+            </div>
           </FormSection>
         </Render>
         <Render if={!this.state.isLoginForm}>
           <FormSection name="register" className="form__section">
-            ユーザー名
-            <Field
-              label="半角英数字6文字以上"
-              name="name"
-              type="text"
-              component={this.renderField}
-            ></Field>
-            メール
-            <Field
-              label="例/ example@example.com"
-              name="email"
-              type="text"
-              component={this.renderField}
-            ></Field>
-            パスワード
-            <Field
-              label="半角英数字6文字以上"
-              name="password"
-              type="password"
-              component={this.renderField}
-            ></Field>
+            <div className="form__input">
+              ユーザー名
+              <Field
+                label="半角英数字6文字以上"
+                name="name"
+                type="text"
+                component={renderField}
+              ></Field>
+            </div>
+            <div className="form__input">
+              メール
+              <Field
+                label="例/ example@example.com"
+                name="email"
+                type="text"
+                component={renderField}
+              ></Field>
+            </div>
+            <div className="form__input">
+              パスワード
+              <Field
+                label="半角英数字6文字以上"
+                name="password"
+                type="password"
+                component={renderField}
+              ></Field>
+            </div>
           </FormSection>
         </Render>
         <div className="form__buttons">

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import store from '@/store'
 import { postStudyRecord, putStudyRecord } from '@/actions/studyRecords'
 import { withRouter } from 'react-router'
+import { renderField, renderTextarea } from '@/util'
 
 interface Props {
   user?: any
@@ -48,51 +49,6 @@ class RecordForm extends React.Component<
     if (res.status === 200) this.props.closeModal!()
   }
 
-  renderTextarea = field => {
-    const {
-      input,
-      label,
-      type,
-      meta: { touched, error }
-    } = field
-
-    return (
-      <div className="form__input">
-        <textarea
-          {...input}
-          cols="20"
-          rows="10"
-          placeholder={label}
-          className="textarea"
-        ></textarea>
-        <div className="error-msg">{touched && error}</div>
-      </div>
-    )
-  }
-
-  renderField = field => {
-    const {
-      input,
-      label,
-      type,
-      value,
-      meta: { touched, error }
-    } = field
-    console.log(field, 'field')
-
-    return (
-      <>
-        <input
-          {...input}
-          placeholder={label}
-          type={type}
-          className="input"
-        ></input>
-        <div className="error-msg">{touched && error}</div>
-      </>
-    )
-  }
-
   renderMaterial = () => {
     const { material } = this.props
 
@@ -106,21 +62,10 @@ class RecordForm extends React.Component<
           label="何を利用して学びましたか？"
           name="teaching_material"
           type="text"
-          component={this.renderField}
+          component={renderField}
         ></Field>
       </div>
     )
-  }
-
-  renderErrorMessages = error => {
-    if (!error) return
-    return error.response.data.messages.map((msg, index) => {
-      return (
-        <p className="error-msg" key={index}>
-          *{msg}
-        </p>
-      )
-    })
   }
 
   render() {
@@ -144,7 +89,7 @@ class RecordForm extends React.Component<
             label=""
             name="study_hours"
             type="number"
-            component={this.renderField}
+            component={renderField}
           ></Field>
         </div>
         <div className="form__input">
@@ -153,7 +98,7 @@ class RecordForm extends React.Component<
             label="勉強内容をコメントしよう。（100字以内）"
             name="comment"
             text="text"
-            component={this.renderTextarea}
+            component={renderTextarea}
           ></Field>
         </div>
         <div className="form__input">
@@ -163,7 +108,7 @@ class RecordForm extends React.Component<
             label="例/ プログラミング,PHP"
             name="study_genre_list"
             type="text"
-            component={this.renderField}
+            component={renderField}
           ></Field>
           <small></small>
         </div>
