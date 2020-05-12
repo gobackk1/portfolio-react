@@ -6,7 +6,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  ResponsiveContainer
 } from 'recharts'
 
 interface Props {
@@ -17,24 +18,31 @@ class BarChartGraph extends React.Component<Props, {}> {
     const { data } = this.props
 
     return (
-      <BarChart
-        width={800}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip content={CustomTooltip} />
-        {/* <Legend /> */}
-        <Bar dataKey="study_hour" name="勉強時間" fill="#8884d8" barSize={50} />
-      </BarChart>
+      <ResponsiveContainer width="95%" height={400}>
+        <BarChart
+          width={800}
+          height={300}
+          data={data}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip content={CustomTooltip} />
+          {/* <Legend /> */}
+          <Bar
+            dataKey="study_hour"
+            name="勉強時間"
+            fill="#8884d8"
+            barSize={50}
+          />
+        </BarChart>
+      </ResponsiveContainer>
     )
   }
 }
