@@ -36,7 +36,7 @@ class Record extends React.Component<Props, {}> {
           <RecordForm type="post"></RecordForm>
         </Modal>
         <Modal openButtonText="新しい教材を登録する" buttonClassName="mock">
-          <MaterialForm></MaterialForm>
+          <MaterialForm type="post"></MaterialForm>
         </Modal>
         {materials.map((material, i) => {
           const { title, id } = material
@@ -57,6 +57,9 @@ class Record extends React.Component<Props, {}> {
               </button>
               <Modal openButtonText="記録する" buttonClassName="mock">
                 <RecordForm type="post" material={material}></RecordForm>
+              </Modal>
+              <Modal openButtonText="更新する" buttonClassName="mock">
+                <MaterialForm type="edit" material={material}></MaterialForm>
               </Modal>
             </div>
           )

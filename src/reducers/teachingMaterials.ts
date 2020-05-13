@@ -2,7 +2,8 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import {
   postTeachingMaterial,
   deleteTeachingMaterial,
-  readTeachingMaterial
+  readTeachingMaterial,
+  updateTeachingMaterial
 } from '@/actions/teachingMaterials'
 
 const initialState = {
@@ -28,8 +29,16 @@ export default reducerWithInitialState(initialState)
     console.log(result, 'postTeachingMaterial.async.done')
     state.materials.push(result.data)
     return {
-      ...state,
-      materials: [...state.materials]
+      ...state
+    }
+  })
+  .case(updateTeachingMaterial.async.done, (state, { result }) => {
+    console.log(result, 'updateTeachingMaterial.async.done')
+    const { data } = result
+    const index = state.materials.findIndex(m => m.id === data.id)
+    state.materials[index] = data
+    return {
+      ...state
     }
   })
   .case(deleteTeachingMaterial.async.done, (state, { result }) => {

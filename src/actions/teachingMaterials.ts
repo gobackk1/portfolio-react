@@ -18,6 +18,20 @@ export const postTeachingMaterial = asyncActionCreator<any, any, Error>(
   }
 )
 
+export const updateTeachingMaterial = asyncActionCreator<any, any, Error>(
+  'UPDATE_TEACHING_MATERIAL',
+  async params => {
+    const { user_id, id } = params
+    const res = await axios.put(
+      `${usersUrl}/${user_id}/teaching_materials/${id}`,
+      params,
+      auth
+    )
+    console.log(res.data, 'UPDATE_TEACHING_MATERIAL')
+    return res
+  }
+)
+
 export const deleteTeachingMaterial = asyncActionCreator<any, any, Error>(
   'DELETE_TEACHING_MATERIAL',
   async ({ userId, id }) => {
