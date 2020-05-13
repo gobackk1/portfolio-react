@@ -26,7 +26,7 @@ class Comment extends React.Component<Props> {
         <div className="card-user__profile">
           <div className="card-user__profile-head">
             <img
-              src={`${process.env.REACT_APP_API_URL}/images/user_images/${user.image_name}`}
+              src={`${process.env.REACT_APP_API_URL}${user.image_url}`}
               width="80"
               height="80"
               alt={user.name}

@@ -10,7 +10,7 @@ import _ from 'lodash'
 const initialState: any = {
   0: {
     id: 0,
-    image_name: 'default.jpg',
+    image_url: '/images/user_images/default.png.png',
     is_following: false,
     name: '',
     user_bio: ''

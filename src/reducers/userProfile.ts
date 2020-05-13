@@ -5,10 +5,8 @@ const initialState: any = {
   user: {
     id: 0,
     name: '',
-    email: '',
-    created_at: '',
     user_bio: '',
-    image_name: 'default.png'
+    image_url: '/images/user_images/default.png.png'
   },
   study_records: [{ comment: '', teaching_material: '', study_hours: 0 }],
   total_study_hours: 0
@@ -21,7 +19,7 @@ export default reducerWithInitialState(initialState)
     }
   })
   .case(updateProfile.async.done, (state, done) => {
-    console.log(done.result.data, 'reducer')
+    console.log(done.result.data, 'updateProfile.async.done')
     return {
       ...state,
       user: {

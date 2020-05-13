@@ -2,11 +2,12 @@ import React from 'react'
 import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { updateProfile } from '@/actions/userProfile'
 import { connect } from 'react-redux'
-import { renderFile, renderField } from '@/util'
+import { renderFile, renderField, encode64 } from '@/util'
 interface Props {
   updateProfile: any
   userProfile: any
   closeModal?: () => void
+  update: () => void
 }
 
 class ProfileForm extends React.Component<
@@ -16,13 +17,18 @@ class ProfileForm extends React.Component<
   encodedImage!: string
 
   onSubmit: any = async (values: any) => {
-    console.log(this.encodedImage)
-    const res = await this.props.updateProfile({
+    const { updateProfile, closeModal, update, userProfile } = this.props
+    const encodedImage = await encode64(values.image_select)
+
+    const res = await updateProfile({
       ...values,
-      id: this.props.userProfile.user.id,
-      image: this.encodedImage
+      id: userProfile.user.id,
+      image_select: encodedImage
     })
-    if (res.status === 200) this.props.closeModal!()
+    if (res.status === 200) {
+      closeModal!()
+      if (update) update()
+    }
   }
 
   render() {

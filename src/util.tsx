@@ -50,12 +50,11 @@ export const renderTextarea = field => {
   )
 }
 
-export const renderFile = (field, image) => {
+export const renderFile = field => {
   let {
     input: { value, name, onChange },
     label,
     type,
-    onFieldChange,
     meta: { touched, error }
   } = field
 
@@ -67,20 +66,23 @@ export const renderFile = (field, image) => {
         onChange={e => {
           e.preventDefault()
           if (!e.target.files) return
-          const reader = new FileReader()
-          reader.onloadend = () => {
-            if (!reader.result) return
-            const result = reader.result as string
-            const base64 = result.slice(result.indexOf(',') + 1)
-            image = base64
-          }
-          reader.readAsDataURL(e.target.files[0])
-
           onChange(e.target.files[0])
-          onFieldChange && onFieldChange(e.target.files[0])
         }}
       />
       <div>{touched && error}</div>
     </>
   )
+}
+
+export const encode64 = image => {
+  return new Promise(resolve => {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (!reader.result) return
+      const result = reader.result as string
+      const base64 = result.slice(result.indexOf(',') + 1)
+      resolve(base64)
+    }
+    reader.readAsDataURL(image)
+  })
 }

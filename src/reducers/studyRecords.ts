@@ -24,7 +24,7 @@ const initialState: any = {
     {
       user: {
         name: '',
-        image_name: 'default.jpg'
+        image_url: '/images/user_images/default.png.png'
       },
       date: '01/01',
       record: {

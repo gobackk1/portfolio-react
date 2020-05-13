@@ -25,13 +25,13 @@ class Profile extends React.Component<Props, State> {
       email: '',
       created_at: '',
       user_bio: '',
-      image_name: 'default.png'
+      image_url: '/images/user_images/default.png'
     },
     study_records: [
       {
         user: {
           name: '',
-          image_name: 'default.jpg'
+          image_url: '/images/user_images/default.png'
         },
         date: '01/01',
         record: {
@@ -43,24 +43,6 @@ class Profile extends React.Component<Props, State> {
         }
       }
     ],
-    // study_records: {
-    //   records: [
-    //     {
-    //       user: {
-    //         name: '',
-    //         image_name: 'default.jpg'
-    //       },
-    //       date: '01/01',
-    //       record: {
-    //         user_id: 0,
-    //         comment: '',
-    //         teaching_material: '',
-    //         study_hours: 0,
-    //         study_record_comments: []
-    //       }
-    //     }
-    //   ]
-    // },
     total_study_hours: 0,
     followings_count: 0,
     followers_count: 0,
@@ -68,9 +50,16 @@ class Profile extends React.Component<Props, State> {
     registered_date: ''
   }
 
+  currentUser!: boolean
+
   userId: number = this.props.match.params.id
     ? Number(this.props.match.params.id)
     : this.props.user.id
+
+  constructor(props) {
+    super(props)
+    this.currentUser = this.props.match.params.id ? false : true
+  }
 
   setAnotherUserProfile = async (id: number) => {
     this.setState({ loaded: false })
@@ -101,20 +90,21 @@ class Profile extends React.Component<Props, State> {
 
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
-
+    const { user } = this.state
+    const update = this.currentUser ? this.setCurrentUserProfile : null
     return (
       <div className="l-inner">
         <div className="profile">
           <div className="profile__head">
             <img
-              src={`${process.env.REACT_APP_API_URL}/images/user_images/${this.state.user.image_name}`}
+              src={`${process.env.REACT_APP_API_URL}${user.image_url}`}
               width="120"
               height="120"
               alt="ユーザープロフィール画像"
             />
             <Render if={correctUser}>
               <Modal openButtonText="編集" buttonClassName="button-edit">
-                <ProfileForm></ProfileForm>
+                <ProfileForm update={update}></ProfileForm>
               </Modal>
             </Render>
             <Render if={!correctUser && this.state.loaded}>
