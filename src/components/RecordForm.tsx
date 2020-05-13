@@ -53,7 +53,17 @@ class RecordForm extends React.Component<
     const { material } = this.props
 
     if (material) {
-      return <div>{material.title}</div>
+      return (
+        <>
+          <div>{material.title}</div>
+          <img
+            src={`${process.env.REACT_APP_API_URL}${material.image_url}`}
+            width="80"
+            height="80"
+            alt="教材のデフォルト画像"
+          />
+        </>
+      )
     }
     return (
       <div className="form__input">
