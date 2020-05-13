@@ -8,11 +8,13 @@
 }
 
 $icons: (
-  star: f005
+  star: f005,
+  pen: f304,
+  book: f02d
 );
 
 @each $prop, $unicode in $icons {
-  .fa-icon-#{$unicode} {
+  .fa-icon-#{$prop} {
     @extend %fa-icon;
     &::before {
       content: unquote('"\\') + $unicode + unquote('"');

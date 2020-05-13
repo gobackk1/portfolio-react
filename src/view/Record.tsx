@@ -31,27 +31,34 @@ class Record extends React.Component<Props, {}> {
       user
     } = this.props
     return (
-      <>
-        <Modal openButtonText="教材なしで記録する" buttonClassName="mock">
+      <div className="l-inner">
+        <Modal
+          openButtonText="記録する"
+          buttonClassName="button-record fa-icon-pen mr30 mb30"
+        >
           <RecordForm type="post"></RecordForm>
         </Modal>
-        <Modal openButtonText="新しい教材を登録する" buttonClassName="mock">
+        <Modal
+          openButtonText="教材を登録する"
+          buttonClassName="button-material fa-icon-book"
+        >
           <MaterialForm type="post"></MaterialForm>
         </Modal>
         {materials.map((material, i) => {
           const { title, id } = material
           return (
-            <div key={i}>
+            <div key={i} className="mt30">
               <img
                 src={`${process.env.REACT_APP_API_URL}${material.image_url}`}
                 width="80"
                 height="80"
                 alt="教材のデフォルト画像"
               />
-              {title}
+              <div>{title}</div>
               <button
                 onClick={() => this.onClickDelete(user.id, id)}
                 type="button"
+                className="mock"
               >
                 削除
               </button>
@@ -64,7 +71,7 @@ class Record extends React.Component<Props, {}> {
             </div>
           )
         })}
-      </>
+      </div>
     )
   }
 }

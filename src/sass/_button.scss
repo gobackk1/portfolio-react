@@ -63,6 +63,20 @@
   }
 }
 
+.button-record {
+  @extend %button-cmn-1;
+  &::before {
+    margin-right: 5px;
+  }
+}
+
+.button-material {
+  @extend %button-cmn-1;
+  &::before {
+    margin-right: 5px;
+  }
+}
+
 %button-follow {
   @extend %button-cmn-1;
   border-color: $color_accent;
@@ -77,4 +91,8 @@
     color: #fff;
     background: $color_accent;
   }
+}
+
+.mock {
+  @extend %button-cmn-1;
 }
