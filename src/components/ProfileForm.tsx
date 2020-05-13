@@ -14,11 +14,12 @@ class ProfileForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
   {}
 > {
-  encodedImage!: string
-
   onSubmit: any = async (values: any) => {
     const { updateProfile, closeModal, update, userProfile } = this.props
-    const encodedImage = await encode64(values.image_select)
+    const { image_select } = values
+    const encodedImage = image_select
+      ? await encode64(values.image_select)
+      : null
 
     const res = await updateProfile({
       ...values,

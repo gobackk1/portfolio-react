@@ -10,7 +10,7 @@ const initialState = {
   materials: [
     {
       id: 0,
-      userId: 0,
+      user_id: 0,
       title: ''
     }
   ]

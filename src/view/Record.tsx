@@ -42,6 +42,12 @@ class Record extends React.Component<Props, {}> {
           const { title, id } = material
           return (
             <div key={i}>
+              <img
+                src={`${process.env.REACT_APP_API_URL}${material.image_url}`}
+                width="80"
+                height="80"
+                alt="教材のデフォルト画像"
+              />
               {title}
               <button
                 onClick={() => this.onClickDelete(user.id, id)}

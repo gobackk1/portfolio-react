@@ -6,11 +6,11 @@ const usersUrl = `${process.env.REACT_APP_API_URL}/users`
 
 export const postTeachingMaterial = asyncActionCreator<any, any, Error>(
   'POST_TEACHING_MATERIAL',
-  async ({ userId, title }) => {
-    console.log(`${usersUrl}/${userId}/teaching_materials`)
+  async params => {
+    const { user_id } = params
     const res = await axios.post(
-      `${usersUrl}/${userId}/teaching_materials`,
-      { title },
+      `${usersUrl}/${user_id}/teaching_materials`,
+      params,
       auth
     )
     console.log(res.data, 'POST_TEACHING_MATERIAL')

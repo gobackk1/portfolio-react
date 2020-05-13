@@ -7,7 +7,8 @@ import {
   renderTextarea,
   renderErrorMessages,
   renderFile,
-  renderField
+  renderField,
+  encode64
 } from '@/util'
 interface Props {
   user?: any
@@ -18,14 +19,21 @@ class RecordForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
   {}
 > {
-  encodedImage!: string
   onSubmit = async (values: any) => {
     const {
       user: { id },
       closeModal
     } = this.props
+    const { image_select } = values
+    const encodedImage = image_select
+      ? await encode64(values.image_select)
+      : null
     const res = await store.dispatch(
-      postTeachingMaterial({ ...values, userId: id })
+      postTeachingMaterial({
+        ...values,
+        user_id: id,
+        image_select: encodedImage
+      })
     )
     if (res.status === 200) closeModal!()
   }
