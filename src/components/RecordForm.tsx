@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import store from '@/store'
 import { postStudyRecord, putStudyRecord } from '@/actions/studyRecords'
 import { withRouter } from 'react-router'
-import { renderField, renderTextarea } from '@/util'
+import { renderField, renderTextarea, renderFile, encode64 } from '@/util'
 
 interface Props {
   user?: any
@@ -33,19 +33,33 @@ class RecordForm extends React.Component<
 
   private dispatchPostStudyRecord = async values => {
     const { material } = this.props
+    const { image_select } = values
     const teaching_material = material
       ? material.title
       : values.teaching_material
+    const image_url = material ? material.image_url : null
+    const encodedImage = image_select ? await encode64(image_select) : null
 
     const res = await store.dispatch(
-      postStudyRecord({ ...values, teaching_material })
+      postStudyRecord({
+        ...values,
+        teaching_material,
+        image_url,
+        image_select: encodedImage
+      })
     )
 
     if (res.status === 200) this.props.closeModal!()
   }
 
   private dispatchUpdateStudyRecord = async values => {
-    const res = await store.dispatch(putStudyRecord(values))
+    const { image_select } = values
+    const encodedImage = image_select ? await encode64(image_select) : null
+
+    const res = await store.dispatch(
+      putStudyRecord({ ...values, image_select: encodedImage })
+    )
+
     if (res.status === 200) this.props.closeModal!()
   }
 
@@ -84,6 +98,7 @@ class RecordForm extends React.Component<
       pristine,
       submitting,
       invalid,
+      material,
       reset,
       user: { error }
     } = this.props
@@ -111,6 +126,17 @@ class RecordForm extends React.Component<
             component={renderTextarea}
           ></Field>
         </div>
+        {!material && (
+          <div className="form__input">
+            画像
+            <Field
+              name="image_select"
+              label="画像を選んでください"
+              type="file"
+              component={renderFile}
+            ></Field>
+          </div>
+        )}
         <div className="form__input">
           タグ
           <br />

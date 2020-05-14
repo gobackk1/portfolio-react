@@ -63,9 +63,7 @@ class RecordForm extends React.Component<
       material: { id }
     } = this.props
     const { image_select } = values
-    const encodedImage = image_select
-      ? await encode64(values.image_select)
-      : null
+    const encodedImage = image_select ? await encode64(image_select) : null
     const res = await store.dispatch(
       updateTeachingMaterial({
         ...values,

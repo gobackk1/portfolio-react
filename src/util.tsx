@@ -68,6 +68,7 @@ export const renderFile = field => {
           if (!e.target.files) return
           onChange(e.target.files[0])
         }}
+        className="input"
       />
       <div>{touched && error}</div>
     </>

@@ -73,7 +73,17 @@ class StudyRecord extends React.Component<Props, {}> {
             <dt>
               <i className="fas fa-book large"></i>教材:
             </dt>
-            <dd>{teaching_material}</dd>
+            <dd>
+              {teaching_material}
+              {record.image_url && (
+                <img
+                  src={`${process.env.REACT_APP_API_URL}${record.image_url}`}
+                  width="80"
+                  height="80"
+                  alt={teaching_material.name}
+                />
+              )}
+            </dd>
           </dl>
           <dl className="record__list material-list">
             <dt>
