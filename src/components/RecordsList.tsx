@@ -2,18 +2,12 @@ import React from 'react'
 import StudyRecord from '@/components/StudyRecord'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { readStudyRecords } from '@/actions/studyRecords'
-import store from '@/store'
 
 interface Props {
-  studyRecords: any
-  readStudyRecords: any
+  studyRecords?: any
 }
 
 class RecordsList extends React.Component<Props> {
-  componentDidMount() {
-    this.props.readStudyRecords(store.getState().user.id)
-  }
   render() {
     return (
       <>
@@ -33,6 +27,4 @@ const mapStateToProps = state => ({
   studyRecords: state.studyRecords
 })
 
-const mapDispatchToProps = { readStudyRecords }
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecordsList)
+export default connect(mapStateToProps, null)(RecordsList)

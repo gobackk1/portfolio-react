@@ -1,10 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { readUsers, searchUsers } from '@/actions/users'
+import { readStudyRecords } from '@/actions/studyRecords'
 import { searchStudyRecords } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
 import classNames from 'classnames'
-import axios, { auth } from '@/axios'
+import store from '@/store'
+import { Waypoint } from 'react-waypoint'
+
 import {
   Link,
   Switch,
@@ -16,7 +19,6 @@ import RecordsList from '@/components/RecordsList'
 
 interface Props extends RouteComponentProps {
   user: any
-  readUsers: any
   searchUsers: any
   searchStudyRecords: any
 }
@@ -26,9 +28,73 @@ class Explore extends React.Component<Props, {}> {
   isUsersPage: () => boolean = () => /users/.test(window.location.pathname)
   isRecordsPage: () => boolean = () =>
     /studyrecords/.test(window.location.pathname)
+  users = {
+    currentPage: 1,
+    perPage: 10
+  }
+  records = {
+    currentPage: 1,
+    perPage: 10
+  }
+  state = {
+    loading: false
+  }
 
   componentWillMount() {
-    this.props.readUsers()
+    this.initialize()
+  }
+
+  initialize = async () => {
+    this.setState({ loading: true })
+    await Promise.all([
+      store.dispatch(
+        readUsers({
+          page: this.users.currentPage,
+          per: this.users.perPage
+        })
+      ),
+      store.dispatch(
+        readStudyRecords({
+          page: this.records.currentPage,
+          per: this.records.perPage
+        })
+      )
+    ])
+    this.setState({ loading: false })
+  }
+
+  loadUsersList: (() => Promise<void>) | undefined = async () => {
+    this.setState({ loading: true })
+    try {
+      await store.dispatch(
+        readUsers({
+          page: this.users.currentPage,
+          per: this.users.perPage
+        })
+      )
+      this.users.currentPage++
+    } catch (e) {
+      // NOTE: onEnterがnullを受け付けない
+      this.loadUsersList = undefined
+    }
+    this.setState({ loading: false })
+  }
+
+  loadRecordsList: (() => Promise<void>) | undefined = async () => {
+    this.setState({ loading: true })
+    try {
+      await store.dispatch(
+        readStudyRecords({
+          page: this.records.currentPage,
+          per: this.records.perPage
+        })
+      )
+      this.records.currentPage++
+    } catch (e) {
+      // NOTE: onEnterがnullを受け付けない
+      this.loadRecordsList = undefined
+    }
+    this.setState({ loading: false })
   }
 
   onChange = ({ nativeEvent }) => {
@@ -36,14 +102,13 @@ class Explore extends React.Component<Props, {}> {
       clearTimeout(this.searchQueue)
       this.searchQueue = null
     }
-    const queue = window.setTimeout(() => {
+    this.searchQueue = window.setTimeout(() => {
       if (this.isUsersPage()) {
-        this.props.searchUsers(nativeEvent.target.value)
+        store.dispatch(searchUsers(nativeEvent.target.value))
       } else {
-        this.props.searchStudyRecords(nativeEvent.target.value)
+        store.dispatch(searchStudyRecords(nativeEvent.target.value))
       }
     }, 500)
-    this.searchQueue = queue
   }
 
   render() {
@@ -78,9 +143,19 @@ class Explore extends React.Component<Props, {}> {
           <Switch>
             <Route path={`${match.url}/users`}>
               <UsersList></UsersList>
+              <Waypoint
+                onEnter={this.loadUsersList}
+                bottomOffset="-200px"
+              ></Waypoint>
+              {this.state.loading && '読み込み中MOCK'}
             </Route>
             <Route path={`${match.url}/studyrecords`}>
               <RecordsList></RecordsList>
+              <Waypoint
+                onEnter={this.loadRecordsList}
+                bottomOffset="-200px"
+              ></Waypoint>
+              {this.state.loading && '読み込み中MOCK'}
             </Route>
           </Switch>
         </div>
@@ -93,6 +168,4 @@ const mapStateToProps = (state: any) => ({
   user: state.user
 })
 
-const mapDispatchToProps = { readUsers, searchUsers, searchStudyRecords }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Explore)
+export default connect(mapStateToProps, null)(Explore)

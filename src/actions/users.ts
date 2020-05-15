@@ -6,11 +6,16 @@ const relationshipUrl: string = `${process.env.REACT_APP_API_URL}/relationships`
 
 export const readUsers = asyncActionCreator<any, any, Error>(
   'READ_USERS',
-  async () => {
-    const res = await axios.get(usersUrl, auth)
+  async ({ page, per }) => {
+    const res = await axios.get(`${usersUrl}?page=${page}&per=${per}`, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
+    }
+
+    if (!res.data.length) {
+      const json = JSON.stringify(res)
+      throw new Error(`追加するデータがありません。 ${json}`)
     }
 
     return res

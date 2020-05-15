@@ -5,11 +5,19 @@ const studyRecordUrl = `${process.env.REACT_APP_API_URL}/study_records`
 
 export const readStudyRecords = asyncActionCreator<any, any, Error>(
   'READ_STUDY_RECORDS',
-  async () => {
-    const res = await axios.get(studyRecordUrl, auth)
+  async ({ page, per }) => {
+    const res = await axios.get(
+      `${studyRecordUrl}?page=${page}&per=${per}`,
+      auth
+    )
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
+    }
+
+    if (!res.data.length) {
+      const json = JSON.stringify(res)
+      throw new Error(`追加するデータがありません。${json}`)
     }
 
     return res

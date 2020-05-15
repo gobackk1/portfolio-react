@@ -5,28 +5,45 @@ import {
   followUser,
   unFollowUser
 } from '@/actions/users'
-import _ from 'lodash'
 
 const initialState: any = {
-  0: {
-    id: 0,
-    image_url: '/images/user_images/default.png.png',
-    is_following: false,
-    name: '',
-    user_bio: ''
-  }
+  init: false,
+  data: [
+    {
+      id: 0,
+      image_url: '/images/user_images/default.png.png',
+      is_following: false,
+      name: '',
+      user_bio: ''
+    }
+  ]
 }
 
 export default reducerWithInitialState(initialState)
-  .cases([readUsers.async.done, searchUsers.async.done], (state, done) => {
-    return _.mapKeys(done.result.data, 'id')
+  .case(readUsers.async.failed, state => {
+    return state
   })
+  .cases(
+    [readUsers.async.done, searchUsers.async.done],
+    (state, { result }) => {
+      if (!state.init) {
+        state.data = []
+        state.init = true
+      }
+      state.data = state.data.concat(result.data)
+      console.log(result, 'readUsers.async.done, searchUsers.async.done')
+      return {
+        ...state
+      }
+    }
+  )
   .cases(
     [followUser.async.done, unFollowUser.async.done],
     (state, { result }) => {
-      return {
-        ...state,
-        [result.data.user.id]: result.data.user
-      }
+      const { id } = result.data.user
+      const index = state.data.findIndex(d => d.id === id)
+      state.data[index] = result.data.user
+      console.log(result, 'followUser.async.done, unFollowUser.async.done')
+      return { ...state }
     }
   )

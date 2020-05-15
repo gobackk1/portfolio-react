@@ -20,11 +20,12 @@ type AuthDoneParams = {
 
 const initialState: any = {
   loaded: false,
+  init: false,
   records: [
     {
       user: {
         name: '',
-        image_url: '/images/user_images/default.png.png'
+        image_url: '/images/user_images/default.png'
       },
       date: '01/01',
       record: {
@@ -39,14 +40,21 @@ const initialState: any = {
 }
 
 export default reducerWithInitialState(initialState)
+  .case(readStudyRecords.async.failed, state => state)
   .cases(
     [readStudyRecords.async.done, searchStudyRecords.async.done],
     (state, { result }) => {
-      console.log(state, 'readStudyRecords')
-      return {
-        loaded: true,
-        records: [...result.data]
+      if (!state.init) {
+        state.records = []
+        state.init = true
       }
+      state.records = state.records.concat(result.data)
+      state.loaded = true
+      console.log(
+        state,
+        'readStudyRecords.async.done, searchStudyRecords.async.done'
+      )
+      return { ...state }
     }
   )
   .cases(

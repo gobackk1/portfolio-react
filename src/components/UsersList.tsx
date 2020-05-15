@@ -3,7 +3,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import FollowButton from '@/components/FollowButton'
-import classNames from 'classnames'
+import store from '@/store'
 
 interface Props extends RouteComponentProps {
   users?: any
@@ -18,7 +18,7 @@ class UsersList extends React.Component<Props, any> {
     return (
       <>
         <ul className="users-list">
-          {_.map(this.props.users, (user, index) => {
+          {_.map(this.props.users.data, (user, index) => {
             return (
               <li
                 key={index}
