@@ -1,5 +1,5 @@
 import axios, { auth } from '@/axios'
-import { asyncActionCreator } from '@/actions'
+import { asyncActionCreator, actionCreator } from '@/actions'
 
 const usersUrl = `${process.env.REACT_APP_API_URL}/users`
 const relationshipUrl: string = `${process.env.REACT_APP_API_URL}/relationships`
@@ -24,8 +24,8 @@ export const readUsers = asyncActionCreator<any, any, Error>(
 
 export const searchUsers = asyncActionCreator<any, any, Error>(
   'SEARCH_USERS',
-  async keyword => {
-    const res = await axios.post(`${usersUrl}/search`, { keyword }, auth)
+  async params => {
+    const res = await axios.post(`${usersUrl}/search`, params, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
@@ -60,3 +60,5 @@ export const unFollowUser = asyncActionCreator<any, any, Error>(
     return res
   }
 )
+
+export const clearUsersStateData = actionCreator('CLEAR_USERS_STATE_DATA')

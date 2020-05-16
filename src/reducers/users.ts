@@ -3,7 +3,8 @@ import {
   readUsers,
   searchUsers,
   followUser,
-  unFollowUser
+  unFollowUser,
+  clearUsersStateData
 } from '@/actions/users'
 
 const initialState: any = {
@@ -23,20 +24,25 @@ export default reducerWithInitialState(initialState)
   .case(readUsers.async.failed, state => {
     return state
   })
-  .cases(
-    [readUsers.async.done, searchUsers.async.done],
-    (state, { result }) => {
-      if (!state.init) {
-        state.data = []
-        state.init = true
-      }
-      state.data = state.data.concat(result.data)
-      console.log(result, 'readUsers.async.done, searchUsers.async.done')
-      return {
-        ...state
-      }
+  .case(readUsers.async.done, (state, { result }) => {
+    if (!state.init) {
+      state.data = []
+      state.init = true
     }
-  )
+    state.data = state.data.concat(result.data)
+    console.log(result, 'readUsers.async.done, searchUsers.async.done')
+    return {
+      ...state
+    }
+  })
+  .case(searchUsers.async.done, (state, { result }) => {
+    if (!state.init) {
+      state.data = []
+      state.init = true
+    }
+    state.data = state.data.concat(result.data)
+    return { ...state }
+  })
   .cases(
     [followUser.async.done, unFollowUser.async.done],
     (state, { result }) => {
@@ -47,3 +53,9 @@ export default reducerWithInitialState(initialState)
       return { ...state }
     }
   )
+  .case(clearUsersStateData, state => {
+    return {
+      ...state,
+      data: []
+    }
+  })
