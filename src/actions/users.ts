@@ -31,6 +31,11 @@ export const searchUsers = asyncActionCreator<any, any, Error>(
       throw new Error(`Error ${res}`)
     }
 
+    if (!res.data.length) {
+      const json = JSON.stringify(res)
+      throw new Error(`追加するデータがありません。 ${json}`)
+    }
+
     return res
   }
 )

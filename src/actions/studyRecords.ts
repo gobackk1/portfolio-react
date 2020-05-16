@@ -1,5 +1,5 @@
 import axios, { auth } from '@/axios'
-import { asyncActionCreator } from '@/actions'
+import { asyncActionCreator, actionCreator } from '@/actions'
 
 const studyRecordUrl = `${process.env.REACT_APP_API_URL}/study_records`
 
@@ -26,11 +26,16 @@ export const readStudyRecords = asyncActionCreator<any, any, Error>(
 
 export const searchStudyRecords = asyncActionCreator<any, any, Error>(
   'SEARCH_STUDY_RECORDS',
-  async keyword => {
-    const res = await axios.post(`${studyRecordUrl}/search`, { keyword }, auth)
+  async params => {
+    const res = await axios.post(`${studyRecordUrl}/search`, params, auth)
 
     if (res.statusText !== 'OK') {
       throw new Error(`Error ${res}`)
+    }
+
+    if (!res.data.length) {
+      const json = JSON.stringify(res)
+      throw new Error(`追加するデータがありません。 ${json}`)
     }
 
     return res
@@ -123,4 +128,8 @@ export const deleteComment = asyncActionCreator<any, any, Error>(
 
     return res
   }
+)
+
+export const clearStudyRecordsStateData = actionCreator(
+  'CLEAR_STUDY_RECORDS_STATE_DATA'
 )

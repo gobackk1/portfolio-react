@@ -7,7 +7,8 @@ import {
   deleteStudyRecord,
   postComment,
   deleteComment,
-  searchStudyRecords
+  searchStudyRecords,
+  clearStudyRecordsStateData
 } from '@/actions/studyRecords'
 import ServerResponse from '@/interfaces/ServerResponse'
 import { AuthReqParams } from '@/interfaces/AuthReqParams'
@@ -102,4 +103,10 @@ export default reducerWithInitialState(initialState)
 
     console.log(state, 'deleteComment')
     return { ...state }
+  })
+  .case(clearStudyRecordsStateData, state => {
+    return {
+      ...state,
+      records: []
+    }
   })

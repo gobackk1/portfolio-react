@@ -1,7 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { readUsers, searchUsers, clearUsersStateData } from '@/actions/users'
-import { readStudyRecords } from '@/actions/studyRecords'
+import {
+  readStudyRecords,
+  clearStudyRecordsStateData
+} from '@/actions/studyRecords'
 import { searchStudyRecords } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
 import classNames from 'classnames'
@@ -24,10 +27,15 @@ interface Props extends RouteComponentProps {
 }
 
 class Explore extends React.Component<Props, {}> {
+  // 検索入力後何ミリ秒後にディスパッチするか
+  debounceMilliseconds: number = 500
   searchQueue: number | null = null
+
+  // NOTE: /explore/studyrecords に直接アクセスが考えられるため、アクティブなタブを内部で記憶しない
   isUsersPage: () => boolean = () => /users/.test(window.location.pathname)
   isRecordsPage: () => boolean = () =>
     /studyrecords/.test(window.location.pathname)
+
   users = {
     currentPage: 1,
     perPage: 10
@@ -37,26 +45,36 @@ class Explore extends React.Component<Props, {}> {
     perPage: 10
   }
   search = {
-    currentPage: 1,
-    perPage: 10
+    users: {
+      currentPage: 1,
+      perPage: 10
+    },
+    records: {
+      currentPage: 1,
+      perPage: 10
+    }
   }
   state = {
     loading: false,
-    mode: 'index',
     onLoadUsersList: () => {},
     onLoadRecordsList: () => {}
   }
 
   componentDidMount() {
-    this.initialize()
+    this.useLoadingSpinner(this.initialize)
     this.setState({
       onLoadUsersList: this.loadUsersList,
       onLoadRecordsList: this.loadRecordsList
     })
   }
 
-  initialize = async () => {
+  useLoadingSpinner = async callback => {
     this.setState({ loading: true })
+    await callback()
+    this.setState({ loading: false })
+  }
+
+  initialize = async () => {
     await Promise.all([
       store.dispatch(
         readUsers({
@@ -71,11 +89,9 @@ class Explore extends React.Component<Props, {}> {
         })
       )
     ])
-    this.setState({ loading: false })
   }
 
   loadUsersList: (() => Promise<void>) | undefined = async () => {
-    this.setState({ loading: true })
     this.users.currentPage++
     try {
       await store.dispatch(
@@ -87,14 +103,12 @@ class Explore extends React.Component<Props, {}> {
     } catch (e) {
       // TODO: error内容によって処理を分岐させる必要がある
       // NOTE: onEnterがnullを受け付けない
-      this.loadUsersList = undefined
+      this.setState({ onLoadUsersList: undefined })
       this.users.currentPage--
     }
-    this.setState({ loading: false })
   }
 
   loadRecordsList: (() => Promise<void>) | undefined = async () => {
-    this.setState({ loading: true })
     this.records.currentPage++
     try {
       await store.dispatch(
@@ -106,50 +120,80 @@ class Explore extends React.Component<Props, {}> {
     } catch (e) {
       // TODO: error内容によって処理を分岐させる必要がある
       // NOTE: onEnterがnullを受け付けない
-      this.loadRecordsList = undefined
+      this.setState({ onLoadRecordsList: undefined })
       this.records.currentPage--
     }
-    this.setState({ loading: false })
   }
 
+  // TODO: dispatchのシュガーを一つにまとめる
   dispatchSearchUsers = async keyword => {
     try {
       await store.dispatch(
         searchUsers({
           keyword,
-          page: this.search.currentPage,
-          per: this.search.perPage
+          page: this.search.users.currentPage,
+          per: this.search.users.perPage
         })
       )
     } catch (e) {
+      this.setState({ onLoadUsersList: undefined })
       console.log(e, 'mock')
     }
   }
 
-  onChange = async ({ nativeEvent }) => {
-    const keyword = nativeEvent.target.value
+  dispatchSearchRecords = async keyword => {
+    try {
+      await store.dispatch(
+        searchStudyRecords({
+          keyword,
+          page: this.search.records.currentPage,
+          per: this.search.records.perPage
+        })
+      )
+    } catch (e) {
+      this.setState({ onLoadRecordsList: undefined })
+      console.log(e, 'mock')
+    }
+  }
 
-    this.search.currentPage = 1
+  setSearchQueue = (keyword, key) => {
+    this.search[key].currentPage = 1
+    const isUsersPage = this.isUsersPage()
+    const onLoadListKey = isUsersPage ? 'onLoadUsersList' : 'onLoadRecordsList'
+    const dispatch = isUsersPage
+      ? 'dispatchSearchUsers'
+      : 'dispatchSearchRecords'
+    const clearState = isUsersPage
+      ? clearUsersStateData
+      : clearStudyRecordsStateData
+
     this.setState({
-      onLoadUsersList: () => {
-        this.search.currentPage++
-        this.dispatchSearchUsers(keyword).catch(() => this.search.currentPage--)
+      [onLoadListKey]: () => {
+        this.search[key].currentPage++
+        this[dispatch](keyword).catch(() => this.search[key].currentPage--)
       }
     })
+    this.searchQueue = window.setTimeout(() => {
+      this.useLoadingSpinner(async () => {
+        store.dispatch(clearState())
+        await this[dispatch](keyword)
+      })
+    }, this.debounceMilliseconds)
+  }
+
+  onChange = async ({ nativeEvent }) => {
+    const keyword = nativeEvent.target.value
 
     if (this.searchQueue) {
       clearTimeout(this.searchQueue)
       this.searchQueue = null
     }
 
-    this.searchQueue = window.setTimeout(() => {
-      if (this.isUsersPage()) {
-        store.dispatch(clearUsersStateData())
-        this.dispatchSearchUsers(keyword)
-      } else {
-        store.dispatch(searchStudyRecords(keyword))
-      }
-    }, 500)
+    if (this.isUsersPage()) {
+      this.setSearchQueue(keyword, 'users')
+    } else {
+      this.setSearchQueue(keyword, 'records')
+    }
   }
 
   render() {
@@ -182,24 +226,27 @@ class Explore extends React.Component<Props, {}> {
           />
         </div>
         <div className="tab__body">
-          <Switch>
-            <Route path={`${match.url}/users`}>
-              <UsersList></UsersList>
-              <Waypoint
-                onEnter={onLoadUsersList}
-                bottomOffset="-200px"
-              ></Waypoint>
-              {loading && '読み込み中MOCK'}
-            </Route>
-            <Route path={`${match.url}/studyrecords`}>
-              <RecordsList></RecordsList>
-              <Waypoint
-                onEnter={onLoadRecordsList}
-                bottomOffset="-200px"
-              ></Waypoint>
-              {loading && '読み込み中MOCK'}
-            </Route>
-          </Switch>
+          {loading && '読み込み中MOCK'}
+          {!loading && (
+            <Switch>
+              <Route path={`${match.url}/users`}>
+                <UsersList></UsersList>
+                <Waypoint
+                  onEnter={onLoadUsersList}
+                  bottomOffset="-200px"
+                ></Waypoint>
+                {loading && '読み込み中MOCK'}
+              </Route>
+              <Route path={`${match.url}/studyrecords`}>
+                <RecordsList></RecordsList>
+                <Waypoint
+                  onEnter={onLoadRecordsList}
+                  bottomOffset="-200px"
+                ></Waypoint>
+                {loading && '読み込み中MOCK'}
+              </Route>
+            </Switch>
+          )}
         </div>
       </div>
     )
