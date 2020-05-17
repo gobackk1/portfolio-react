@@ -17,9 +17,10 @@ export const renderField = field => {
   )
 }
 
-export const renderErrorMessages = error => {
-  if (!error) return
-  return error.response.data.messages.map((msg, index) => {
+export const renderErrorMessages = messages => {
+  if (!messages.length) return
+  return messages.map((msg, index) => {
+    if (!msg) return
     return (
       <p className="error-msg" key={index}>
         *{msg}

@@ -56,7 +56,7 @@ class LoginForm extends React.Component<
         <p className="form__title">
           {this.state.isLoginForm ? 'ログイン' : '新規登録'}
         </p>
-        {renderErrorMessages(error)}
+        {error && renderErrorMessages(error.response.data.messages)}
         <Render if={this.state.isLoginForm}>
           <FormSection name="login" className="form__section">
             <div className="form__input">

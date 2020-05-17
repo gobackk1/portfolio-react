@@ -19,6 +19,7 @@ import {
   RouteComponentProps
 } from 'react-router-dom'
 import RecordsList from '@/components/RecordsList'
+import { renderErrorMessages } from '@/util'
 
 interface Props extends RouteComponentProps {
   user: any
@@ -57,7 +58,8 @@ class Explore extends React.Component<Props, {}> {
   state = {
     loading: false,
     onLoadUsersList: () => {},
-    onLoadRecordsList: () => {}
+    onLoadRecordsList: () => {},
+    errorMessage: ''
   }
 
   componentDidMount() {
@@ -136,8 +138,7 @@ class Explore extends React.Component<Props, {}> {
         })
       )
     } catch (e) {
-      this.setState({ onLoadUsersList: undefined })
-      console.log(e, 'mock')
+      this.setState({ onLoadUsersList: undefined, errorMessage: e.message })
     }
   }
 
@@ -171,7 +172,8 @@ class Explore extends React.Component<Props, {}> {
       [onLoadListKey]: () => {
         this.search[key].currentPage++
         this[dispatch](keyword).catch(() => this.search[key].currentPage--)
-      }
+      },
+      errorMessage: ''
     })
     this.searchQueue = window.setTimeout(() => {
       this.useLoadingSpinner(async () => {
@@ -198,7 +200,12 @@ class Explore extends React.Component<Props, {}> {
 
   render() {
     const { match } = this.props
-    const { onLoadRecordsList, onLoadUsersList, loading } = this.state
+    const {
+      onLoadRecordsList,
+      onLoadUsersList,
+      loading,
+      errorMessage
+    } = this.state
     const userTabClassName = classNames({
       'tab__list-item': !this.isUsersPage(),
       'tab__list-item--active': this.isUsersPage()
@@ -207,6 +214,7 @@ class Explore extends React.Component<Props, {}> {
       'tab__list-item': !this.isRecordsPage(),
       'tab__list-item--active': this.isRecordsPage()
     })
+
     return (
       <div className="tab">
         <div className="tab__list">
@@ -226,6 +234,7 @@ class Explore extends React.Component<Props, {}> {
           />
         </div>
         <div className="tab__body">
+          {renderErrorMessages([errorMessage])}
           {loading && '読み込み中MOCK'}
           {!loading && (
             <Switch>
