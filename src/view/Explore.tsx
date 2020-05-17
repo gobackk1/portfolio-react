@@ -7,6 +7,7 @@ import {
 } from '@/actions/studyRecords'
 import { searchStudyRecords } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
+import { GuardedRoute } from '@/components/GuardedRoute'
 import classNames from 'classnames'
 import store from '@/store'
 import { Waypoint } from 'react-waypoint'
@@ -215,6 +216,10 @@ class Explore extends React.Component<Props, {}> {
       'tab__list-item--active': this.isRecordsPage()
     })
 
+    const callback = () => {
+      this.state.errorMessage = ''
+    }
+
     return (
       <div className="tab">
         <div className="tab__list">
@@ -238,22 +243,25 @@ class Explore extends React.Component<Props, {}> {
           {loading && '読み込み中MOCK'}
           {!loading && (
             <Switch>
-              <Route path={`${match.url}/users`}>
+              <GuardedRoute path={`${match.url}/users`} beforeEnter={callback}>
                 <UsersList></UsersList>
                 <Waypoint
                   onEnter={onLoadUsersList}
                   bottomOffset="-200px"
                 ></Waypoint>
                 {loading && '読み込み中MOCK'}
-              </Route>
-              <Route path={`${match.url}/studyrecords`}>
+              </GuardedRoute>
+              <GuardedRoute
+                path={`${match.url}/studyrecords`}
+                beforeEnter={callback}
+              >
                 <RecordsList></RecordsList>
                 <Waypoint
                   onEnter={onLoadRecordsList}
                   bottomOffset="-200px"
                 ></Waypoint>
                 {loading && '読み込み中MOCK'}
-              </Route>
+              </GuardedRoute>
             </Switch>
           )}
         </div>
