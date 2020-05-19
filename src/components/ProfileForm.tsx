@@ -2,7 +2,7 @@ import React from 'react'
 import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { updateProfile } from '@/actions/userProfile'
 import { connect } from 'react-redux'
-import { renderFile, renderField, encode64 } from '@/util'
+import { renderFile, renderField, encode64 } from '@/utils/render'
 interface Props {
   updateProfile: any
   userProfile: any

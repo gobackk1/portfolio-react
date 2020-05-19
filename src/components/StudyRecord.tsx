@@ -38,10 +38,10 @@ class StudyRecord extends React.Component<Props, {}> {
   render() {
     const {
       id,
+      date,
       record,
       record: { comment, teaching_material, study_hours, study_genre_list },
       comments,
-      date,
       user
     } = this.props.record
 

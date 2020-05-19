@@ -4,7 +4,12 @@ import { connect } from 'react-redux'
 import store from '@/store'
 import { postStudyRecord, putStudyRecord } from '@/actions/studyRecords'
 import { withRouter } from 'react-router'
-import { renderField, renderTextarea, renderFile, encode64 } from '@/util'
+import {
+  renderField,
+  renderTextarea,
+  renderFile,
+  encode64
+} from '@/utils/render'
 
 interface Props {
   user?: any

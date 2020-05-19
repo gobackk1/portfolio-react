@@ -12,7 +12,7 @@ import {
   renderFile,
   renderField,
   encode64
-} from '@/util'
+} from '@/utils/render'
 interface Props {
   user?: any
   closeModal?: () => void

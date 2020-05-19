@@ -35,7 +35,8 @@ const initialState: any = {
         teaching_material: '',
         study_hours: 0,
         study_record_comments: []
-      }
+      },
+      comments: []
     }
   ]
 }
@@ -49,7 +50,7 @@ export default reducerWithInitialState(initialState)
         state.records = []
         state.init = true
       }
-      state.records = state.records.concat(result.data)
+      state.records = state.records.concat(result.data.result)
       state.loaded = true
       console.log(
         state,

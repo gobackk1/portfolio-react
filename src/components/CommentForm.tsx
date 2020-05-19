@@ -3,7 +3,7 @@ import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { postComment } from '@/actions/studyRecords'
 import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
-import { renderField } from '@/util'
+import { renderField } from '@/utils/render'
 
 interface Props {
   recordId: number

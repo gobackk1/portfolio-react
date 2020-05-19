@@ -1,5 +1,6 @@
 import axios, { auth } from '@/axios'
 import { asyncActionCreator, actionCreator } from '@/actions'
+import CustomError from '@/utils/CustomError'
 
 const studyRecordUrl = `${process.env.REACT_APP_API_URL}/study_records`
 
@@ -15,9 +16,11 @@ export const readStudyRecords = asyncActionCreator<any, any, Error>(
       throw new Error(`Error ${res}`)
     }
 
-    if (!res.data.length) {
-      const json = JSON.stringify(res)
-      throw new Error(`追加するデータがありません。${json}`)
+    if (!res.data.result.length) {
+      if (res.data.not_found) {
+        throw new CustomError(res.data.messages[0], 'record_not_found')
+      }
+      throw new CustomError('追加するデータがありません', 'any_more_data')
     }
 
     return res
@@ -33,9 +36,11 @@ export const searchStudyRecords = asyncActionCreator<any, any, Error>(
       throw new Error(`Error ${res}`)
     }
 
-    if (!res.data.length) {
-      const json = JSON.stringify(res)
-      throw new Error(`追加するデータがありません。 ${json}`)
+    if (!res.data.result.length) {
+      if (res.data.not_found) {
+        throw new CustomError(res.data.messages[0], 'record_not_found')
+      }
+      throw new CustomError('追加するデータがありません', 'any_more_data')
     }
 
     return res

@@ -20,10 +20,12 @@ import {
   RouteComponentProps
 } from 'react-router-dom'
 import RecordsList from '@/components/RecordsList'
-import { renderErrorMessages } from '@/util'
+import { renderErrorMessages } from '@/utils/render'
 
 interface Props extends RouteComponentProps {
   user: any
+  users: any
+  studyRecords: any
   searchUsers: any
   searchStudyRecords: any
 }
@@ -94,7 +96,7 @@ class Explore extends React.Component<Props, {}> {
     ])
   }
 
-  loadUsersList: (() => Promise<void>) | undefined = async () => {
+  loadUsersList: () => Promise<void> = async () => {
     this.users.currentPage++
     try {
       await store.dispatch(
@@ -104,14 +106,13 @@ class Explore extends React.Component<Props, {}> {
         })
       )
     } catch (e) {
-      // TODO: error内容によって処理を分岐させる必要がある
       // NOTE: onEnterがnullを受け付けない
       this.setState({ onLoadUsersList: undefined })
       this.users.currentPage--
     }
   }
 
-  loadRecordsList: (() => Promise<void>) | undefined = async () => {
+  loadRecordsList: () => Promise<void> = async () => {
     this.records.currentPage++
     try {
       await store.dispatch(
@@ -139,6 +140,10 @@ class Explore extends React.Component<Props, {}> {
         })
       )
     } catch (e) {
+      if (e.type === 'any_more_data') {
+        this.setState({ onLoadUsersList: undefined })
+        return
+      }
       this.setState({ onLoadUsersList: undefined, errorMessage: e.message })
     }
   }
@@ -153,8 +158,11 @@ class Explore extends React.Component<Props, {}> {
         })
       )
     } catch (e) {
-      this.setState({ onLoadRecordsList: undefined })
-      console.log(e, 'mock')
+      if (e.type === 'any_more_data') {
+        this.setState({ onLoadRecordsList: undefined })
+        return
+      }
+      this.setState({ onLoadRecordsList: undefined, errorMessage: e.message })
     }
   }
 
@@ -199,6 +207,21 @@ class Explore extends React.Component<Props, {}> {
     }
   }
 
+  beforeEnter = async () => {
+    // NOTE: setStateを使うと無限ループになる
+    this.state.errorMessage = ''
+    if (!this.props.users.data.length) {
+      const search = document.getElementById('explore-users-search')
+      if (search) (search as HTMLInputElement).value = ''
+      await this.loadUsersList()
+    }
+    if (!this.props.studyRecords.records.length) {
+      const search = document.getElementById('explore-records-search')
+      if (search) (search as HTMLInputElement).value = ''
+      await this.loadRecordsList()
+    }
+  }
+
   render() {
     const { match } = this.props
     const {
@@ -216,17 +239,21 @@ class Explore extends React.Component<Props, {}> {
       'tab__list-item--active': this.isRecordsPage()
     })
 
-    const callback = () => {
-      this.state.errorMessage = ''
-    }
-
     return (
       <div className="tab">
         <div className="tab__list">
-          <Link to={`${match.url}/users`} className={userTabClassName}>
+          <Link
+            to={`${match.url}/users`}
+            className={userTabClassName}
+            onClick={this.beforeEnter}
+          >
             ユーザー
           </Link>
-          <Link to={`${match.url}/studyrecords`} className={recordTabClassName}>
+          <Link
+            to={`${match.url}/studyrecords`}
+            className={recordTabClassName}
+            onClick={this.beforeEnter}
+          >
             勉強記録
           </Link>
         </div>
@@ -236,6 +263,16 @@ class Explore extends React.Component<Props, {}> {
             onChange={this.onChange}
             className="search__input"
             placeholder="検索"
+            style={{ display: this.isUsersPage() ? '' : 'none' }}
+            id="explore-users-search"
+          />
+          <input
+            type="text"
+            onChange={this.onChange}
+            className="search__input"
+            placeholder="検索"
+            style={{ display: this.isRecordsPage() ? '' : 'none' }}
+            id="explore-records-search"
           />
         </div>
         <div className="tab__body">
@@ -243,25 +280,22 @@ class Explore extends React.Component<Props, {}> {
           {loading && '読み込み中MOCK'}
           {!loading && (
             <Switch>
-              <GuardedRoute path={`${match.url}/users`} beforeEnter={callback}>
+              <Route path={`${match.url}/users`}>
                 <UsersList></UsersList>
                 <Waypoint
                   onEnter={onLoadUsersList}
-                  bottomOffset="-200px"
+                  bottomOffset="-400px"
                 ></Waypoint>
                 {loading && '読み込み中MOCK'}
-              </GuardedRoute>
-              <GuardedRoute
-                path={`${match.url}/studyrecords`}
-                beforeEnter={callback}
-              >
+              </Route>
+              <Route path={`${match.url}/studyrecords`}>
                 <RecordsList></RecordsList>
                 <Waypoint
                   onEnter={onLoadRecordsList}
-                  bottomOffset="-200px"
+                  bottomOffset="-400px"
                 ></Waypoint>
                 {loading && '読み込み中MOCK'}
-              </GuardedRoute>
+              </Route>
             </Switch>
           )}
         </div>
@@ -271,7 +305,9 @@ class Explore extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = (state: any) => ({
-  user: state.user
+  user: state.user,
+  users: state.users,
+  studyRecords: state.studyRecords
 })
 
 export default connect(mapStateToProps, null)(Explore)

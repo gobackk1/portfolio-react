@@ -5,7 +5,7 @@ import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
 import store from '@/store'
 import Render from '@/components/Render'
-import { renderField, renderErrorMessages } from '@/util'
+import { renderField, renderErrorMessages } from '@/utils/render'
 
 interface Props {
   user?: any
