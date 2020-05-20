@@ -5,7 +5,7 @@ import CustomError from '@/utils/CustomError'
 const usersUrl = `${process.env.REACT_APP_API_URL}/users`
 const relationshipUrl: string = `${process.env.REACT_APP_API_URL}/relationships`
 
-export const readUsers = asyncActionCreator<any, any, Error>(
+export const readUsers = asyncActionCreator<any, any, CustomError>(
   'READ_USERS',
   async ({ page, per }) => {
     const res = await axios.get(`${usersUrl}?page=${page}&per=${per}`, auth)
@@ -71,21 +71,12 @@ export const unFollowUser = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const clearUsersStateData = actionCreator('CLEAR_USERS_STATE_DATA')
-export const incrementCurrentPage = actionCreator('INCREMENT_CURRENT_PAGE')
-export const decrementCurrentPage = actionCreator('DECREMENT_CURRENT_PAGE')
-export const incrementCurrentSearchPage = actionCreator(
-  'INCREMENT_CURRENT_SEARCH_PAGE'
+export const initializeUsersState = actionCreator('INITIALIZE_USERS_STATE')
+export const initializeSearchState = actionCreator('INITIALIZE_SEARCH_STATE')
+export const setCurrentSearchPage = actionCreator<number>(
+  'SET_CURRENT_SEARCH_PAGE'
 )
-export const decrementCurrentSearchPage = actionCreator(
-  'DECREMENT_CURRENT_SEARCH_PAGE'
-)
-export const initializeCurrentPage = actionCreator('INITIALIZE_CURRENT_PAGE')
-export const initializeCurrentSearchPage = actionCreator(
-  'INITIALIZE_CURRENT_SEARCH_PAGE'
-)
-export const clearOnLoadUsersList = actionCreator('CLEAR_ON_LOAD_USERS_LIST')
 export const setErrorMessage = actionCreator<string>('SET_ERROR_MESSAGE')
-export const setOnLoadUsersList = actionCreator<() => void>(
+export const setOnLoadReadUsers = actionCreator<(() => void) | undefined>(
   'SET_ON_LOAD_USERS_LIST'
 )

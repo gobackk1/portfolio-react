@@ -1,10 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { readUsers, searchUsers, clearUsersStateData } from '@/actions/users'
 import {
-  readStudyRecords,
-  clearStudyRecordsStateData
-} from '@/actions/studyRecords'
+  readUsers,
+  searchUsers,
+  setErrorMessage,
+  initializeUsersState,
+  initializeSearchState
+} from '@/actions/users'
+import { readStudyRecords } from '@/actions/studyRecords'
 import { searchStudyRecords } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
 import classNames from 'classnames'
@@ -33,25 +36,18 @@ class Explore extends React.Component<Props, {}> {
   // 検索入力後何ミリ秒後にディスパッチするか
   debounceMilliseconds: number = 500
   searchQueue: number | null = null
+  userSearch!: any
 
   // NOTE: /explore/studyrecords に直接アクセスが考えられるため、アクティブなタブを内部で記憶しない
   isUsersPage: () => boolean = () => /users/.test(window.location.pathname)
   isRecordsPage: () => boolean = () =>
     /studyrecords/.test(window.location.pathname)
 
-  users = {
-    currentPage: 1,
-    perPage: 10
-  }
   records = {
     currentPage: 1,
     perPage: 10
   }
   search = {
-    users: {
-      currentPage: 1,
-      perPage: 10
-    },
     records: {
       currentPage: 1,
       perPage: 10
@@ -65,6 +61,7 @@ class Explore extends React.Component<Props, {}> {
   }
 
   componentDidMount() {
+    this.userSearch = document.getElementById('explore-users-search')
     this.useLoadingSpinner(this.initialize)
     this.setState({
       onLoadRecordsList: this.loadRecordsList
@@ -78,15 +75,23 @@ class Explore extends React.Component<Props, {}> {
   }
 
   initialize = async () => {
-    console.log(this.props.users)
-
+    if (this.userSearch.value === '') {
+      this.userSearch.value = this.props.users.search.keyword
+    }
+    if (!this.props.users.init) {
+      try {
+        await this.props.users.dispatchReadUsers(10)
+        // await store.dispatch(
+        //   readUsers({
+        //     page: this.props.users.currentPage,
+        //     per: this.props.users.perPage
+        //   })
+        // )
+      } catch (e) {
+        console.log(e)
+      }
+    }
     await Promise.all([
-      store.dispatch(
-        readUsers({
-          page: this.props.users.currentPage,
-          per: this.props.users.perPage
-        })
-      ),
       store.dispatch(
         readStudyRecords({
           page: this.records.currentPage,
@@ -131,30 +136,19 @@ class Explore extends React.Component<Props, {}> {
     }
   }
 
-  setSearchQueue = (keyword, key) => {
-    // this.search[key].currentPage = 1
-    const isUsersPage = this.isUsersPage()
-    const onLoadListKey = isUsersPage ? 'onLoadUsersList' : 'onLoadRecordsList'
-    const dispatch = isUsersPage
-      ? 'dispatchSearchUsers'
-      : 'dispatchSearchRecords'
-    const clearState = isUsersPage
-      ? clearUsersStateData
-      : clearStudyRecordsStateData
+  setSearchQueue = (keyword: string): void => {
+    const readUser = async () => {
+      store.dispatch(initializeUsersState())
+      this.props.users.dispatchReadUsers(10)
+    }
+    const searchUser = async () => {
+      store.dispatch(initializeSearchState())
+      await this.props.users.dispatchSearchUsers(keyword, 10)
+    }
+    const callback = keyword ? searchUser : readUser
 
-    // this.setState({
-    //   [onLoadListKey]: () => {
-    //     this.search[key].currentPage++
-    //     this[dispatch](keyword).catch(() => this.search[key].currentPage--)
-    //   },
-    //   errorMessage: ''
-    // })
-    this.props.users.setSearchQueue(keyword)
     this.searchQueue = window.setTimeout(() => {
-      this.useLoadingSpinner(async () => {
-        store.dispatch(clearState())
-        await this.props.users.dispatchSearchUsers(keyword)
-      })
+      this.useLoadingSpinner(callback)
     }, this.debounceMilliseconds)
   }
 
@@ -167,15 +161,14 @@ class Explore extends React.Component<Props, {}> {
     }
 
     if (this.isUsersPage()) {
-      this.setSearchQueue(keyword, 'users')
+      this.setSearchQueue(keyword)
     } else {
       // this.props.users.setSearchQueue(keyword)
     }
   }
 
   beforeEnter = async () => {
-    // NOTE: setStateを使うと無限ループになる
-    this.state.errorMessage = ''
+    store.dispatch(setErrorMessage(''))
     if (!this.props.users.data.length) {
       const search = document.getElementById('explore-users-search')
       if (search) (search as HTMLInputElement).value = ''
