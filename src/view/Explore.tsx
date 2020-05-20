@@ -7,7 +7,6 @@ import {
 } from '@/actions/studyRecords'
 import { searchStudyRecords } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
-import { GuardedRoute } from '@/components/GuardedRoute'
 import classNames from 'classnames'
 import store from '@/store'
 import { Waypoint } from 'react-waypoint'
@@ -60,7 +59,7 @@ class Explore extends React.Component<Props, {}> {
   }
   state = {
     loading: false,
-    onLoadUsersList: () => {},
+    onLoadUsersList: this.props.users.onLoadUsersList,
     onLoadRecordsList: () => {},
     errorMessage: ''
   }
@@ -68,7 +67,6 @@ class Explore extends React.Component<Props, {}> {
   componentDidMount() {
     this.useLoadingSpinner(this.initialize)
     this.setState({
-      onLoadUsersList: this.loadUsersList,
       onLoadRecordsList: this.loadRecordsList
     })
   }
@@ -80,11 +78,13 @@ class Explore extends React.Component<Props, {}> {
   }
 
   initialize = async () => {
+    console.log(this.props.users)
+
     await Promise.all([
       store.dispatch(
         readUsers({
-          page: this.users.currentPage,
-          per: this.users.perPage
+          page: this.props.users.currentPage,
+          per: this.props.users.perPage
         })
       ),
       store.dispatch(
@@ -94,22 +94,6 @@ class Explore extends React.Component<Props, {}> {
         })
       )
     ])
-  }
-
-  loadUsersList: () => Promise<void> = async () => {
-    this.users.currentPage++
-    try {
-      await store.dispatch(
-        readUsers({
-          page: this.users.currentPage,
-          per: this.users.perPage
-        })
-      )
-    } catch (e) {
-      // NOTE: onEnterがnullを受け付けない
-      this.setState({ onLoadUsersList: undefined })
-      this.users.currentPage--
-    }
   }
 
   loadRecordsList: () => Promise<void> = async () => {
@@ -126,25 +110,6 @@ class Explore extends React.Component<Props, {}> {
       // NOTE: onEnterがnullを受け付けない
       this.setState({ onLoadRecordsList: undefined })
       this.records.currentPage--
-    }
-  }
-
-  // TODO: dispatchのシュガーを一つにまとめる
-  dispatchSearchUsers = async keyword => {
-    try {
-      await store.dispatch(
-        searchUsers({
-          keyword,
-          page: this.search.users.currentPage,
-          per: this.search.users.perPage
-        })
-      )
-    } catch (e) {
-      if (e.type === 'any_more_data') {
-        this.setState({ onLoadUsersList: undefined })
-        return
-      }
-      this.setState({ onLoadUsersList: undefined, errorMessage: e.message })
     }
   }
 
@@ -167,7 +132,7 @@ class Explore extends React.Component<Props, {}> {
   }
 
   setSearchQueue = (keyword, key) => {
-    this.search[key].currentPage = 1
+    // this.search[key].currentPage = 1
     const isUsersPage = this.isUsersPage()
     const onLoadListKey = isUsersPage ? 'onLoadUsersList' : 'onLoadRecordsList'
     const dispatch = isUsersPage
@@ -177,17 +142,18 @@ class Explore extends React.Component<Props, {}> {
       ? clearUsersStateData
       : clearStudyRecordsStateData
 
-    this.setState({
-      [onLoadListKey]: () => {
-        this.search[key].currentPage++
-        this[dispatch](keyword).catch(() => this.search[key].currentPage--)
-      },
-      errorMessage: ''
-    })
+    // this.setState({
+    //   [onLoadListKey]: () => {
+    //     this.search[key].currentPage++
+    //     this[dispatch](keyword).catch(() => this.search[key].currentPage--)
+    //   },
+    //   errorMessage: ''
+    // })
+    this.props.users.setSearchQueue(keyword)
     this.searchQueue = window.setTimeout(() => {
       this.useLoadingSpinner(async () => {
         store.dispatch(clearState())
-        await this[dispatch](keyword)
+        await this.props.users.dispatchSearchUsers(keyword)
       })
     }, this.debounceMilliseconds)
   }
@@ -203,7 +169,7 @@ class Explore extends React.Component<Props, {}> {
     if (this.isUsersPage()) {
       this.setSearchQueue(keyword, 'users')
     } else {
-      this.setSearchQueue(keyword, 'records')
+      // this.props.users.setSearchQueue(keyword)
     }
   }
 
@@ -213,7 +179,7 @@ class Explore extends React.Component<Props, {}> {
     if (!this.props.users.data.length) {
       const search = document.getElementById('explore-users-search')
       if (search) (search as HTMLInputElement).value = ''
-      await this.loadUsersList()
+      await this.props.users.loadUsersList()
     }
     if (!this.props.studyRecords.records.length) {
       const search = document.getElementById('explore-records-search')
@@ -223,13 +189,11 @@ class Explore extends React.Component<Props, {}> {
   }
 
   render() {
-    const { match } = this.props
     const {
-      onLoadRecordsList,
-      onLoadUsersList,
-      loading,
-      errorMessage
-    } = this.state
+      match,
+      users: { errorMessage, onLoadUsersList }
+    } = this.props
+    const { onLoadRecordsList, loading } = this.state
     const userTabClassName = classNames({
       'tab__list-item': !this.isUsersPage(),
       'tab__list-item--active': this.isUsersPage()
