@@ -124,12 +124,14 @@ export default reducerWithInitialState(initialState)
     state.init = false
     state.currentPage = 1
     state.data = []
+    state.errorMessage = ''
     return { ...state }
   })
   .case(initializeSearchState, state => {
     state.search.init = false
     state.search.currentPage = 1
     state.data = []
+    state.errorMessage = ''
     return { ...state }
   })
   .case(setCurrentSearchPage, state => {
