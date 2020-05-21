@@ -4,11 +4,8 @@ import {
   searchUsers,
   followUser,
   unFollowUser,
-  initializeSearchState,
-  setOnLoadReadUsers,
-  setErrorMessage,
-  initializeUsersState,
-  setCurrentSearchPage
+  resetSearchUsersState,
+  resetUsersState
 } from '@/actions/users'
 
 import store from '@/store'
@@ -22,7 +19,7 @@ const dispatchReadUsers = async (per: number): Promise<void> => {
       })
     )
   } catch (e) {
-    store.dispatch(setOnLoadReadUsers(undefined))
+    console.log(e, 'mock')
   }
 }
 
@@ -39,10 +36,7 @@ const dispatchSearchUsers = async (
       })
     )
   } catch (e) {
-    if (e.type === 'record_not_found') {
-      store.dispatch(setErrorMessage(e.message))
-    }
-    store.dispatch(setOnLoadReadUsers(undefined))
+    console.log(e, 'mock')
   }
 }
 
@@ -66,20 +60,26 @@ const initialState: any = {
       user_bio: ''
     }
   ],
-  onLoadUsersList: undefined,
+  onLoadUsers: undefined,
   dispatchReadUsers,
   dispatchSearchUsers
 }
 
 export default reducerWithInitialState(initialState)
-  .cases([readUsers.async.failed, searchUsers.async.failed], state => {
-    return state
-  })
+  .cases(
+    [readUsers.async.failed, searchUsers.async.failed],
+    (state, { error }) => {
+      if (error.type === 'record_not_found') state.errorMessage = error.message
+      state.onLoadUsers = undefined
+      return { ...state }
+    }
+  )
   .case(readUsers.async.done, (state, { result }) => {
     if (!state.init) {
       state.data = []
       state.init = true
-      state.onLoadUsersList = () => {
+      state.errorMessage = ''
+      state.onLoadUsers = () => {
         dispatchReadUsers(state.perPage)
       }
     }
@@ -93,7 +93,8 @@ export default reducerWithInitialState(initialState)
       state.data = []
       state.search.init = true
       state.search.keyword = params.keyword
-      state.onLoadUsersList = () => {
+      state.errorMessage = ''
+      state.onLoadUsers = () => {
         dispatchSearchUsers(params.keyword, params.per)
       }
     }
@@ -112,29 +113,17 @@ export default reducerWithInitialState(initialState)
       return state
     }
   )
-  .case(setOnLoadReadUsers, (state, params) => {
-    state.onLoadUsersList = params
-    return { ...state }
-  })
-  .case(setErrorMessage, (state, params) => {
-    state.errorMessage = params
-    return { ...state }
-  })
-  .case(initializeUsersState, state => {
+  .case(resetUsersState, state => {
     state.init = false
     state.currentPage = 1
     state.data = []
     state.errorMessage = ''
     return { ...state }
   })
-  .case(initializeSearchState, state => {
+  .case(resetSearchUsersState, state => {
     state.search.init = false
     state.search.currentPage = 1
     state.data = []
     state.errorMessage = ''
-    return { ...state }
-  })
-  .case(setCurrentSearchPage, state => {
-    state.search.currentPage = 1
     return { ...state }
   })

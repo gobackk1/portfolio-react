@@ -8,20 +8,51 @@ import {
   postComment,
   deleteComment,
   searchStudyRecords,
-  clearStudyRecordsStateData
+  resetSearchStudyRecordsState,
+  resetStudyRecordsState
 } from '@/actions/studyRecords'
-import ServerResponse from '@/interfaces/ServerResponse'
-import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import _ from 'lodash'
+import store from '@/store'
 
-type AuthDoneParams = {
-  params: AuthReqParams
-  result: ServerResponse
+const dispatchReadStudyRecords: (per: number) => Promise<void> = async per => {
+  try {
+    await store.dispatch(
+      readStudyRecords({
+        page: store.getState().studyRecords.currentPage,
+        per
+      })
+    )
+  } catch (e) {
+    console.log(e, 'mock')
+  }
+}
+
+const dispatchSearchStudyRecords = async (keyword: string, per: number) => {
+  try {
+    await store.dispatch(
+      searchStudyRecords({
+        keyword,
+        page: store.getState().studyRecords.search.currentPage,
+        per
+      })
+    )
+  } catch (e) {
+    console.log(e, 'mock')
+  }
 }
 
 const initialState: any = {
   loaded: false,
   init: false,
+  currentPage: 1,
+  perPage: 10,
+  search: {
+    init: false,
+    currentPage: 1,
+    perPage: 10,
+    keyword: ''
+  },
+  errorMessage: '',
   records: [
     {
       user: {
@@ -38,27 +69,49 @@ const initialState: any = {
       },
       comments: []
     }
-  ]
+  ],
+  onLoadStudyRecords: undefined,
+  dispatchReadStudyRecords,
+  dispatchSearchStudyRecords
 }
 
 export default reducerWithInitialState(initialState)
-  .case(readStudyRecords.async.failed, state => state)
   .cases(
-    [readStudyRecords.async.done, searchStudyRecords.async.done],
-    (state, { result }) => {
-      if (!state.init) {
-        state.records = []
-        state.init = true
-      }
-      state.records = state.records.concat(result.data.result)
-      state.loaded = true
-      console.log(
-        state,
-        'readStudyRecords.async.done, searchStudyRecords.async.done'
-      )
+    [readStudyRecords.async.failed, searchStudyRecords.async.failed],
+    (state, { error }) => {
+      if (error.type === 'record_not_found') state.errorMessage = error.message
+      state.onLoadStudyRecords = undefined
       return { ...state }
     }
   )
+  .case(readStudyRecords.async.done, (state, { result }) => {
+    if (!state.init) {
+      state.records = []
+      state.init = true
+      state.onLoadStudyRecords = () => {
+        dispatchReadStudyRecords(state.perPage)
+      }
+    }
+    state.currentPage++
+    state.records = state.records.concat(result.data.result)
+    state.loaded = true
+    return { ...state }
+  })
+  .case(searchStudyRecords.async.done, (state, { params, result }) => {
+    if (!state.search.init) {
+      state.records = []
+      state.search.init = true
+      state.onLoadStudyRecords = () => {
+        dispatchSearchStudyRecords(params.keyword, params.per)
+      }
+    }
+    state.search.currentPage++
+    state.search.keyword = params.keyword
+    state.records = state.records.concat(result.data.result)
+    state.loaded = true
+    console.log(state, 'searchStudyRecords.async.done')
+    return { ...state }
+  })
   .cases(
     [getStudyRecord.async.done, putStudyRecord.async.done],
     (state, { result }) => {
@@ -105,9 +158,18 @@ export default reducerWithInitialState(initialState)
     console.log(state, 'deleteComment')
     return { ...state }
   })
-  .case(clearStudyRecordsStateData, state => {
-    return {
-      ...state,
-      records: []
-    }
+  .case(resetStudyRecordsState, state => {
+    state.init = false
+    state.currentPage = 1
+    state.records = []
+    state.errorMessage = ''
+    return { ...state }
+  })
+  .case(resetSearchStudyRecordsState, state => {
+    state.search.init = false
+    state.search.currentPage = 1
+    state.records = []
+    state.errorMessage = ''
+    state.search.keyword = ''
+    return { ...state }
   })

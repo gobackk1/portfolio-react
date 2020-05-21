@@ -1,26 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { resetUsersState, resetSearchUsersState } from '@/actions/users'
 import {
-  readUsers,
-  searchUsers,
-  setErrorMessage,
-  initializeUsersState,
-  initializeSearchState
-} from '@/actions/users'
-import { readStudyRecords } from '@/actions/studyRecords'
-import { searchStudyRecords } from '@/actions/studyRecords'
+  resetSearchStudyRecordsState,
+  resetStudyRecordsState
+} from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
 import classNames from 'classnames'
 import store from '@/store'
 import { Waypoint } from 'react-waypoint'
 
-import {
-  Link,
-  Switch,
-  Route,
-  useRouteMatch,
-  RouteComponentProps
-} from 'react-router-dom'
+import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import RecordsList from '@/components/RecordsList'
 import { renderErrorMessages } from '@/utils/render'
 
@@ -36,36 +26,26 @@ class Explore extends React.Component<Props, {}> {
   // 検索入力後何ミリ秒後にディスパッチするか
   debounceMilliseconds: number = 500
   searchQueue: number | null = null
-  userSearch!: any
+  usersSearchInput!: HTMLInputElement | null
+  studyRecordsSearchInput!: HTMLInputElement | null
 
   // NOTE: /explore/studyrecords に直接アクセスが考えられるため、アクティブなタブを内部で記憶しない
   isUsersPage: () => boolean = () => /users/.test(window.location.pathname)
   isRecordsPage: () => boolean = () =>
     /studyrecords/.test(window.location.pathname)
 
-  records = {
-    currentPage: 1,
-    perPage: 10
-  }
-  search = {
-    records: {
-      currentPage: 1,
-      perPage: 10
-    }
-  }
   state = {
-    loading: false,
-    onLoadUsersList: this.props.users.onLoadUsersList,
-    onLoadRecordsList: () => {},
-    errorMessage: ''
+    loading: false
   }
 
   componentDidMount() {
-    this.userSearch = document.getElementById('explore-users-search')
+    this.usersSearchInput = document.getElementById(
+      'explore-users-search'
+    ) as HTMLInputElement
+    this.studyRecordsSearchInput = document.getElementById(
+      'explore-records-search'
+    ) as HTMLInputElement
     this.useLoadingSpinner(this.initialize)
-    this.setState({
-      onLoadRecordsList: this.loadRecordsList
-    })
   }
 
   useLoadingSpinner = async callback => {
@@ -75,77 +55,67 @@ class Explore extends React.Component<Props, {}> {
   }
 
   initialize = async () => {
-    if (this.userSearch.value === '') {
-      this.userSearch.value = this.props.users.search.keyword
+    if (this.usersSearchInput!.value === '') {
+      this.usersSearchInput!.value = this.props.users.search.keyword
+    }
+    if (this.studyRecordsSearchInput!.value === '') {
+      this.studyRecordsSearchInput!.value = this.props.studyRecords.search.keyword
     }
     if (!this.props.users.init) {
       try {
         await this.props.users.dispatchReadUsers(10)
-        // await store.dispatch(
-        //   readUsers({
-        //     page: this.props.users.currentPage,
-        //     per: this.props.users.perPage
-        //   })
-        // )
       } catch (e) {
         console.log(e)
       }
     }
-    await Promise.all([
-      store.dispatch(
-        readStudyRecords({
-          page: this.records.currentPage,
-          per: this.records.perPage
-        })
-      )
-    ])
-  }
-
-  loadRecordsList: () => Promise<void> = async () => {
-    this.records.currentPage++
-    try {
-      await store.dispatch(
-        readStudyRecords({
-          page: this.records.currentPage,
-          per: this.records.perPage
-        })
-      )
-    } catch (e) {
-      // TODO: error内容によって処理を分岐させる必要がある
-      // NOTE: onEnterがnullを受け付けない
-      this.setState({ onLoadRecordsList: undefined })
-      this.records.currentPage--
-    }
-  }
-
-  dispatchSearchRecords = async keyword => {
-    try {
-      await store.dispatch(
-        searchStudyRecords({
-          keyword,
-          page: this.search.records.currentPage,
-          per: this.search.records.perPage
-        })
-      )
-    } catch (e) {
-      if (e.type === 'any_more_data') {
-        this.setState({ onLoadRecordsList: undefined })
-        return
+    if (!this.props.studyRecords.init) {
+      try {
+        await this.props.studyRecords.dispatchReadStudyRecords(10)
+      } catch (e) {
+        console.log(e)
       }
-      this.setState({ onLoadRecordsList: undefined, errorMessage: e.message })
     }
   }
 
-  setSearchQueue = (keyword: string): void => {
-    const readUser = async () => {
-      store.dispatch(initializeUsersState())
-      this.props.users.dispatchReadUsers(10)
-    }
-    const searchUser = async () => {
-      store.dispatch(initializeSearchState())
-      await this.props.users.dispatchSearchUsers(keyword, 10)
-    }
-    const callback = keyword ? searchUser : readUser
+  dispatchReadUsers: () => Promise<void> = async () => {
+    store.dispatch(resetUsersState())
+    await this.props.users.dispatchReadUsers(10)
+  }
+
+  dispatchSearchUsers: (
+    keyword: string
+  ) => () => Promise<void> = keyword => async () => {
+    store.dispatch(resetSearchUsersState())
+    await this.props.users.dispatchSearchUsers(keyword, 10)
+  }
+
+  dispatchReadStudyRecords: () => Promise<void> = async () => {
+    store.dispatch(resetStudyRecordsState())
+    this.props.studyRecords.dispatchReadStudyRecords(10)
+  }
+
+  dispatchSearchStudyRecords: (
+    keyword: string
+  ) => () => Promise<void> = keyword => async () => {
+    store.dispatch(resetSearchStudyRecordsState())
+    await this.props.studyRecords.dispatchSearchStudyRecords(keyword, 10)
+  }
+
+  setSearchQueue = (keyword: string, page: string): void => {
+    const {
+      dispatchReadUsers,
+      dispatchSearchUsers,
+      dispatchReadStudyRecords,
+      dispatchSearchStudyRecords
+    } = this
+    const callback =
+      page === 'user'
+        ? keyword
+          ? dispatchSearchUsers(keyword)
+          : dispatchReadUsers
+        : keyword
+        ? dispatchSearchStudyRecords(keyword)
+        : dispatchReadStudyRecords
 
     this.searchQueue = window.setTimeout(() => {
       this.useLoadingSpinner(callback)
@@ -161,32 +131,34 @@ class Explore extends React.Component<Props, {}> {
     }
 
     if (this.isUsersPage()) {
-      this.setSearchQueue(keyword)
+      this.setSearchQueue(keyword, 'user')
     } else {
-      // this.props.users.setSearchQueue(keyword)
+      this.setSearchQueue(keyword, 'studyRecords')
     }
   }
 
   beforeEnter = async () => {
-    store.dispatch(setErrorMessage(''))
     if (!this.props.users.data.length) {
       const search = document.getElementById('explore-users-search')
       if (search) (search as HTMLInputElement).value = ''
-      await this.props.users.loadUsersList()
+      await this.dispatchReadUsers()
     }
     if (!this.props.studyRecords.records.length) {
       const search = document.getElementById('explore-records-search')
       if (search) (search as HTMLInputElement).value = ''
-      await this.loadRecordsList()
+      await this.dispatchReadStudyRecords()
     }
   }
 
   render() {
     const {
       match,
-      users: { errorMessage, onLoadUsersList }
+      users,
+      studyRecords,
+      users: { onLoadUsers },
+      studyRecords: { onLoadStudyRecords }
     } = this.props
-    const { onLoadRecordsList, loading } = this.state
+    const { loading } = this.state
     const userTabClassName = classNames({
       'tab__list-item': !this.isUsersPage(),
       'tab__list-item--active': this.isUsersPage()
@@ -233,14 +205,15 @@ class Explore extends React.Component<Props, {}> {
           />
         </div>
         <div className="tab__body">
-          {renderErrorMessages([errorMessage])}
+          {renderErrorMessages([users.errorMessage])}
+          {renderErrorMessages([studyRecords.errorMessage])}
           {loading && '読み込み中MOCK'}
           {!loading && (
             <Switch>
               <Route path={`${match.url}/users`}>
                 <UsersList></UsersList>
                 <Waypoint
-                  onEnter={onLoadUsersList}
+                  onEnter={onLoadUsers}
                   bottomOffset="-400px"
                 ></Waypoint>
                 {loading && '読み込み中MOCK'}
@@ -248,7 +221,7 @@ class Explore extends React.Component<Props, {}> {
               <Route path={`${match.url}/studyrecords`}>
                 <RecordsList></RecordsList>
                 <Waypoint
-                  onEnter={onLoadRecordsList}
+                  onEnter={onLoadStudyRecords}
                   bottomOffset="-400px"
                 ></Waypoint>
                 {loading && '読み込み中MOCK'}

@@ -4,7 +4,7 @@ import CustomError from '@/utils/CustomError'
 
 const studyRecordUrl = `${process.env.REACT_APP_API_URL}/study_records`
 
-export const readStudyRecords = asyncActionCreator<any, any, Error>(
+export const readStudyRecords = asyncActionCreator<any, any, CustomError>(
   'READ_STUDY_RECORDS',
   async ({ page, per }) => {
     const res = await axios.get(
@@ -27,7 +27,7 @@ export const readStudyRecords = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const searchStudyRecords = asyncActionCreator<any, any, Error>(
+export const searchStudyRecords = asyncActionCreator<any, any, CustomError>(
   'SEARCH_STUDY_RECORDS',
   async params => {
     const res = await axios.post(`${studyRecordUrl}/search`, params, auth)
@@ -47,7 +47,7 @@ export const searchStudyRecords = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const getStudyRecord = asyncActionCreator<any, any, Error>(
+export const getStudyRecord = asyncActionCreator<any, any, CustomError>(
   'READ_STUDY_RECORD',
   async id => {
     const res = await axios.get(`${studyRecordUrl}/${id}`, auth)
@@ -60,7 +60,7 @@ export const getStudyRecord = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const postStudyRecord = asyncActionCreator<any, any, Error>(
+export const postStudyRecord = asyncActionCreator<any, any, CustomError>(
   'POST_STUDY_RECORD',
   async params => {
     const res = await axios.post(studyRecordUrl, params, auth)
@@ -73,7 +73,7 @@ export const postStudyRecord = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const putStudyRecord = asyncActionCreator<any, any, Error>(
+export const putStudyRecord = asyncActionCreator<any, any, CustomError>(
   'PUT_STUDY_RECORD',
   async params => {
     console.log(params, 'PUT_STUDY_RECORD')
@@ -87,7 +87,7 @@ export const putStudyRecord = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const deleteStudyRecord = asyncActionCreator<any, any, Error>(
+export const deleteStudyRecord = asyncActionCreator<any, any, CustomError>(
   'DELETE_STUDY_RECORD',
   async id => {
     const res = await axios.delete(`${studyRecordUrl}/${id}`, auth)
@@ -100,7 +100,7 @@ export const deleteStudyRecord = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const postComment = asyncActionCreator<any, any, Error>(
+export const postComment = asyncActionCreator<any, any, CustomError>(
   'POST_STUDY_RECORD_COMMENT',
   async params => {
     const { study_record_id } = params
@@ -135,6 +135,7 @@ export const deleteComment = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const clearStudyRecordsStateData = actionCreator(
-  'CLEAR_STUDY_RECORDS_STATE_DATA'
+export const resetStudyRecordsState = actionCreator('RESET_STUDY_RECORDS_STATE')
+export const resetSearchStudyRecordsState = actionCreator(
+  'RESET_SEARCH_STUDY_RECORDS_STATE'
 )

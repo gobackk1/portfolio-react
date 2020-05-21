@@ -25,7 +25,7 @@ export const readUsers = asyncActionCreator<any, any, CustomError>(
   }
 )
 
-export const searchUsers = asyncActionCreator<any, any, Error>(
+export const searchUsers = asyncActionCreator<any, any, CustomError>(
   'SEARCH_USERS',
   async params => {
     const res = await axios.post(`${usersUrl}/search`, params, auth)
@@ -71,12 +71,5 @@ export const unFollowUser = asyncActionCreator<any, any, Error>(
   }
 )
 
-export const initializeUsersState = actionCreator('INITIALIZE_USERS_STATE')
-export const initializeSearchState = actionCreator('INITIALIZE_SEARCH_STATE')
-export const setCurrentSearchPage = actionCreator<number>(
-  'SET_CURRENT_SEARCH_PAGE'
-)
-export const setErrorMessage = actionCreator<string>('SET_ERROR_MESSAGE')
-export const setOnLoadReadUsers = actionCreator<(() => void) | undefined>(
-  'SET_ON_LOAD_USERS_LIST'
-)
+export const resetUsersState = actionCreator('RESET_USERS_STATE')
+export const resetSearchUsersState = actionCreator('RESET_SEARCH_USERS_STATE')
