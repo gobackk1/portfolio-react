@@ -139,13 +139,11 @@ class Explore extends React.Component<Props, {}> {
 
   beforeEnter = async () => {
     if (!this.props.users.data.length) {
-      const search = document.getElementById('explore-users-search')
-      if (search) (search as HTMLInputElement).value = ''
+      this.usersSearchInput!.value = ''
       await this.dispatchReadUsers()
     }
     if (!this.props.studyRecords.records.length) {
-      const search = document.getElementById('explore-records-search')
-      if (search) (search as HTMLInputElement).value = ''
+      this.studyRecordsSearchInput!.value = ''
       await this.dispatchReadStudyRecords()
     }
   }
