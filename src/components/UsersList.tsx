@@ -3,7 +3,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import FollowButton from '@/components/FollowButton'
-import store from '@/store'
+import { Waypoint } from 'react-waypoint'
 
 interface Props extends RouteComponentProps {
   users?: any
@@ -15,6 +15,7 @@ class UsersList extends React.Component<Props, any> {
   }
 
   render() {
+    const { onLoadUsers, isLoading } = this.props.users
     return (
       <>
         <ul className="users-list">
@@ -49,6 +50,8 @@ class UsersList extends React.Component<Props, any> {
             )
           })}
         </ul>
+        <Waypoint onEnter={onLoadUsers} bottomOffset="-400px"></Waypoint>
+        {isLoading && '読み込み中mock'}
       </>
     )
   }

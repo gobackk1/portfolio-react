@@ -42,6 +42,7 @@ const dispatchSearchUsers = async (
 
 const initialState: any = {
   init: false,
+  isLoading: false,
   currentPage: 1,
   perPage: 10,
   search: {
@@ -66,9 +67,13 @@ const initialState: any = {
 }
 
 export default reducerWithInitialState(initialState)
+  .case(readUsers.async.started, state => {
+    return { ...state, isLoading: true }
+  })
   .cases(
     [readUsers.async.failed, searchUsers.async.failed],
     (state, { error }) => {
+      state.isLoading = false
       if (error.type === 'record_not_found') state.errorMessage = error.message
       state.onLoadUsers = undefined
       return { ...state }
@@ -83,6 +88,7 @@ export default reducerWithInitialState(initialState)
         dispatchReadUsers(state.perPage)
       }
     }
+    state.isLoading = false
     state.currentPage++
     state.data = state.data.concat(result.data.result)
     console.log('readUsers.async.done')

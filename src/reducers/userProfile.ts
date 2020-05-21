@@ -14,6 +14,7 @@ const initialState: any = {
 
 export default reducerWithInitialState(initialState)
   .case(initProfile.async.done, (state, done) => {
+    console.log(done.result)
     return {
       ...done.result.data
     }

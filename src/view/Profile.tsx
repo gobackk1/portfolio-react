@@ -9,6 +9,7 @@ import ProfileForm from '@/components/ProfileForm'
 import FollowButton from '@/components/FollowButton'
 import store from '@/store'
 import { initProfile } from '@/actions/userProfile'
+import RecordsList from '@/components/RecordsList'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   user: any
@@ -134,13 +135,14 @@ class Profile extends React.Component<Props, State> {
             </span>
           </div>
         </div>
-        <ul className="record-list">
+        <RecordsList></RecordsList>
+        {/* <ul className="record-list">
           {this.state.study_records.map((record, index) => (
             <li key={index} className="record-list__item">
               <StudyRecord record={record}></StudyRecord>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     )
   }

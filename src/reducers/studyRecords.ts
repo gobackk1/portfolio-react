@@ -43,6 +43,7 @@ const dispatchSearchStudyRecords = async (keyword: string, per: number) => {
 
 const initialState: any = {
   loaded: false,
+  isLoading: false,
   init: false,
   currentPage: 1,
   perPage: 10,
@@ -77,8 +78,16 @@ const initialState: any = {
 
 export default reducerWithInitialState(initialState)
   .cases(
+    [readStudyRecords.async.started, searchStudyRecords.async.started],
+    state => {
+      state.isLoading = true
+      return { ...state }
+    }
+  )
+  .cases(
     [readStudyRecords.async.failed, searchStudyRecords.async.failed],
     (state, { error }) => {
+      state.isLoading = false
       if (error.type === 'record_not_found') state.errorMessage = error.message
       state.onLoadStudyRecords = undefined
       return { ...state }
@@ -92,10 +101,13 @@ export default reducerWithInitialState(initialState)
         dispatchReadStudyRecords(state.perPage)
       }
     }
+    state.isLoading = false
     state.currentPage++
     state.records = state.records.concat(result.data.result)
     state.loaded = true
-    return { ...state }
+    return {
+      ...state
+    }
   })
   .case(searchStudyRecords.async.done, (state, { params, result }) => {
     if (!state.search.init) {

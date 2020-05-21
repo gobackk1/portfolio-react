@@ -2,6 +2,7 @@ import React from 'react'
 import StudyRecord from '@/components/StudyRecord'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import { Waypoint } from 'react-waypoint'
 
 interface Props {
   studyRecords?: any
@@ -9,6 +10,7 @@ interface Props {
 
 class RecordsList extends React.Component<Props> {
   render() {
+    const { onLoadStudyRecords, isLoading } = this.props.studyRecords
     return (
       <>
         <ul className="record-list">
@@ -18,6 +20,8 @@ class RecordsList extends React.Component<Props> {
             </li>
           ))}
         </ul>
+        <Waypoint onEnter={onLoadStudyRecords} bottomOffset="-400px"></Waypoint>
+        {isLoading && '読み込み中MOCK'}
       </>
     )
   }

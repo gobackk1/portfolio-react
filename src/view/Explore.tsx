@@ -210,19 +210,10 @@ class Explore extends React.Component<Props, {}> {
             <Switch>
               <Route path={`${match.url}/users`}>
                 <UsersList></UsersList>
-                <Waypoint
-                  onEnter={onLoadUsers}
-                  bottomOffset="-400px"
-                ></Waypoint>
-                {loading && '読み込み中MOCK'}
+                {/* {loading && '読み込み中MOCK'} */}
               </Route>
               <Route path={`${match.url}/studyrecords`}>
                 <RecordsList></RecordsList>
-                <Waypoint
-                  onEnter={onLoadStudyRecords}
-                  bottomOffset="-400px"
-                ></Waypoint>
-                {loading && '読み込み中MOCK'}
               </Route>
             </Switch>
           )}
