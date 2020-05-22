@@ -62,6 +62,6 @@ export default reducerWithInitialState(initialState)
     return { ...state }
   })
   .case(setUserProfileState, (state, { followers_count }) => {
-    if (followers_count) state.followers_count = followers_count
+    if (followers_count != null) state.data.followers_count = followers_count
     return { ...state }
   })

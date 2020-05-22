@@ -36,16 +36,6 @@ class Profile extends React.Component<Props, State> {
     await store.dispatch(getProfile(id))
   }
 
-  updateFollowerCount = (i: number) => {
-    console.log(this.props.userProfile.data.followers_count)
-
-    store.dispatch(
-      setUserProfileState({
-        followers_count: this.props.userProfile.data.followers_count + i
-      })
-    )
-  }
-
   componentDidMount() {
     this.props.user.id === this.userId
       ? this.setCurrentUserProfile(this.userId)
@@ -86,9 +76,6 @@ class Profile extends React.Component<Props, State> {
               <FollowButton
                 followId={user.id}
                 isFollowing={is_following}
-                updateFollowerCount={isFollowing =>
-                  this.updateFollowerCount(isFollowing)
-                }
               ></FollowButton>
             </Render>
           </div>
@@ -108,13 +95,6 @@ class Profile extends React.Component<Props, State> {
           </div>
         </div>
         <RecordsList records={records} page="profile"></RecordsList>
-        {/* <ul className="record-list">
-          {this.state.study_records.map((record, index) => (
-            <li key={index} className="record-list__item">
-              <StudyRecord record={record}></StudyRecord>
-            </li>
-          ))}
-        </ul> */}
       </div>
     )
   }

@@ -2,13 +2,14 @@ import React from 'react'
 import axios, { auth } from '@/axios'
 import { followUser, unFollowUser } from '@/actions/users'
 import { connect } from 'react-redux'
+import store from '@/store'
+import { setUserProfileState } from '@/actions/userProfile'
 
 const relationshipUrl: string = `${process.env.REACT_APP_API_URL}/relationships`
 
 interface Props {
   followId: number
   isFollowing: boolean
-  updateFollowerCount?: any
   followUser: any
   unFollowUser: any
 }
@@ -21,10 +22,9 @@ class FollowButton extends React.Component<Props, {}> {
 
   createFollow = async id => {
     this.setState({ disabled: true })
+    const nowCount = store.getState().userProfile.data.followers_count
+    store.dispatch(setUserProfileState({ followers_count: nowCount + 1 }))
     await this.props.followUser(id)
-    if (this.props.updateFollowerCount) {
-      this.props.updateFollowerCount(1)
-    }
     this.setState({ isFollowing: true, disabled: false })
   }
 
@@ -32,10 +32,14 @@ class FollowButton extends React.Component<Props, {}> {
     if (!window.confirm('本当にフォローを解除しますか？')) return
     this.setState({ disabled: true })
     await this.props.unFollowUser(id)
-    if (this.props.updateFollowerCount) {
-      this.props.updateFollowerCount(-1)
-    }
-    this.setState({ isFollowing: false, disabled: false })
+    const nowCount = store.getState().userProfile.data.followers_count
+    console.log(nowCount)
+    store.dispatch(setUserProfileState({ followers_count: nowCount - 1 }))
+
+    this.setState({
+      isFollowing: false,
+      disabled: false
+    })
   }
 
   onClickFollow = id => {
