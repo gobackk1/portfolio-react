@@ -6,15 +6,25 @@ import { Waypoint } from 'react-waypoint'
 
 interface Props {
   studyRecords?: any
+  userProfile?: any
+  page?: 'profile'
+  records: any
 }
 
-class RecordsList extends React.Component<Props> {
+class RecordsList extends React.Component<Props, {}> {
   render() {
-    const { onLoadStudyRecords, isLoading } = this.props.studyRecords
+    let onLoadStudyRecords
+    if (this.props.page === 'profile') {
+      onLoadStudyRecords = this.props.userProfile.onLoadStudyRecords
+      console.log(this.props.userProfile.onLoadStudyRecords)
+    } else {
+      onLoadStudyRecords = this.props.studyRecords.onLoadStudyRecords
+    }
+    const { isLoading } = this.props.studyRecords
     return (
       <>
         <ul className="record-list">
-          {this.props.studyRecords.records.map((record, index) => (
+          {this.props.records.map((record, index) => (
             <li key={index} className="record-list__item">
               <StudyRecord record={record}></StudyRecord>
             </li>
@@ -28,7 +38,8 @@ class RecordsList extends React.Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  studyRecords: state.studyRecords
+  studyRecords: state.studyRecords,
+  userProfile: state.userProfile
 })
 
 export default connect(mapStateToProps, null)(RecordsList)

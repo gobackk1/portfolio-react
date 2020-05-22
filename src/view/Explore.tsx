@@ -154,7 +154,7 @@ class Explore extends React.Component<Props, {}> {
       users,
       studyRecords,
       users: { onLoadUsers },
-      studyRecords: { onLoadStudyRecords }
+      studyRecords: { records }
     } = this.props
     const { loading } = this.state
     const userTabClassName = classNames({
@@ -213,7 +213,7 @@ class Explore extends React.Component<Props, {}> {
                 {/* {loading && '読み込み中MOCK'} */}
               </Route>
               <Route path={`${match.url}/studyrecords`}>
-                <RecordsList></RecordsList>
+                <RecordsList records={records}></RecordsList>
               </Route>
             </Switch>
           )}
