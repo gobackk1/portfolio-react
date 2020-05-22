@@ -4,11 +4,10 @@ import axios, { auth } from '@/axios'
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
 import Render from '@/components/Render'
 import Modal from '@/components/Modal'
-import StudyRecord from '@/components/StudyRecord'
 import ProfileForm from '@/components/ProfileForm'
 import FollowButton from '@/components/FollowButton'
 import store from '@/store'
-import { initProfile } from '@/actions/userProfile'
+import { getProfile, setUserProfileState } from '@/actions/userProfile'
 import RecordsList from '@/components/RecordsList'
 
 interface Props extends RouteComponentProps<{ id: string }> {
@@ -18,39 +17,6 @@ interface Props extends RouteComponentProps<{ id: string }> {
 interface State {}
 
 class Profile extends React.Component<Props, State> {
-  state = {
-    loaded: true,
-    user: {
-      id: 0,
-      name: '',
-      email: '',
-      created_at: '',
-      user_bio: '',
-      image_url: '/images/user_images/default.png'
-    },
-    study_records: [
-      {
-        user: {
-          name: '',
-          image_url: '/images/user_images/default.png'
-        },
-        date: '01/01',
-        record: {
-          user_id: 0,
-          comment: '',
-          teaching_material: '',
-          study_hours: 0,
-          study_record_comments: []
-        }
-      }
-    ],
-    total_study_hours: 0,
-    followings_count: 0,
-    followers_count: 0,
-    is_following: false,
-    registered_date: ''
-  }
-
   currentUser!: boolean
 
   userId: number = this.props.match.params.id
@@ -63,35 +29,43 @@ class Profile extends React.Component<Props, State> {
   }
 
   setAnotherUserProfile = async (id: number) => {
-    this.setState({ loaded: false })
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/users/${id}`,
-      auth
-    )
-
-    this.setState({ ...res.data, loaded: true })
+    await store.dispatch(getProfile(id))
   }
 
-  setCurrentUserProfile = async () => {
-    await store.dispatch(initProfile(store.getState().user.id))
-    this.setState(this.props.userProfile)
+  setCurrentUserProfile = async (id: number) => {
+    await store.dispatch(getProfile(id))
   }
 
   updateFollowerCount = (i: number) => {
-    this.setState({
-      followers_count: this.state.followers_count + i
-    })
+    console.log(this.props.userProfile.data.followers_count)
+
+    store.dispatch(
+      setUserProfileState({
+        followers_count: this.props.userProfile.data.followers_count + i
+      })
+    )
   }
 
   componentDidMount() {
     this.props.user.id === this.userId
-      ? this.setCurrentUserProfile()
+      ? this.setCurrentUserProfile(this.userId)
       : this.setAnotherUserProfile(this.userId)
   }
 
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
-    const { user } = this.state
+    const {
+      data: {
+        records,
+        user,
+        is_following,
+        registered_date,
+        followings_count,
+        followers_count,
+        total_study_hours
+      }
+    } = this.props.userProfile
+
     const update = this.currentUser ? this.setCurrentUserProfile : null
     return (
       <div className="l-inner">
@@ -108,34 +82,32 @@ class Profile extends React.Component<Props, State> {
                 <ProfileForm update={update}></ProfileForm>
               </Modal>
             </Render>
-            <Render if={!correctUser && this.state.loaded}>
+            <Render if={!correctUser}>
               <FollowButton
-                followId={this.state.user.id}
-                isFollowing={this.state.is_following}
+                followId={user.id}
+                isFollowing={is_following}
                 updateFollowerCount={isFollowing =>
                   this.updateFollowerCount(isFollowing)
                 }
               ></FollowButton>
             </Render>
           </div>
-          <div className="profile__name">{this.state.user.name}</div>
-          <div className="profile__registered">
-            {this.state.registered_date} 登録
-          </div>
-          <div className="profile__bio">{this.state.user.user_bio}</div>
+          <div className="profile__name">{user.name}</div>
+          <div className="profile__registered">{registered_date} 登録</div>
+          <div className="profile__bio">{user.user_bio}</div>
           <div className="profile__footer">
             <span className="profile__footer-item">
-              フォロー {this.state.followings_count}
+              フォロー {followings_count}
             </span>
             <span className="profile__footer-item">
-              フォロワー {this.state.followers_count}
+              フォロワー {followers_count}
             </span>
             <span className="profile__footer-item">
-              総勉強時間 {this.state.total_study_hours}時間
+              総勉強時間 {total_study_hours}時間
             </span>
           </div>
         </div>
-        <RecordsList></RecordsList>
+        <RecordsList records={records} page="profile"></RecordsList>
         {/* <ul className="record-list">
           {this.state.study_records.map((record, index) => (
             <li key={index} className="record-list__item">
