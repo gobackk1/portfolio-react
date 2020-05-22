@@ -14,7 +14,6 @@ import Profile from '@/view/Profile'
 import Report from '@/view/Report'
 
 import { login } from '@/actions/user'
-import { initProfile } from '@/actions/userProfile'
 import RecordEdit from './view/RecordEdit'
 ;(async () => {
   // 開発用ログインスキップ
