@@ -16,7 +16,6 @@ class RecordsList extends React.Component<Props, {}> {
     let onLoadStudyRecords
     if (this.props.page === 'profile') {
       onLoadStudyRecords = this.props.userProfile.onLoadStudyRecords
-      console.log(this.props.userProfile.onLoadStudyRecords)
     } else {
       onLoadStudyRecords = this.props.studyRecords.onLoadStudyRecords
     }

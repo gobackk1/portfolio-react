@@ -36,6 +36,13 @@ class StudyRecord extends React.Component<Props, {}> {
   }
 
   render() {
+    console.log(this.props.record, 'studyrecordstsx')
+
+    if (!this.props.record) {
+      console.log('oi')
+
+      return <>mock</>
+    }
     const {
       id,
       date,

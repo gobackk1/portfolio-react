@@ -48,7 +48,7 @@ export const searchStudyRecords = asyncActionCreator<any, any, CustomError>(
 )
 
 export const getStudyRecord = asyncActionCreator<any, any, CustomError>(
-  'READ_STUDY_RECORD',
+  'GET_STUDY_RECORD',
   async id => {
     const res = await axios.get(`${studyRecordUrl}/${id}`, auth)
 

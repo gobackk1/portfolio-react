@@ -22,7 +22,7 @@ class FollowButton extends React.Component<Props, {}> {
 
   createFollow = async id => {
     this.setState({ disabled: true })
-    const nowCount = store.getState().userProfile.data.followers_count
+    const nowCount = store.getState().userProfile.profile.followers_count
     store.dispatch(setUserProfileState({ followers_count: nowCount + 1 }))
     await this.props.followUser(id)
     this.setState({ isFollowing: true, disabled: false })
@@ -32,7 +32,7 @@ class FollowButton extends React.Component<Props, {}> {
     if (!window.confirm('本当にフォローを解除しますか？')) return
     this.setState({ disabled: true })
     await this.props.unFollowUser(id)
-    const nowCount = store.getState().userProfile.data.followers_count
+    const nowCount = store.getState().userProfile.profile.followers_count
     console.log(nowCount)
     store.dispatch(setUserProfileState({ followers_count: nowCount - 1 }))
 

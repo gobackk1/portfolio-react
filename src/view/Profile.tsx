@@ -7,7 +7,11 @@ import Modal from '@/components/Modal'
 import ProfileForm from '@/components/ProfileForm'
 import FollowButton from '@/components/FollowButton'
 import store from '@/store'
-import { getProfile, setUserProfileState } from '@/actions/userProfile'
+import {
+  getProfile,
+  readProfileStudyRecords,
+  setUserProfileState
+} from '@/actions/userProfile'
 import RecordsList from '@/components/RecordsList'
 
 interface Props extends RouteComponentProps<{ id: string }> {
@@ -28,25 +32,39 @@ class Profile extends React.Component<Props, State> {
     this.currentUser = this.props.match.params.id ? false : true
   }
 
-  setAnotherUserProfile = async (id: number) => {
-    await store.dispatch(getProfile(id))
-  }
+  // setAnotherUserProfile = async (id: number) => {
+  //   const { currentPage: page } = store.getState().userProfile
+  //   await store.dispatch(readProfileStudyRecords({ id, page, per: 10 }))
+  //   await store.dispatch(getProfile(id))
+  // }
 
-  setCurrentUserProfile = async (id: number) => {
+  setUserProfile = async (id: number) => {
+    console.log('setUserProfile')
+
+    store.dispatch(setUserProfileState({ currentPage: 1, records: [] }))
+    const { currentPage: page } = store.getState().userProfile
+    await store.dispatch(
+      readProfileStudyRecords({
+        id,
+        page,
+        per: 10
+      })
+    )
     await store.dispatch(getProfile(id))
   }
 
   componentDidMount() {
-    this.props.user.id === this.userId
-      ? this.setCurrentUserProfile(this.userId)
-      : this.setAnotherUserProfile(this.userId)
+    this.setUserProfile(this.userId)
+    // this.props.user.id === this.userId
+    //   ? this.setCurrentUserProfile(this.userId)
+    //   : this.setAnotherUserProfile(this.userId)
   }
 
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
     const {
-      data: {
-        records,
+      records,
+      profile: {
         user,
         is_following,
         registered_date,
@@ -55,8 +73,7 @@ class Profile extends React.Component<Props, State> {
         total_study_hours
       }
     } = this.props.userProfile
-
-    const update = this.currentUser ? this.setCurrentUserProfile : null
+    const update = this.setUserProfile
     return (
       <div className="l-inner">
         <div className="profile">
