@@ -36,6 +36,7 @@ class UserShow extends React.Component<Props, {}> {
   }
 
   async componentDidMount() {
+    window.scrollTo(0, 0)
     this.id = Number(this.props.match.params.id)
     const res = await axios.get(
       `${process.env.REACT_APP_API_URL}/study_records/${this.id}`,
@@ -43,7 +44,10 @@ class UserShow extends React.Component<Props, {}> {
     )
     console.log(res.data, 'USERSHOW')
 
-    this.setState({ payload: res.data, isLoading: false })
+    this.setState({
+      payload: res.data,
+      isLoading: false
+    })
   }
 
   renderIfRecordHasComment = comments => {

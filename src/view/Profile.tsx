@@ -54,6 +54,7 @@ class Profile extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0)
     this.setUserProfile(this.userId)
     // this.props.user.id === this.userId
     //   ? this.setCurrentUserProfile(this.userId)
