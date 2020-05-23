@@ -42,7 +42,6 @@ const dispatchSearchStudyRecords = async (keyword: string, per: number) => {
 }
 
 const initialState: any = {
-  loaded: false,
   isLoading: false,
   init: false,
   currentPage: 1,
@@ -56,6 +55,7 @@ const initialState: any = {
   errorMessage: '',
   records: [
     {
+      id: 1,
       user: {
         name: '',
         image_url: '/images/user_images/default.png'
@@ -129,7 +129,11 @@ export default reducerWithInitialState(initialState)
     (state, { result }) => {
       const data = result.data
       const index = state.records.findIndex(r => r.id === data.id)
-      if (index !== -1) state.records[index] = data
+      if (index !== -1) {
+        state.records[index] = data
+      } else {
+        state.records.push(data)
+      }
 
       console.log(state, 'getStudyRecord or putStudyRecord')
       return { ...state }

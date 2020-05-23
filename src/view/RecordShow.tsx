@@ -23,65 +23,11 @@ interface Props extends RouteComponentProps<{ id: string }> {
 
 class UserShow extends React.Component<Props, {}> {
   id!: number
-  state = {
-    isLoading: true,
-    payload: {
-      user: {
-        id: 0
-      },
-      record: {
-        id: 1
-      }
-    }
-  }
 
-  async componentDidMount() {
-    window.scrollTo(0, 0)
+  async componentWillMount() {
     this.id = Number(this.props.match.params.id)
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/study_records/${this.id}`,
-      auth
-    )
-    console.log(res.data, 'USERSHOW')
-
-    this.setState({
-      payload: res.data,
-      isLoading: false
-    })
-  }
-
-  renderIfRecordHasComment = comments => {
-    if (!comments) return
-    return (
-      <ul>
-        {comments.map((comment, index) => (
-          <li key={index}>
-            <Comment data={comment} recordId={this.id}></Comment>
-          </li>
-        ))}
-      </ul>
-    )
-  }
-
-  test = () => {
-    const {
-      isLoading,
-      payload,
-      payload: { user, record, comments }
-    } = this.state as any
-    if (isLoading) {
-      return <>loading</>
-    }
-    return (
-      <>
-        {!isLoading && (
-          <div className="mb40">
-            <StudyRecord record={payload} link={false}></StudyRecord>
-          </div>
-        )}
-        {this.renderIfRecordHasComment(comments)}
-      </>
-    )
+    window.scrollTo(0, 0)
+    await store.dispatch(getStudyRecord(this.id))
   }
 
   onClickBack: (() => void) | null = () => {
@@ -89,10 +35,10 @@ class UserShow extends React.Component<Props, {}> {
   }
 
   render() {
-    const {
-      isLoading,
-      payload: { user, record, comments }
-    } = this.state as any
+    const { records } = this.props.studyRecords
+    const index = records.findIndex(r => r.id === this.id)
+    if (index === -1) return <></>
+    const { user, record, comments } = records[index]
     const correctUser = user.id === this.props.user.id
     return (
       <div className="l-inner">
@@ -114,7 +60,16 @@ class UserShow extends React.Component<Props, {}> {
             <RecordForm type="edit"></RecordForm>
           </Modal>
         </Render>
-        {this.test()}
+        <div className="mb40">
+          <StudyRecord record={records[index]} link={false}></StudyRecord>
+        </div>
+        <ul>
+          {comments.map((comment, index) => (
+            <li key={index}>
+              <Comment data={comment} recordId={this.id}></Comment>
+            </li>
+          ))}
+        </ul>
       </div>
     )
   }
@@ -124,6 +79,7 @@ const mapStateToProps = state => ({
   studyRecords: state.studyRecords,
   user: state.user
 })
+
 const mapDispatchToProps = { getStudyRecord, readStudyRecords, deleteComment }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserShow)
