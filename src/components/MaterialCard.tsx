@@ -4,6 +4,7 @@ import 'react-slidedown/lib/slidedown.css'
 import Modal from '@/components/Modal'
 import RecordForm from '@/components/RecordForm'
 import MaterialForm from '@/components/MaterialForm'
+import MaterialImage from '@/components/MaterialImage'
 import store from '@/store'
 import { deleteTeachingMaterial } from '@/actions/teachingMaterials'
 import { connect } from 'react-redux'
@@ -63,14 +64,10 @@ class MaterialCard extends React.Component<Props> {
           }}
         >
           <div className="card-material__head">
-            <div
-              style={{
-                background: `url(${process.env.REACT_APP_API_URL}${this.props.material.image_url}) no-repeat center/contain`,
-                color: 'red',
-                height: 150,
-                width: '100%'
-              }}
-            ></div>
+            <MaterialImage
+              bgUrl={`url(${process.env.REACT_APP_API_URL}${this.props.material.image_url}) no-repeat center/contain`}
+              height={150}
+            ></MaterialImage>
           </div>
           <div className="card-material__foot">
             <div>{title}</div>

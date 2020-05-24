@@ -10,6 +10,7 @@ import {
   renderFile,
   encode64
 } from '@/utils/render'
+import MaterialImage from '@/components/MaterialImage'
 
 interface Props {
   user?: any
@@ -74,13 +75,12 @@ class RecordForm extends React.Component<
     if (material) {
       return (
         <>
+          教材
           <div>{material.title}</div>
-          <img
-            src={`${process.env.REACT_APP_API_URL}${material.image_url}`}
-            width="80"
-            height="80"
-            alt="教材のデフォルト画像"
-          />
+          <MaterialImage
+            bgUrl={`url(${process.env.REACT_APP_API_URL}${material.image_url}) no-repeat center/contain`}
+            height={100}
+          ></MaterialImage>
         </>
       )
     }

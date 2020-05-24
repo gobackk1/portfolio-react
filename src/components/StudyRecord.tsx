@@ -1,6 +1,7 @@
 import React from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import LikeCounter from '@/components/LikeCounter'
+import MaterialImage from '@/components/MaterialImage'
 import classNames from 'classnames'
 
 interface Props extends RouteComponentProps {
@@ -83,12 +84,10 @@ class StudyRecord extends React.Component<Props, {}> {
             <dd>
               {teaching_material}
               {record.image_url && (
-                <img
-                  src={`${process.env.REACT_APP_API_URL}${record.image_url}`}
-                  width="80"
-                  height="80"
-                  alt={teaching_material.name}
-                />
+                <MaterialImage
+                  bgUrl={`url(${process.env.REACT_APP_API_URL}${record.image_url}) no-repeat center/contain`}
+                  height={100}
+                ></MaterialImage>
               )}
             </dd>
           </dl>

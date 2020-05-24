@@ -326,6 +326,9 @@
     display: block;
     padding: 5px;
     width: 100px;
+    &:hover {
+      background: darken($color_gray_0, 10);
+    }
   }
   &__hidden {
     opacity: 0;
