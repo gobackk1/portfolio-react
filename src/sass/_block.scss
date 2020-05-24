@@ -108,7 +108,7 @@
     }
   }
   &__body {
-    padding: 0 60px;
+    padding: 0 60px 60px;
   }
 }
 
@@ -238,7 +238,7 @@
   &--enable-link {
     cursor: pointer;
     &:hover {
-      background: $color_accent_light;
+      background: lighten($color_info, 5%);
     }
   }
   &__profile {
@@ -287,7 +287,7 @@
   &--enable-link {
     cursor: pointer;
     &:hover {
-      background: $color_accent_light;
+      background: lighten($color_info, 5%);
     }
   }
   &__img {
@@ -304,7 +304,7 @@
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
   cursor: pointer;
   &:hover {
-    background: $color_info;
+    background: lighten($color_info, 5%);
   }
   &__head {
     display: flex;

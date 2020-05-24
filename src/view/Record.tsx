@@ -3,10 +3,7 @@ import Modal from '@/components/Modal'
 import RecordForm from '@/components/RecordForm'
 import MaterialForm from '@/components/MaterialForm'
 import MaterialCard from '@/components/MaterialCard'
-import {
-  readTeachingMaterial,
-  deleteTeachingMaterial
-} from '@/actions/teachingMaterials'
+import { readTeachingMaterial } from '@/actions/teachingMaterials'
 import store from '@/store'
 import { connect } from 'react-redux'
 import DotSpinner from '@/components/DotSpinner'
@@ -57,13 +54,11 @@ class Record extends React.Component<Props, {}> {
           )}
           {!isLoading && (
             <ul className="material-list">
-              {materials.map((material, i) => {
-                return (
-                  <li key={i} className="material-list__item">
-                    <MaterialCard material={material}></MaterialCard>
-                  </li>
-                )
-              })}
+              {materials.map((material, i) => (
+                <li key={i} className="material-list__item">
+                  <MaterialCard material={material}></MaterialCard>
+                </li>
+              ))}
             </ul>
           )}
         </div>
