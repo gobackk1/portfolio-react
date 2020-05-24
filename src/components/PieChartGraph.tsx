@@ -34,13 +34,15 @@ interface Props {
 }
 
 class PieChartGraph extends PureComponent<Props, {}> {
+  componentDidMount() {
+    const list = document.querySelector('h3 + .recharts-wrapper ul')
+    list!.classList.add('test')
+  }
   render() {
     const { data } = this.props
-    console.log(data, 'data')
-
     return (
       <>
-        <PieChart width={300} height={300}>
+        <PieChart width={800} height={300}>
           <Pie
             data={data}
             cx={100}
@@ -98,8 +100,9 @@ const iconStyle = (color: string) => ({
 
 const style = {
   left: 300,
-  top: 50,
-  width: 200
+  // top: 50,
+  width: 'auto',
+  height: 'auto'
 }
 
 export default PieChartGraph

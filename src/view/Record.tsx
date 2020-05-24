@@ -9,56 +9,71 @@ import {
 } from '@/actions/teachingMaterials'
 import store from '@/store'
 import { connect } from 'react-redux'
+import DotSpinner from '@/components/DotSpinner'
 
 interface Props {
   teachingMaterials: any
-  user: any
 }
 
 class Record extends React.Component<Props, {}> {
-  componentDidMount() {
-    store.dispatch(readTeachingMaterial(store.getState().user.id))
+  state = {
+    isLoading: true
   }
 
-  onClickRecord = () => {}
+  async componentDidMount() {
+    const { loaded } = this.props.teachingMaterials
+    if (!loaded) {
+      await store.dispatch(readTeachingMaterial(store.getState().user.id))
+    }
+    this.setState({ isLoading: false })
+  }
 
   render() {
     const {
-      teachingMaterials: { materials },
-      user
+      teachingMaterials: { materials }
     } = this.props
+    const { isLoading } = this.state
+
     return (
-      <div className="l-inner">
-        <Modal
-          openButtonText="記録する"
-          buttonClassName="button-record fa-icon-pen mr30 mb30"
-        >
-          <RecordForm type="post"></RecordForm>
-        </Modal>
-        <Modal
-          openButtonText="教材を登録する"
-          buttonClassName="button-material fa-icon-book"
-        >
-          <MaterialForm type="post"></MaterialForm>
-        </Modal>
-        <h2 className="title-l mb20">教材一覧</h2>
-        <ul className="material-list">
-          {materials.map((material, i) => {
-            return (
-              <li key={i} className="material-list__item">
-                <MaterialCard material={material}></MaterialCard>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      <>
+        <div className="l-inner">
+          <Modal
+            openButtonText="記録する"
+            buttonClassName="button-record fa-icon-pen mr30 mb30"
+          >
+            <RecordForm type="post"></RecordForm>
+          </Modal>
+          <Modal
+            openButtonText="教材を登録する"
+            buttonClassName="button-material fa-icon-book"
+          >
+            <MaterialForm type="post"></MaterialForm>
+          </Modal>
+          <h2 className="title-l mb20">教材一覧</h2>
+          {isLoading && (
+            <div className="tac">
+              <DotSpinner></DotSpinner>
+            </div>
+          )}
+          {!isLoading && (
+            <ul className="material-list">
+              {materials.map((material, i) => {
+                return (
+                  <li key={i} className="material-list__item">
+                    <MaterialCard material={material}></MaterialCard>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+      </>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  teachingMaterials: state.teachingMaterials,
-  user: state.user
+  teachingMaterials: state.teachingMaterials
 })
 
 export default connect(mapStateToProps, null)(Record)
