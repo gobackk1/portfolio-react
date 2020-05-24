@@ -7,13 +7,11 @@ import {
 } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
 import DotSpinner from '@/components/DotSpinner'
+import RecordsList from '@/components/RecordsList'
+import ErrorMessages from '@/components/ErrorMessages'
 import classNames from 'classnames'
 import store from '@/store'
-import { Waypoint } from 'react-waypoint'
-
 import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
-import RecordsList from '@/components/RecordsList'
-import { renderErrorMessages } from '@/utils/render'
 
 interface Props extends RouteComponentProps {
   user: any
@@ -138,14 +136,17 @@ class Explore extends React.Component<Props, {}> {
     }
   }
 
-  beforeEnter = async () => {
+  beforeEnterUsers = () => {
     if (!this.props.users.data.length) {
       this.usersSearchInput!.value = ''
-      await this.dispatchReadUsers()
+      this.useLoadingSpinner(this.dispatchReadUsers)
     }
+  }
+
+  beforeEnterStudyRecords = () => {
     if (!this.props.studyRecords.records.length) {
       this.studyRecordsSearchInput!.value = ''
-      await this.dispatchReadStudyRecords()
+      this.useLoadingSpinner(this.dispatchReadStudyRecords)
     }
   }
 
@@ -154,7 +155,6 @@ class Explore extends React.Component<Props, {}> {
       match,
       users,
       studyRecords,
-      users: { onLoadUsers },
       studyRecords: { records }
     } = this.props
     const { loading } = this.state
@@ -173,39 +173,37 @@ class Explore extends React.Component<Props, {}> {
           <Link
             to={`${match.url}/users`}
             className={userTabClassName}
-            onClick={this.beforeEnter}
+            onClick={this.beforeEnterUsers}
           >
             ユーザー
           </Link>
           <Link
             to={`${match.url}/studyrecords`}
             className={recordTabClassName}
-            onClick={this.beforeEnter}
+            onClick={this.beforeEnterStudyRecords}
           >
             勉強記録
           </Link>
-        </div>
-        <div className="search">
-          <input
-            type="text"
-            onChange={this.onChange}
-            className="search__input"
-            placeholder="検索"
-            style={{ display: this.isUsersPage() ? '' : 'none' }}
-            id="explore-users-search"
-          />
-          <input
-            type="text"
-            onChange={this.onChange}
-            className="search__input"
-            placeholder="検索"
-            style={{ display: this.isRecordsPage() ? '' : 'none' }}
-            id="explore-records-search"
-          />
+          <div className="tab__list-search search">
+            <input
+              type="text"
+              onChange={this.onChange}
+              className="search__input"
+              placeholder="検索"
+              style={{ display: this.isUsersPage() ? '' : 'none' }}
+              id="explore-users-search"
+            />
+            <input
+              type="text"
+              onChange={this.onChange}
+              className="search__input"
+              placeholder="検索"
+              style={{ display: this.isRecordsPage() ? '' : 'none' }}
+              id="explore-records-search"
+            />
+          </div>
         </div>
         <div className="tab__body">
-          {renderErrorMessages([users.errorMessage])}
-          {renderErrorMessages([studyRecords.errorMessage])}
           {loading && (
             <div className="tac">
               <DotSpinner></DotSpinner>
@@ -214,10 +212,13 @@ class Explore extends React.Component<Props, {}> {
           {!loading && (
             <Switch>
               <Route path={`${match.url}/users`}>
+                <ErrorMessages messages={[users.errorMessage]}></ErrorMessages>
                 <UsersList></UsersList>
-                {/* {loading && '読み込み中MOCK'} */}
               </Route>
               <Route path={`${match.url}/studyrecords`}>
+                <ErrorMessages
+                  messages={[studyRecords.errorMessage]}
+                ></ErrorMessages>
                 <RecordsList records={records}></RecordsList>
               </Route>
             </Switch>

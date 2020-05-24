@@ -9,7 +9,8 @@ import {
   deleteComment,
   searchStudyRecords,
   resetSearchStudyRecordsState,
-  resetStudyRecordsState
+  resetStudyRecordsState,
+  setStudyRecordsState
 } from '@/actions/studyRecords'
 import _ from 'lodash'
 import store from '@/store'
@@ -187,5 +188,9 @@ export default reducerWithInitialState(initialState)
     state.records = []
     state.errorMessage = ''
     state.search.keyword = ''
+    return { ...state }
+  })
+  .case(setStudyRecordsState, (state, { errorMessage }) => {
+    if (errorMessage != null) state.errorMessage = errorMessage
     return { ...state }
   })

@@ -45,3 +45,11 @@ $values: 10, 15, 20, 30, 40, 50;
 .tac {
   text-align: center;
 }
+
+%cf {
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}

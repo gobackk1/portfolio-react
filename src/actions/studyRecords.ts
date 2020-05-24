@@ -139,3 +139,6 @@ export const resetStudyRecordsState = actionCreator('RESET_STUDY_RECORDS_STATE')
 export const resetSearchStudyRecordsState = actionCreator(
   'RESET_SEARCH_STUDY_RECORDS_STATE'
 )
+export const setStudyRecordsState = actionCreator<any>(
+  'SET_STUDY_RECORDS_STATE'
+)

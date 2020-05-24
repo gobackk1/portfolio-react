@@ -69,12 +69,13 @@
 
 .tab {
   &__list {
+    @extend %cf;
     border-bottom: 1px solid $color_gray_1;
     margin-bottom: 30px;
   }
   %tab__list-item {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 8px 20px;
     position: relative;
     font-size: 18px;
     font-weight: bold;
@@ -96,6 +97,9 @@
         opacity: 1;
       }
     }
+  }
+  &__list-search {
+    float: right;
   }
   &__list-item {
     @extend %tab__list-item;
@@ -157,15 +161,17 @@
 }
 
 .search {
-  margin-bottom: 40px;
   text-align: center;
   &__input {
-    width: 500px;
-    height: 40px;
+    width: 400px;
+    height: 43px;
     outline: none;
     padding-left: 20px;
     font-size: 20px;
-    border: 1px solid $color_gray_1;
+    background: #e8e8e8;
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0px 1000px #e8e8e8 inset;
+    }
   }
 }
 
@@ -234,13 +240,13 @@
   padding: 15px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  transition: background 0.3s;
+  transition: border 0.3s;
   background: $color_white;
-
+  border: 2px solid $color_white;
   &--enable-link {
     cursor: pointer;
     &:hover {
-      background: lighten($color_info, 5%);
+      border: 2px solid $color_primary_light;
     }
   }
   &__profile {
