@@ -6,6 +6,7 @@ import {
   resetStudyRecordsState
 } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
+import DotSpinner from '@/components/DotSpinner'
 import classNames from 'classnames'
 import store from '@/store'
 import { Waypoint } from 'react-waypoint'
@@ -205,7 +206,11 @@ class Explore extends React.Component<Props, {}> {
         <div className="tab__body">
           {renderErrorMessages([users.errorMessage])}
           {renderErrorMessages([studyRecords.errorMessage])}
-          {loading && '読み込み中MOCK'}
+          {loading && (
+            <div className="tac">
+              <DotSpinner></DotSpinner>
+            </div>
+          )}
           {!loading && (
             <Switch>
               <Route path={`${match.url}/users`}>

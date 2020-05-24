@@ -3,6 +3,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import FollowButton from '@/components/FollowButton'
+import DotSpinner from '@/components/DotSpinner'
 import { Waypoint } from 'react-waypoint'
 
 interface Props extends RouteComponentProps {
@@ -51,7 +52,11 @@ class UsersList extends React.Component<Props, any> {
           })}
         </ul>
         <Waypoint onEnter={onLoadUsers} bottomOffset="-400px"></Waypoint>
-        {isLoading && '読み込み中mock'}
+        {isLoading && (
+          <div className="tac">
+            <DotSpinner></DotSpinner>
+          </div>
+        )}
       </>
     )
   }

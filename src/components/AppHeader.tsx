@@ -30,7 +30,7 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
     return (
       <header className="app-header">
         <Link to="/" className="app-header__title">
-          アプリ名
+          勉強時間記録アプリ
         </Link>
         <nav>
           <ul className="app-header__menu menu-list">

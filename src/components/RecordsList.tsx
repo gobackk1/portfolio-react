@@ -1,5 +1,6 @@
 import React from 'react'
 import StudyRecord from '@/components/StudyRecord'
+import DotSpinner from '@/components/DotSpinner'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { Waypoint } from 'react-waypoint'
@@ -30,7 +31,11 @@ class RecordsList extends React.Component<Props, {}> {
           ))}
         </ul>
         <Waypoint onEnter={onLoadStudyRecords} bottomOffset="-400px"></Waypoint>
-        {isLoading && '読み込み中MOCK'}
+        {isLoading && (
+          <div className="tac">
+            <DotSpinner></DotSpinner>
+          </div>
+        )}
       </>
     )
   }
