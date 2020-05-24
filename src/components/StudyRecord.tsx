@@ -76,7 +76,7 @@ class StudyRecord extends React.Component<Props, {}> {
             <div>{date}</div>
           </div>
           <div className="record__comment">{comment}</div>
-          <dl className="record__list material-list">
+          <dl className="record__list material">
             <dt>
               <i className="fas fa-book large"></i>教材:
             </dt>
@@ -92,7 +92,7 @@ class StudyRecord extends React.Component<Props, {}> {
               )}
             </dd>
           </dl>
-          <dl className="record__list material-list">
+          <dl className="record__list material">
             <dt>
               <i className="far fa-clock large"></i>勉強時間:
             </dt>

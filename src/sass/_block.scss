@@ -112,6 +112,17 @@
   }
 }
 
+.material-list {
+  &__item {
+    display: inline-block;
+    margin-bottom: 20px;
+    width: 32%;
+    &:not(:nth-child(3n)) {
+      margin-right: 2%;
+    }
+  }
+}
+
 .tag-list {
   display: flex;
   &__item {
@@ -287,6 +298,51 @@
   }
 }
 
+.card-material {
+  padding: 20px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  &:hover {
+    background: $color_info;
+  }
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  &__foot {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__dropdown {
+    position: relative;
+    .react-slidedown {
+      background: $color_gray_0;
+    }
+  }
+  &__dropdown-button {
+    color: $color_text;
+    display: block;
+    padding: 5px;
+    width: 100px;
+  }
+  &__hidden {
+    opacity: 0;
+    height: 0;
+    width: 0;
+  }
+  &__ellipsis {
+    padding: 3px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: $color_gray_2;
+    &:hover {
+      background: $color_gray_1;
+    }
+  }
+}
+
 .record {
   &__title {
     display: flex;
@@ -313,7 +369,7 @@
   }
 }
 
-.material-list {
+.material {
   dt {
     display: inline-block;
     min-width: 100px;
@@ -355,4 +411,9 @@
   background: $color_info;
   padding: 5px;
   border: 1px solid;
+}
+
+// react-slidedown {
+.react-slidedown.my-dropdown-slidedown {
+  transition-duration: 0s;
 }

@@ -10,7 +10,8 @@
 $icons: (
   star: f005,
   pen: f304,
-  book: f02d
+  book: f02d,
+  ellipsis: f142
 );
 
 @each $prop, $unicode in $icons {
