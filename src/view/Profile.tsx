@@ -20,16 +20,13 @@ interface Props extends RouteComponentProps<{ id: string }> {
   users: any
   userProfile: any
 }
-interface State {}
 
-class Profile extends React.Component<Props, State> {
+class Profile extends React.Component<Props> {
+  userId!: number
   currentUser!: boolean
   state = {
-    isLoadingProfile: true,
-    isLoadingStudyRecords: false
+    isLoadingStudyRecords: true
   }
-
-  userId!: number
 
   constructor(props) {
     super(props)
@@ -38,50 +35,46 @@ class Profile extends React.Component<Props, State> {
       ? Number(this.props.match.params.id)
       : this.props.user.id
     this.setUserProfile(this.userId)
-    console.log('constructor')
   }
 
   componentDidMount() {
     window.scrollTo(0, 0)
-    this.setState({ isLoadingProfile: false })
   }
 
   setUserProfile = async (id: number) => {
-    store.dispatch(setUserProfileState({ currentPage: 1, records: [] }))
-    await this.dispatchGetProfile(id)
-    await this.dispatchReadProfileStudyRecords(id)
+    // store.dispatch(setUserProfileState({ currentPage: 1, records: [] }))
+    Promise.all([
+      this.dispatchGetUser(id),
+      this.dispatchReadProfileStudyRecords(id)
+    ])
   }
 
-  dispatchGetProfile: (id: number) => Promise<void> = async id => {
+  dispatchGetUser: (id: number) => Promise<void> = async id => {
     const { data } = this.props.users
-
     const index = data.findIndex(d => d.user.id === this.userId)
-    console.log(index, 'index')
     if (index === -1) {
       await store.dispatch(getUser(this.userId))
     }
   }
 
   dispatchReadProfileStudyRecords: (id: number) => Promise<void> = async id => {
-    this.setState({
-      isLoadingStudyRecords: true
-    })
-    const { currentPage: page } = store.getState().userProfile
     await store.dispatch(
       readProfileStudyRecords({
         id,
-        page,
-        per: 10
+        page: 1,
+        per: 10,
+        initialize: true
       })
     )
-    this.setState({
-      isLoadingStudyRecords: false
-    })
   }
 
   render() {
+    console.log('render')
+
     const correctUser = Number(this.userId) === this.props.user.id
     const { data } = this.props.users
+    const { records, isLoading } = this.props.userProfile
+
     const index = data.findIndex(d => d.user.id === this.userId)
     if (index === -1) return <></>
     const update = this.setUserProfile
@@ -93,59 +86,54 @@ class Profile extends React.Component<Props, State> {
       followers_count,
       total_study_hours
     } = data[index]
-    const { isLoadingStudyRecords, isLoadingProfile } = this.state
     return (
       <div className="l-inner">
-        {isLoadingProfile && (
+        <div className="profile">
+          <div className="profile__head">
+            <img
+              src={`${process.env.REACT_APP_API_URL}${user.image_url}`}
+              width="120"
+              height="120"
+              alt="ユーザープロフィール画像"
+            />
+            <Render if={correctUser}>
+              <Modal openButtonText="編集" buttonClassName="button-edit">
+                <ProfileForm update={update}></ProfileForm>
+              </Modal>
+            </Render>
+            <Render if={!correctUser}>
+              <FollowButton
+                followId={user.id}
+                isFollowing={is_following}
+              ></FollowButton>
+            </Render>
+          </div>
+          <div className="profile__name">{user.name}</div>
+          <div className="profile__registered">{registered_date} 登録</div>
+          <div className="profile__bio">{user.user_bio}</div>
+          <div className="profile__footer">
+            <span className="profile__footer-item">
+              フォロー {followings_count}
+            </span>
+            <span className="profile__footer-item">
+              フォロワー {followers_count}
+            </span>
+            <span className="profile__footer-item">
+              総勉強時間 {total_study_hours}時間
+            </span>
+          </div>
+        </div>
+        {isLoading && (
           <div className="tac">
             <DotSpinner></DotSpinner>
           </div>
         )}
-        {!isLoadingProfile && (
-          <div className="profile">
-            <div className="profile__head">
-              <img
-                src={`${process.env.REACT_APP_API_URL}${user.image_url}`}
-                width="120"
-                height="120"
-                alt="ユーザープロフィール画像"
-              />
-              <Render if={correctUser}>
-                <Modal openButtonText="編集" buttonClassName="button-edit">
-                  <ProfileForm update={update}></ProfileForm>
-                </Modal>
-              </Render>
-              <Render if={!correctUser}>
-                <FollowButton
-                  followId={user.id}
-                  isFollowing={is_following}
-                ></FollowButton>
-              </Render>
-            </div>
-            <div className="profile__name">{user.name}</div>
-            <div className="profile__registered">{registered_date} 登録</div>
-            <div className="profile__bio">{user.user_bio}</div>
-            <div className="profile__footer">
-              <span className="profile__footer-item">
-                フォロー {followings_count}
-              </span>
-              <span className="profile__footer-item">
-                フォロワー {followers_count}
-              </span>
-              <span className="profile__footer-item">
-                総勉強時間 {total_study_hours}時間
-              </span>
-            </div>
-          </div>
-        )}
-        {isLoadingStudyRecords && (
+        <RecordsList records={records} page="profile"></RecordsList>
+        {isLoading && (
           <div className="tac">
             <DotSpinner></DotSpinner>
           </div>
         )}
-        {/* {!isLoadingStudyRecords && (
-          <RecordsList records={records} page="profile"></RecordsList>
-        )} */}
       </div>
     )
   }

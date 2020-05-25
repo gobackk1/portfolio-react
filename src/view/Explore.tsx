@@ -34,7 +34,7 @@ class Explore extends React.Component<Props, {}> {
     /studyrecords/.test(window.location.pathname)
 
   state = {
-    loading: false
+    isLoading: false
   }
 
   componentDidMount() {
@@ -48,9 +48,9 @@ class Explore extends React.Component<Props, {}> {
   }
 
   useLoadingSpinner = async callback => {
-    this.setState({ loading: true })
+    this.setState({ isLoading: true })
     await callback()
-    this.setState({ loading: false })
+    this.setState({ isLoading: false })
   }
 
   initialize = async () => {
@@ -157,7 +157,7 @@ class Explore extends React.Component<Props, {}> {
       studyRecords,
       studyRecords: { records }
     } = this.props
-    const { loading } = this.state
+    const { isLoading } = this.state
     const userTabClassName = classNames({
       'tab__list-item': !this.isUsersPage(),
       'tab__list-item--active': this.isUsersPage()
@@ -204,12 +204,12 @@ class Explore extends React.Component<Props, {}> {
           </div>
         </div>
         <div className="tab__body">
-          {loading && (
+          {isLoading && (
             <div className="tac">
               <DotSpinner></DotSpinner>
             </div>
           )}
-          {!loading && (
+          {!isLoading && (
             <Switch>
               <Route path={`${match.url}/users`}>
                 <ErrorMessages messages={[users.errorMessage]}></ErrorMessages>

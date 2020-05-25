@@ -12,7 +12,7 @@ const dispatchReadProfileStudyRecords = async (per: number) => {
   try {
     await store.dispatch(
       readProfileStudyRecords({
-        id: state.profile.user.id,
+        id: state.userId,
         page: state.currentPage,
         per
       })
@@ -23,20 +23,8 @@ const dispatchReadProfileStudyRecords = async (per: number) => {
 }
 
 const initialState: any = {
-  profile: {
-    user: {
-      id: 0,
-      name: '',
-      user_bio: '',
-      image_url: '/images/user_images/default.png.png'
-    },
-    total_study_hours: 0,
-    followings_count: 0,
-    followers_count: 0,
-    is_following: false,
-    registered_date: '',
-    currentPage: 1
-  },
+  userId: 0,
+  isLoading: false,
   records: [
     // {
     //   user: {
@@ -75,11 +63,22 @@ export default reducerWithInitialState(initialState)
       }
     }
   })
+  .case(readProfileStudyRecords.async.started, (state, { initialize, id }) => {
+    if (initialize) {
+      state.currentPage = 1
+      state.records = []
+      state.userId = id
+    }
+    state.isLoading = true
+    return { ...state }
+  })
   .case(readProfileStudyRecords.async.failed, (state, { error }) => {
+    state.isLoading = false
     state.onLoadStudyRecords = undefined
     return { ...state }
   })
   .case(readProfileStudyRecords.async.done, (state, { result }) => {
+    state.isLoading = false
     state.currentPage++
     state.records = state.records.concat(result.result)
     return { ...state }

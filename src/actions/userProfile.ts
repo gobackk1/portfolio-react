@@ -30,7 +30,7 @@ export const updateProfile = asyncActionCreator<any, any, Error>(
 )
 
 export const readProfileStudyRecords = asyncActionCreator<
-  { id: number; page: number; per: number },
+  { id: number; page: number; per: number; initialize?: boolean },
   { result: any },
   CustomError
 >('GET_PROFILE_STUDY_RECORDS', async ({ id, page, per }) => {
