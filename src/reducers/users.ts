@@ -113,7 +113,7 @@ export default reducerWithInitialState(initialState)
     }
     state.search.currentPage++
     state.data = state.data.concat(result.data.result)
-    console.log('readUsers.async.done')
+    console.log(state, 'searchUsers.async.done')
     return { ...state }
   })
   .case(getUser.async.done, (state, { result }) => {
