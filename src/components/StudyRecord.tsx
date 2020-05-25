@@ -17,8 +17,8 @@ class StudyRecord extends React.Component<Props, {}> {
   renderIfRecordHasTag = study_genre_list => {
     if (!study_genre_list) return ''
     return study_genre_list.map((genre, index) => (
-      <li key={index} className="tag-list__item tag">
-        <div className="tag__body">{genre}</div>
+      <li key={index} className="tag-list__item">
+        <div className="tag">{genre}</div>
       </li>
     ))
   }
@@ -73,30 +73,27 @@ class StudyRecord extends React.Component<Props, {}> {
         </div>
         <div className="card-record__body record">
           <div className="record__title">
-            <div className="record__title-name">{user.name}</div>
-            <div>{date}</div>
+            <div className="record__username">{user.name}</div>
+            <div className="record__date">{date}</div>
           </div>
-          <div className="record__comment">{comment}</div>
-          <dl className="record__list material">
-            <dt>
-              <i className="fas fa-book large"></i>教材:
-            </dt>
-            <dd>
-              {teaching_material}
+          {comment && <div className="record__comment">{comment}</div>}
+          <div className="record__material material">
+            <div className="material__img">
               {record.image_url && (
                 <MaterialImage
                   bgUrl={`url(${process.env.REACT_APP_API_URL}${record.image_url}) no-repeat center/contain`}
                   height={100}
                 ></MaterialImage>
               )}
-            </dd>
-          </dl>
-          <dl className="record__list material">
-            <dt>
-              <i className="far fa-clock large"></i>勉強時間:
-            </dt>
-            <dd>{study_hours}時間</dd>
-          </dl>
+            </div>
+            <div className="material__text">
+              <div className="material__title">{teaching_material}</div>
+              <div className="material__hours">
+                <i className="far fa-clock large"></i>
+                {study_hours}時間
+              </div>
+            </div>
+          </div>
           <div className="record__footer">
             <div className="record__tags">
               <ul className="tag-list">

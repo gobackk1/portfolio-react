@@ -1,3 +1,15 @@
 @mixin box-shadow() {
   box-shadow: 0px 0px 3px 3px #adadad;
 }
+
+@mixin round-block($color) {
+  padding: 10px;
+  background: $color;
+  border-radius: 5px;
+}
+
+@mixin round-border-block($color) {
+  padding: 15px;
+  border: 1px solid $color;
+  border-radius: 5px;
+}
