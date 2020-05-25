@@ -25,6 +25,19 @@ export const readUsers = asyncActionCreator<any, any, CustomError>(
   }
 )
 
+export const getUser = asyncActionCreator<number, any, CustomError>(
+  'GET_USER',
+  async id => {
+    const res = await axios.get(`${usersUrl}/${id}`, auth)
+
+    if (res.statusText !== 'OK') {
+      throw new CustomError(`Error ${res}`, 'mock')
+    }
+
+    return res.data
+  }
+)
+
 export const searchUsers = asyncActionCreator<any, any, CustomError>(
   'SEARCH_USERS',
   async params => {

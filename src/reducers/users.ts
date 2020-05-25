@@ -5,7 +5,8 @@ import {
   followUser,
   unFollowUser,
   resetSearchUsersState,
-  resetUsersState
+  resetUsersState,
+  getUser
 } from '@/actions/users'
 
 import store from '@/store'
@@ -54,11 +55,17 @@ const initialState: any = {
   errorMessage: '',
   data: [
     {
-      id: 0,
-      image_url: '/images/user_images/default.png.png',
-      is_following: false,
-      name: '',
-      user_bio: ''
+      user: {
+        id: 0,
+        image_url: '/images/user_images/default.png.png',
+        is_following: false,
+        name: '',
+        user_bio: ''
+      },
+      is_following: 0,
+      followings_count: 0,
+      total_study_hours: 0,
+      registered_date: ''
     }
   ],
   onLoadUsers: undefined,
@@ -91,7 +98,7 @@ export default reducerWithInitialState(initialState)
     state.isLoading = false
     state.currentPage++
     state.data = state.data.concat(result.data.result)
-    console.log('readUsers.async.done')
+    console.log(state, 'readUsers.async.done')
     return { ...state }
   })
   .case(searchUsers.async.done, (state, { params, result }) => {
@@ -107,6 +114,12 @@ export default reducerWithInitialState(initialState)
     state.search.currentPage++
     state.data = state.data.concat(result.data.result)
     console.log('readUsers.async.done')
+    return { ...state }
+  })
+  .case(getUser.async.done, (state, { result }) => {
+    console.log('result', result)
+    state.data.push(result)
+    console.log(state)
     return { ...state }
   })
   .cases(

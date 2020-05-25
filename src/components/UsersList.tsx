@@ -20,7 +20,7 @@ class UsersList extends React.Component<Props, any> {
     return (
       <>
         <ul className="users-list">
-          {_.map(this.props.users.data, (user, index) => {
+          {_.map(this.props.users.data, ({ user }, index) => {
             return (
               <li
                 key={index}

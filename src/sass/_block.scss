@@ -243,6 +243,8 @@
   transition: border 0.3s;
   background: $color_white;
   border: 2px solid $color_white;
+  border-radius: 5px;
+
   &--enable-link {
     cursor: pointer;
     &:hover {
@@ -293,7 +295,7 @@
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
   transition: background 0.3s;
   background: $color_white;
-
+  border-radius: 5px;
   &--enable-link {
     cursor: pointer;
     &:hover {
