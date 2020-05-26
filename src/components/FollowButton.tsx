@@ -24,7 +24,7 @@ class FollowButton extends React.Component<Props, {}> {
     this.setState({ disabled: true })
     await this.props.followUser(id)
     const { data } = store.getState().users
-    const index = data.findIndex(d => d.user.id === id)
+    const index = data.findIndex(d => d.id === id)
     const user = data[index]
     user.followers_count++
     store.dispatch(setUser({ user, index }))
@@ -36,7 +36,7 @@ class FollowButton extends React.Component<Props, {}> {
     this.setState({ disabled: true })
     await this.props.unFollowUser(id)
     const { data } = store.getState().users
-    const index = data.findIndex(d => d.user.id === id)
+    const index = data.findIndex(d => d.id === id)
     const user = data[index]
     user.followers_count--
     store.dispatch(setUser({ user, index }))

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Field, FormSection, reduxForm, InjectedFormProps } from 'redux-form'
 import { login, register, clearError } from '@/actions/user'
-import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { connect } from 'react-redux'
 import store from '@/store'
 import Render from '@/components/Render'
@@ -14,9 +13,6 @@ interface Props {
 interface State {
   isLoginForm: boolean
 }
-interface FormValue {
-  [key: string]: AuthReqParams
-}
 
 class LoginForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
@@ -26,7 +22,7 @@ class LoginForm extends React.Component<
     isLoginForm: true
   }
 
-  onSubmit: any = async (values: FormValue) => {
+  onSubmit: any = async (values: any) => {
     const res = this.state.isLoginForm
       ? await store.dispatch(login(values.login))
       : await store.dispatch(register(values.register))

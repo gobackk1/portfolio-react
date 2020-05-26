@@ -1,6 +1,4 @@
 import axios from '@/axios'
-import ServerResponse from '@/interfaces/ServerResponse'
-import { AuthReqParams } from '@/interfaces/AuthReqParams'
 import { actionCreator, asyncActionCreator } from '@/actions'
 
 const loginUrl = `${process.env.REACT_APP_API_URL}/login`

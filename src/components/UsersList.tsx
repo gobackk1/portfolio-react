@@ -21,10 +21,7 @@ class UsersList extends React.Component<Props, any> {
       <>
         <ul className="users-list">
           {_.map(this.props.users.data, (d, index) => {
-            const {
-              user: { image_url, id, name, user_bio },
-              is_following
-            } = d
+            const { image_url, id, name, user_bio, is_following } = d
             return (
               <li
                 key={index}

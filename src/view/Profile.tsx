@@ -51,7 +51,7 @@ class Profile extends React.Component<Props> {
 
   dispatchGetUser: (id: number) => Promise<void> = async id => {
     const { data } = this.props.users
-    const index = data.findIndex(d => d.user.id === this.userId)
+    const index = data.findIndex(d => d.id === this.userId)
     if (index === -1) {
       await store.dispatch(getUser(this.userId))
     }
@@ -73,16 +73,19 @@ class Profile extends React.Component<Props> {
     const { data } = this.props.users
     const { records, isLoading } = this.props.userProfile
 
-    const index = data.findIndex(d => d.user.id === this.userId)
+    const index = data.findIndex(d => d.id === this.userId)
     if (index === -1) return <></>
     const update = this.setUserProfile
     const {
       registered_date,
       is_following,
       followings_count,
-      user,
       followers_count,
-      total_study_hours
+      total_study_hours,
+      image_url,
+      name,
+      user_bio,
+      id
     } = data[index]
     console.log(data[index])
 
@@ -91,7 +94,7 @@ class Profile extends React.Component<Props> {
         <div className="profile">
           <div className="profile__head">
             <img
-              src={`${process.env.REACT_APP_API_URL}${user.image_url}`}
+              src={`${process.env.REACT_APP_API_URL}${image_url}`}
               width="120"
               height="120"
               alt="ユーザープロフィール画像"
@@ -103,14 +106,14 @@ class Profile extends React.Component<Props> {
             </Render>
             <Render if={!correctUser}>
               <FollowButton
-                followId={user.id}
+                followId={id}
                 isFollowing={is_following}
               ></FollowButton>
             </Render>
           </div>
-          <div className="profile__name">{user.name}</div>
+          <div className="profile__name">{name}</div>
           <div className="profile__registered">{registered_date} 登録</div>
-          <div className="profile__bio">{user.user_bio}</div>
+          <div className="profile__bio">{user_bio}</div>
           <div className="profile__footer">
             <span className="profile__footer-item">
               フォロー {followings_count}

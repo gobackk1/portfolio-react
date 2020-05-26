@@ -1,15 +1,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { login, register, logout, clearError } from '@/actions/user'
-import ServerResponse from '@/interfaces/ServerResponse'
-import UserState from '@/interfaces/UserState'
-import { AuthReqParams } from '@/interfaces/AuthReqParams'
 
-type AuthDoneParams = {
-  params: AuthReqParams
-  result: ServerResponse
-}
-
-const initialState: UserState = {
+const initialState: any = {
   id: 0,
   name: '',
   email: '',

@@ -26,9 +26,10 @@ const dispatchReadUsers = async (per: number): Promise<void> => {
 }
 
 const dispatchSearchUsers = async (
-  keyword: string,
+  keyword: string | undefined,
   per: number
 ): Promise<void> => {
+  if (!keyword) return
   try {
     await store.dispatch(
       searchUsers({
@@ -56,14 +57,11 @@ const initialState: any = {
   errorMessage: '',
   data: [
     {
-      user: {
-        id: 0,
-        image_url: '/images/user_images/default.png.png',
-        is_following: false,
-        name: '',
-        user_bio: ''
-      },
-      is_following: 0,
+      id: 0,
+      image_url: '/images/user_images/default.png.png',
+      is_following: false,
+      name: '',
+      user_bio: '',
       followings_count: 0,
       total_study_hours: 0,
       registered_date: ''
@@ -87,7 +85,7 @@ export default reducerWithInitialState(initialState)
       return { ...state }
     }
   )
-  .case(readUsers.async.done, (state, { result }) => {
+  .case(readUsers.async.done, (state, { result: { users } }) => {
     if (!state.init) {
       state.data = []
       state.init = true
@@ -98,11 +96,11 @@ export default reducerWithInitialState(initialState)
     }
     state.isLoading = false
     state.currentPage++
-    state.data = state.data.concat(result.data.result)
+    state.data = state.data.concat(users)
     console.log(state, 'readUsers.async.done')
     return { ...state }
   })
-  .case(searchUsers.async.done, (state, { params, result }) => {
+  .case(searchUsers.async.done, (state, { params, result: { users } }) => {
     if (!state.search.init) {
       state.data = []
       state.search.init = true
@@ -113,7 +111,7 @@ export default reducerWithInitialState(initialState)
       }
     }
     state.search.currentPage++
-    state.data = state.data.concat(result.data.result)
+    state.data = state.data.concat(users)
     console.log(state, 'searchUsers.async.done')
     return { ...state }
   })
@@ -128,8 +126,9 @@ export default reducerWithInitialState(initialState)
   .cases(
     [followUser.async.done, unFollowUser.async.done],
     (state, { result }) => {
-      const { id } = result.user
-      const index = state.data.findIndex(d => d.user.id === id)
+      const { id } = result
+      console.log(state.data)
+      const index = state.data.findIndex(d => d.id === id)
       state.data[index] = result
       console.log('followUser.async.done, unFollowUser.async.done')
       return { ...state }
