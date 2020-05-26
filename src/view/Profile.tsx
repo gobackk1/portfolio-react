@@ -6,11 +6,7 @@ import Modal from '@/components/Modal'
 import ProfileForm from '@/components/ProfileForm'
 import FollowButton from '@/components/FollowButton'
 import store from '@/store'
-import {
-  getProfile,
-  readProfileStudyRecords,
-  setUserProfileState
-} from '@/actions/userProfile'
+import { readProfileStudyRecords } from '@/actions/userProfile'
 import { getUser } from '@/actions/users'
 import RecordsList from '@/components/RecordsList'
 import DotSpinner from '@/components/DotSpinner'

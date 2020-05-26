@@ -1,7 +1,5 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import {
-  getProfile,
-  updateProfile,
   readProfileStudyRecords,
   setUserProfileState
 } from '@/actions/userProfile'
@@ -33,20 +31,6 @@ const initialState: any = {
 }
 
 export default reducerWithInitialState(initialState)
-  .case(getProfile.async.done, (state, done) => {
-    console.log(done.result, 'getProfile.async.done')
-    return { ...state, profile: done.result.data }
-  })
-  .case(updateProfile.async.done, (state, done) => {
-    console.log(done.result.data, 'updateProfile.async.done')
-    return {
-      ...state,
-      user: {
-        ...state.user,
-        user_bio: done.result.data.user.user_bio
-      }
-    }
-  })
   .case(readProfileStudyRecords.async.started, (state, { initialize, id }) => {
     if (initialize) {
       state.currentPage = 1
