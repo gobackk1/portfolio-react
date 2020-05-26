@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 import FollowButton from '@/components/FollowButton'
 import DotSpinner from '@/components/DotSpinner'
 import { Waypoint } from 'react-waypoint'
+import store from '@/store'
 
 interface Props extends RouteComponentProps {
   users?: any
@@ -16,11 +16,14 @@ class UsersList extends React.Component<Props, any> {
   }
 
   render() {
-    const { onLoadUsers, isLoading } = this.props.users
+    const { onLoadUsers, isLoading, data } = this.props.users
+    const dataWithoutCurrentUser = data.filter(
+      d => d.id !== store.getState().user.id
+    )
     return (
       <>
         <ul className="users-list">
-          {_.map(this.props.users.data, (d, index) => {
+          {dataWithoutCurrentUser.map((d, index) => {
             const { image_url, id, name, user_bio, is_following } = d
             return (
               <li

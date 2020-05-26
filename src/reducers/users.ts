@@ -9,7 +9,6 @@ import {
   getUser,
   updateUser
 } from '@/actions/users'
-
 import store from '@/store'
 
 const dispatchReadUsers = async (per: number): Promise<void> => {
