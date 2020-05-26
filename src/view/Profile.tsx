@@ -30,38 +30,46 @@ class Profile extends React.Component<Props> {
     this.userId = this.props.match.params.id
       ? Number(this.props.match.params.id)
       : this.props.user.id
-    this.getUserIfNotFound(this.userId)
+    this.getUserIfNotFound()
+    this.dispatchReadProfileStudyRecords()
   }
 
   componentDidMount() {
     window.scrollTo(0, 0)
   }
 
-  getUserIfNotFound = async (id: number) => {
+  getUserIfNotFound = async () => {
     const { data } = this.props.users
     const index = data.findIndex(d => d.id === this.userId)
     if (index === -1) {
-      Promise.all([
-        store.dispatch(getUser(this.userId)),
-        store.dispatch(
-          readProfileStudyRecords({
-            id,
-            page: 1,
-            per: 10,
-            initialize: true
-          })
-        )
-      ])
+      await store.dispatch(getUser(this.userId))
     }
+  }
+
+  dispatchReadProfileStudyRecords = async () => {
+    await store.dispatch(
+      readProfileStudyRecords({
+        id: this.userId,
+        page: 1,
+        per: 10,
+        initialize: true
+      })
+    )
   }
 
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
     const { data } = this.props.users
     const { records, isLoading } = this.props.userProfile
-
     const index = data.findIndex(d => d.id === this.userId)
-    if (index === -1) return <></>
+    if (index === -1)
+      return (
+        <div className="l-inner">
+          <div className="tac">
+            <DotSpinner></DotSpinner>
+          </div>
+        </div>
+      )
     const update = this.getUserIfNotFound
     const {
       registered_date,
@@ -74,8 +82,6 @@ class Profile extends React.Component<Props> {
       user_bio,
       id
     } = data[index]
-    console.log(data[index])
-
     return (
       <div className="l-inner">
         <div className="profile">
