@@ -20,31 +20,35 @@ class UsersList extends React.Component<Props, any> {
     return (
       <>
         <ul className="users-list">
-          {_.map(this.props.users.data, ({ user }, index) => {
+          {_.map(this.props.users.data, (d, index) => {
+            const {
+              user: { image_url, id, name, user_bio },
+              is_following
+            } = d
             return (
               <li
                 key={index}
                 className="users-list__item card-user card-user--enable-link"
-                onClick={e => this.onClickUserList(user.id, e)}
+                onClick={e => this.onClickUserList(id, e)}
               >
                 <div className="card-user__profile">
                   <div className="card-user__profile-head">
                     <img
-                      src={`${process.env.REACT_APP_API_URL}${user.image_url}`}
+                      src={`${process.env.REACT_APP_API_URL}${image_url}`}
                       width="80"
                       height="80"
-                      alt={user.name}
+                      alt={name}
                     />
                   </div>
                   <div className="card-user__profile-body">
-                    <div className="card-user__profile-name">{user.name}</div>
-                    {user.user_bio}
+                    <div className="card-user__profile-name">{name}</div>
+                    {user_bio}
                   </div>
                 </div>
                 <div className="card-user__follow">
                   <FollowButton
-                    followId={user.id}
-                    isFollowing={user.is_following}
+                    followId={id}
+                    isFollowing={is_following}
                   ></FollowButton>
                 </div>
               </li>

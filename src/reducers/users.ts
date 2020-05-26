@@ -6,7 +6,8 @@ import {
   unFollowUser,
   resetSearchUsersState,
   resetUsersState,
-  getUser
+  getUser,
+  setUser
 } from '@/actions/users'
 
 import store from '@/store'
@@ -117,19 +118,21 @@ export default reducerWithInitialState(initialState)
     return { ...state }
   })
   .case(getUser.async.done, (state, { result }) => {
-    console.log('result', result)
     state.data.push(result)
-    console.log(state)
+    return { ...state }
+  })
+  .case(setUser, (state, { user, index }) => {
+    state.data[index] = user
     return { ...state }
   })
   .cases(
     [followUser.async.done, unFollowUser.async.done],
     (state, { result }) => {
-      const { id } = result.data.user
-      const index = state.data.findIndex(d => d.id === id)
-      state.data[index] = result.data.user
+      const { id } = result.user
+      const index = state.data.findIndex(d => d.user.id === id)
+      state.data[index] = result
       console.log('followUser.async.done, unFollowUser.async.done')
-      return state
+      return { ...state }
     }
   )
   .case(resetUsersState, state => {

@@ -58,31 +58,34 @@ export const searchUsers = asyncActionCreator<any, any, CustomError>(
   }
 )
 
-export const followUser = asyncActionCreator<any, any, Error>(
-  'FOLLOW_USER',
-  async id => {
-    const res = await axios.post(relationshipUrl, { id }, auth)
+export const followUser = asyncActionCreator<
+  number,
+  { followers_count: any; user: any },
+  CustomError
+>('FOLLOW_USER', async id => {
+  const res = await axios.post(relationshipUrl, { id }, auth)
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
-
-    return res
+  if (res.statusText !== 'OK') {
+    throw new CustomError(`Error ${res}`, 'mock')
   }
-)
 
-export const unFollowUser = asyncActionCreator<any, any, Error>(
-  'UNFOLLOW_USER',
-  async id => {
-    const res = await axios.delete(`${relationshipUrl}/${id}`, auth)
+  return res.data
+})
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
+export const unFollowUser = asyncActionCreator<
+  number,
+  { followers_count: any; user: any },
+  CustomError
+>('UNFOLLOW_USER', async id => {
+  const res = await axios.delete(`${relationshipUrl}/${id}`, auth)
 
-    return res
+  if (res.statusText !== 'OK') {
+    throw new CustomError(`Error ${res}`, 'mock')
   }
-)
+
+  return res.data
+})
 
 export const resetUsersState = actionCreator('RESET_USERS_STATE')
 export const resetSearchUsersState = actionCreator('RESET_SEARCH_USERS_STATE')
+export const setUser = actionCreator<any>('SET_USER')

@@ -25,23 +25,7 @@ const dispatchReadProfileStudyRecords = async (per: number) => {
 const initialState: any = {
   userId: 0,
   isLoading: false,
-  records: [
-    // {
-    //   user: {
-    //     name: '',
-    //     image_url: '/images/user_images/default.png'
-    //   },
-    //   date: '01/01',
-    //   record: {
-    //     user_id: 0,
-    //     comment: '',
-    //     teaching_material: '',
-    //     study_hours: 0,
-    //     study_record_comments: []
-    //   },
-    //   comments: []
-    // }
-  ],
+  records: [],
   currentPage: 1,
   onLoadStudyRecords: () => {
     dispatchReadProfileStudyRecords(10)

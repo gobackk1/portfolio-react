@@ -79,12 +79,10 @@ class StudyRecord extends React.Component<Props, {}> {
           {comment && <div className="record__comment">{comment}</div>}
           <div className="record__material material">
             <div className="material__img">
-              {record.image_url && (
-                <MaterialImage
-                  bgUrl={`url(${process.env.REACT_APP_API_URL}${record.image_url}) no-repeat center/contain`}
-                  height={100}
-                ></MaterialImage>
-              )}
+              <MaterialImage
+                bgUrl={`url(${process.env.REACT_APP_API_URL}${record.image_url}) no-repeat center/contain`}
+                height={100}
+              ></MaterialImage>
             </div>
             <div className="material__text">
               <div className="material__title">{teaching_material}</div>

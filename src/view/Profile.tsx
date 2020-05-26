@@ -69,8 +69,6 @@ class Profile extends React.Component<Props> {
   }
 
   render() {
-    console.log('render')
-
     const correctUser = Number(this.userId) === this.props.user.id
     const { data } = this.props.users
     const { records, isLoading } = this.props.userProfile
@@ -86,6 +84,8 @@ class Profile extends React.Component<Props> {
       followers_count,
       total_study_hours
     } = data[index]
+    console.log(data[index])
+
     return (
       <div className="l-inner">
         <div className="profile">

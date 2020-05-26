@@ -1,6 +1,6 @@
 import React from 'react'
 import axios, { auth } from '@/axios'
-import { followUser, unFollowUser } from '@/actions/users'
+import { followUser, unFollowUser, setUser } from '@/actions/users'
 import { connect } from 'react-redux'
 import store from '@/store'
 import { setUserProfileState } from '@/actions/userProfile'
@@ -22,9 +22,12 @@ class FollowButton extends React.Component<Props, {}> {
 
   createFollow = async id => {
     this.setState({ disabled: true })
-    const nowCount = store.getState().userProfile.profile.followers_count
-    store.dispatch(setUserProfileState({ followers_count: nowCount + 1 }))
     await this.props.followUser(id)
+    const { data } = store.getState().users
+    const index = data.findIndex(d => d.user.id === id)
+    const user = data[index]
+    user.followers_count++
+    store.dispatch(setUser({ user, index }))
     this.setState({ isFollowing: true, disabled: false })
   }
 
@@ -32,14 +35,12 @@ class FollowButton extends React.Component<Props, {}> {
     if (!window.confirm('本当にフォローを解除しますか？')) return
     this.setState({ disabled: true })
     await this.props.unFollowUser(id)
-    const nowCount = store.getState().userProfile.profile.followers_count
-    console.log(nowCount)
-    store.dispatch(setUserProfileState({ followers_count: nowCount - 1 }))
-
-    this.setState({
-      isFollowing: false,
-      disabled: false
-    })
+    const { data } = store.getState().users
+    const index = data.findIndex(d => d.user.id === id)
+    const user = data[index]
+    user.followers_count--
+    store.dispatch(setUser({ user, index }))
+    this.setState({ isFollowing: false, disabled: false })
   }
 
   onClickFollow = id => {
