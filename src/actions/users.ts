@@ -18,7 +18,6 @@ const usersUrl = `${process.env.REACT_APP_API_URL}/users`
 const relationshipUrl: string = `${process.env.REACT_APP_API_URL}/relationships`
 export const resetUsersState = actionCreator('RESET_USERS_STATE')
 export const resetSearchUsersState = actionCreator('RESET_SEARCH_USERS_STATE')
-export const setUser = actionCreator<any>('SET_USER')
 
 export const readUsers = asyncActionCreator<
   IPagerRequest,

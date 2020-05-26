@@ -7,7 +7,6 @@ import {
   resetSearchUsersState,
   resetUsersState,
   getUser,
-  setUser,
   updateUser
 } from '@/actions/users'
 
@@ -124,10 +123,6 @@ export default reducerWithInitialState(initialState)
     const index = state.data.findIndex(d => d.id === result.id)
     state.data[index] = result
     console.log('updateUser.async.done', state)
-    return { ...state }
-  })
-  .case(setUser, (state, { user, index }) => {
-    state.data[index] = user
     return { ...state }
   })
   .cases(
