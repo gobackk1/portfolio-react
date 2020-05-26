@@ -40,16 +40,16 @@ class RecordForm extends React.Component<
   private dispatchPostStudyRecord = async values => {
     const { material } = this.props
     const { image_select } = values
-    const teaching_material = material
+    const teaching_material_name = material
       ? material.title
-      : values.teaching_material
+      : values.teaching_material_name
     const image_url = material ? material.image_url : null
     const encodedImage = image_select ? await encode64(image_select) : null
 
     const res = await store.dispatch(
       postStudyRecord({
         ...values,
-        teaching_material,
+        teaching_material_name,
         image_url,
         image_select: encodedImage
       })
@@ -89,7 +89,7 @@ class RecordForm extends React.Component<
         教材<span className="caution">*</span>
         <Field
           label="何を利用して学びましたか？"
-          name="teaching_material"
+          name="teaching_material_name"
           type="text"
           component={renderField}
         ></Field>
@@ -178,8 +178,8 @@ const validate = (values: any) => {
       errors.comment = 'コメントは100字以内にしてください'
     }
   }
-  if (!values.teaching_material) {
-    errors.teaching_material = '教材は必須です'
+  if (!values.teaching_material_name) {
+    errors.teaching_material_name = '教材は必須です'
   }
   if (!values.study_hours) {
     errors.study_hours = '勉強時間は必須です'
