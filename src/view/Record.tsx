@@ -36,13 +36,13 @@ class Record extends React.Component<Props, {}> {
         <div className="l-inner">
           <Modal
             openButtonText="記録する"
-            buttonClassName="button-record fa-icon-pen mr30 mb30"
+            buttonClassName="button-record--large fa-icon-pen mr30 mb30"
           >
             <RecordForm type="post"></RecordForm>
           </Modal>
           <Modal
             openButtonText="教材を登録する"
-            buttonClassName="button-material fa-icon-book"
+            buttonClassName="button-material--large fa-icon-book"
           >
             <MaterialForm type="post"></MaterialForm>
           </Modal>

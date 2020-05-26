@@ -29,15 +29,32 @@
   @extend %button-cmn-1;
   background: $color_header_text;
   color: $color_primary;
+  font-weight: bold;
+  &--large {
+    @extend %button-cmn-1;
+    background: $color_header_text;
+    color: $color_primary;
+    font-size: 20px;
+    font-weight: bold;
+  }
 }
 
 .button-back {
   @extend %button-cmn-1;
+  &--large {
+    @extend %button-cmn-1;
+    font-size: 20px;
+  }
 }
 
 .button-comment {
   @extend %button-cmn-1;
   color: $color_sub;
+  &--large {
+    @extend %button-cmn-1;
+    color: $color_sub;
+    font-size: 20px;
+  }
 }
 
 .button-login-or-register {
@@ -68,12 +85,26 @@
   &::before {
     margin-right: 5px;
   }
+  &--large {
+    @extend %button-cmn-1;
+    font-size: 20px;
+    &::before {
+      margin-right: 5px;
+    }
+  }
 }
 
 .button-material {
   @extend %button-cmn-1;
   &::before {
     margin-right: 5px;
+  }
+  &--large {
+    @extend %button-cmn-1;
+    font-size: 20px;
+    &::before {
+      margin-right: 5px;
+    }
   }
 }
 

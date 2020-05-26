@@ -45,13 +45,13 @@ class UserShow extends React.Component<Props, {}> {
         <button
           onClick={() => this.onClickBack!()}
           type="button"
-          className="button-back mb20 mr15"
+          className="button-back--large mb20 mr15"
         >
           <i className="fas fa-arrow-left dib mr5"></i>一覧へ戻る
         </button>
         <Modal
           openButtonText="コメントする"
-          buttonClassName="button-comment mb20 mr15"
+          buttonClassName="button-comment--large mb20 mr15"
           icon={<i className="far fa-comment dib mr5"></i>}
         >
           <CommentForm recordId={this.id}></CommentForm>
@@ -59,7 +59,7 @@ class UserShow extends React.Component<Props, {}> {
         <Render if={correctUser}>
           <Modal
             openButtonText="編集"
-            buttonClassName="button-edit"
+            buttonClassName="button-edit--large"
             icon={<i className="fas fa-pen dib mr5"></i>}
           >
             <RecordForm type="edit"></RecordForm>
