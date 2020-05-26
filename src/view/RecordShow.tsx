@@ -47,16 +47,21 @@ class UserShow extends React.Component<Props, {}> {
           type="button"
           className="button-back mb20 mr15"
         >
-          戻る
+          <i className="fas fa-arrow-left dib mr5"></i>一覧へ戻る
         </button>
         <Modal
           openButtonText="コメントする"
           buttonClassName="button-comment mb20 mr15"
+          icon={<i className="far fa-comment dib mr5"></i>}
         >
           <CommentForm recordId={this.id}></CommentForm>
         </Modal>
         <Render if={correctUser}>
-          <Modal openButtonText="編集" buttonClassName="button-edit">
+          <Modal
+            openButtonText="編集"
+            buttonClassName="button-edit"
+            icon={<i className="fas fa-pen dib mr5"></i>}
+          >
             <RecordForm type="edit"></RecordForm>
           </Modal>
         </Render>

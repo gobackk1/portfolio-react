@@ -25,6 +25,7 @@ const styles = {
 interface Props {
   openButtonText: string
   buttonClassName: string
+  icon?: JSX.Element
 }
 
 Modal.setAppElement('#root')
@@ -55,6 +56,7 @@ class ModalWindow extends React.Component<Props, {}> {
           return child
       }
     })
+    const { openButtonText, icon } = this.props
 
     return (
       <>
@@ -63,7 +65,8 @@ class ModalWindow extends React.Component<Props, {}> {
           onClick={this.openModal}
           className={buttonClassName}
         >
-          {this.props.openButtonText}
+          {icon}
+          {openButtonText}
         </button>
         <Modal
           isOpen={this.state.modalIsOpen}

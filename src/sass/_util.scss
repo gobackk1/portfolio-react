@@ -10,7 +10,7 @@ $props: (
   mb: margin-bottom,
   ml: margin-left
 );
-$values: 10, 15, 20, 30, 40, 50;
+$values: 5, 10, 15, 20, 30, 40, 50;
 
 @each $key, $prop in $props {
   @each $value in $values {
@@ -44,6 +44,10 @@ $values: 10, 15, 20, 30, 40, 50;
 
 .tac {
   text-align: center;
+}
+
+.dib {
+  display: inline-block;
 }
 
 %cf {
