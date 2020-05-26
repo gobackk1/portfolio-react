@@ -1,7 +1,6 @@
 import axios, { auth } from '@/axios'
 import { asyncActionCreator, actionCreator } from '@/actions'
 import CustomError from '@/utils/CustomError'
-import { AxiosResponse } from 'axios'
 
 const usersUrl = `${process.env.REACT_APP_API_URL}/users`
 

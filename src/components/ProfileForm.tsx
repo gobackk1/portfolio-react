@@ -1,55 +1,63 @@
 import React from 'react'
 import { Field, reduxForm, InjectedFormProps } from 'redux-form'
-import { updateProfile } from '@/actions/userProfile'
 import { connect } from 'react-redux'
 import { renderFile, renderField, encode64 } from '@/utils/render'
+import store from '@/store'
+import { updateUser } from '@/actions/users'
 interface Props {
-  updateProfile: any
   userProfile: any
   closeModal?: () => void
-  update: () => void
 }
 
 class ProfileForm extends React.Component<
   Props & InjectedFormProps<{}, Props>,
   {}
 > {
-  onSubmit: any = async (values: any) => {
-    const { updateProfile, closeModal, update, userProfile } = this.props
-    const { image_select } = values
-    const encodedImage = image_select
-      ? await encode64(values.image_select)
-      : null
+  onSubmit: any = async ({ image_select, user_bio }) => {
+    const { closeModal, userProfile } = this.props
+    const encodedImage = image_select ? await encode64(image_select) : null
 
-    const res = await updateProfile({
-      ...values,
-      id: userProfile.user.id,
-      image_select: encodedImage
-    })
-    if (res.status === 200) {
+    try {
+      await store.dispatch(
+        updateUser({
+          id: userProfile.userId,
+          user_bio,
+          image_select: encodedImage
+        })
+      )
       closeModal!()
-      if (update) update()
+    } catch (e) {
+      console.log(e, 'mock')
     }
   }
 
   render() {
     const { handleSubmit, pristine, submitting, invalid } = this.props
     return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
-        <p>プロフィール編集</p>
-        <Field
-          name="image_select"
-          label="image_select"
-          type="file"
-          component={renderFile}
-        ></Field>
-        <Field
-          name="user_bio"
-          label="user_bio"
-          type="text"
-          component={renderField}
-        ></Field>
-        <button disabled={pristine || submitting || invalid}>送信</button>
+      <form onSubmit={handleSubmit(this.onSubmit)} className="form">
+        <p className="form__title">プロフィール編集</p>
+        <div className="form__input">
+          <Field
+            name="image_select"
+            label="image_select"
+            type="file"
+            component={renderFile}
+          ></Field>
+        </div>
+        <div className="form__input">
+          <Field
+            name="user_bio"
+            label="user_bio"
+            type="text"
+            component={renderField}
+          ></Field>
+        </div>
+        <button
+          disabled={pristine || submitting || invalid}
+          className="button-submit"
+        >
+          送信
+        </button>
       </form>
     )
   }
@@ -63,7 +71,6 @@ const validate = (values: any) => {
   return errors
 }
 
-const mapDispatchToProps = { updateProfile }
 const mapStateToProps = (state, ownProps) => ({
   initialValues: state.userProfile.user,
   userProfile: state.userProfile
@@ -71,7 +78,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(
   reduxForm<{}, Props>({
     validate,

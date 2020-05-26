@@ -54,6 +54,19 @@ export const getUser = asyncActionCreator<number, IUser, CustomError>(
   }
 )
 
+export const updateUser = asyncActionCreator<any, IUser, CustomError>(
+  'UPDATE_USER',
+  async params => {
+    const res = await axios.put(`${usersUrl}/${params.id}`, params, auth)
+    console.log(res)
+    if (res.statusText !== 'OK') {
+      throw new CustomError('mock', 'mock')
+    }
+
+    return res.data
+  }
+)
+
 export const searchUsers = asyncActionCreator<
   IPagerRequest,
   IUsersResponse,

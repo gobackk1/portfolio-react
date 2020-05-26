@@ -34,38 +34,29 @@ class Profile extends React.Component<Props> {
     this.userId = this.props.match.params.id
       ? Number(this.props.match.params.id)
       : this.props.user.id
-    this.setUserProfile(this.userId)
+    this.getUserIfNotFound(this.userId)
   }
 
   componentDidMount() {
     window.scrollTo(0, 0)
   }
 
-  setUserProfile = async (id: number) => {
-    // store.dispatch(setUserProfileState({ currentPage: 1, records: [] }))
-    Promise.all([
-      this.dispatchGetUser(id),
-      this.dispatchReadProfileStudyRecords(id)
-    ])
-  }
-
-  dispatchGetUser: (id: number) => Promise<void> = async id => {
+  getUserIfNotFound = async (id: number) => {
     const { data } = this.props.users
     const index = data.findIndex(d => d.id === this.userId)
     if (index === -1) {
-      await store.dispatch(getUser(this.userId))
+      Promise.all([
+        store.dispatch(getUser(this.userId)),
+        store.dispatch(
+          readProfileStudyRecords({
+            id,
+            page: 1,
+            per: 10,
+            initialize: true
+          })
+        )
+      ])
     }
-  }
-
-  dispatchReadProfileStudyRecords: (id: number) => Promise<void> = async id => {
-    await store.dispatch(
-      readProfileStudyRecords({
-        id,
-        page: 1,
-        per: 10,
-        initialize: true
-      })
-    )
   }
 
   render() {
@@ -75,7 +66,7 @@ class Profile extends React.Component<Props> {
 
     const index = data.findIndex(d => d.id === this.userId)
     if (index === -1) return <></>
-    const update = this.setUserProfile
+    const update = this.getUserIfNotFound
     const {
       registered_date,
       is_following,
