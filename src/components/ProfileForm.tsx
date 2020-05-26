@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { renderFile, renderField, encode64 } from '@/utils/render'
 import store from '@/store'
 import { updateUser } from '@/actions/users'
+import { updateProfileStudyRecords } from '@/actions/userProfile'
 interface Props {
   userProfile: any
   closeModal?: () => void
@@ -18,13 +19,15 @@ class ProfileForm extends React.Component<
     const encodedImage = image_select ? await encode64(image_select) : null
 
     try {
-      await store.dispatch(
+      const res = await store.dispatch(
         updateUser({
           id: userProfile.userId,
           user_bio,
           image_select: encodedImage
         })
       )
+      const { image_url } = res
+      store.dispatch(updateProfileStudyRecords({ image_url }))
       closeModal!()
     } catch (e) {
       console.log(e, 'mock')

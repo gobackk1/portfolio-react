@@ -29,3 +29,6 @@ export const readProfileStudyRecords = asyncActionCreator<
 })
 
 export const setUserProfileState = actionCreator<any>('SET_USER_PROFILE_STATE')
+export const updateProfileStudyRecords = actionCreator<any>(
+  'UPDATE_PROFILE_STUDY_RECORDS'
+)

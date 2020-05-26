@@ -1,7 +1,8 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import {
   readProfileStudyRecords,
-  setUserProfileState
+  setUserProfileState,
+  updateProfileStudyRecords
 } from '@/actions/userProfile'
 import store from '@/store'
 
@@ -61,3 +62,13 @@ export default reducerWithInitialState(initialState)
       return { ...state }
     }
   )
+  .case(updateProfileStudyRecords, (state, { image_url }) => {
+    if (image_url) {
+      const copy = state.records
+      state.records = copy.map(r => {
+        r.user.image_url = image_url
+        return r
+      })
+    }
+    return { ...state }
+  })
