@@ -425,6 +425,13 @@
   }
 }
 
+.no-comment {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: darken($color_info, 15%);
+}
+
 // react-modalのオーバーライド
 
 .ReactModal__Content {

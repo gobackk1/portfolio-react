@@ -63,7 +63,11 @@ class UserShow extends React.Component<Props, {}> {
         <div className="mb40">
           <StudyRecord record={records[index]} link={false}></StudyRecord>
         </div>
+        <h3 className="title-m mb15">コメント</h3>
         <ul>
+          {!comments.length && (
+            <div className="no-comment">コメントはありません</div>
+          )}
           {comments.map((comment, index) => (
             <li key={index}>
               <Comment data={comment} recordId={this.id}></Comment>
