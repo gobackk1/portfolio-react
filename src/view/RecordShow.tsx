@@ -71,7 +71,7 @@ class UserShow extends React.Component<Props, {}> {
         <h3 className="title-m mb15">コメント</h3>
         <ul>
           {!comments.length && (
-            <div className="no-comment">コメントはありません</div>
+            <div className="not-found">コメントはありません</div>
           )}
           {comments.map((comment, index) => (
             <li key={index}>

@@ -54,6 +54,9 @@ class Record extends React.Component<Props, {}> {
           )}
           {!isLoading && (
             <ul className="material-list">
+              {!materials.length && (
+                <div className="not-found">まだ教材が登録されていません</div>
+              )}
               {materials.map((material, i) => (
                 <li key={i} className="material-list__item">
                   <MaterialCard material={material}></MaterialCard>
