@@ -376,7 +376,7 @@
   }
   &__comment {
     margin-bottom: 15px;
-    @include round-block($color_info);
+    @include round-block(lighten($color_info, 5%));
   }
   &__material {
     margin-bottom: 15px;
