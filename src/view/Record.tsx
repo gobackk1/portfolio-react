@@ -46,7 +46,7 @@ class Record extends React.Component<Props, {}> {
           >
             <MaterialForm type="post"></MaterialForm>
           </Modal>
-          <h2 className="title-l mb20">教材一覧</h2>
+          <h3 className="title-m mb20">教材一覧</h3>
           {isLoading && (
             <div className="tac">
               <DotSpinner></DotSpinner>
