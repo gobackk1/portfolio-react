@@ -25,17 +25,17 @@
   }
 }
 
-.button-edit {
+%button-edit {
   @extend %button-cmn-1;
   background: $color_header_text;
   color: $color_primary;
   font-weight: bold;
+}
+.button-edit {
+  @extend %button-edit;
   &--large {
-    @extend %button-cmn-1;
-    background: $color_header_text;
-    color: $color_primary;
+    @extend %button-edit;
     font-size: 20px;
-    font-weight: bold;
   }
 }
 
@@ -47,12 +47,14 @@
   }
 }
 
-.button-comment {
+%button-comment {
   @extend %button-cmn-1;
   color: $color_sub;
+}
+.button-comment {
+  @extend %button-comment;
   &--large {
-    @extend %button-cmn-1;
-    color: $color_sub;
+    @extend %button-comment;
     font-size: 20px;
   }
 }
@@ -80,31 +82,37 @@
   }
 }
 
-.button-record {
+%button-record {
   @extend %button-cmn-1;
+  background: $color_accent;
+  color: $color_white;
+  border: 1px solid $color_accent;
   &::before {
     margin-right: 5px;
   }
+}
+.button-record {
+  @extend %button-record;
   &--large {
-    @extend %button-cmn-1;
+    @extend %button-record;
     font-size: 20px;
-    &::before {
-      margin-right: 5px;
-    }
   }
 }
 
-.button-material {
+%button-material {
   @extend %button-cmn-1;
+  background: $color_sub_light;
+  color: $color_white;
+  border: 1px solid $color_sub_light;
   &::before {
     margin-right: 5px;
   }
+}
+.button-material {
+  @extend %button-material;
   &--large {
-    @extend %button-cmn-1;
+    @extend %button-material;
     font-size: 20px;
-    &::before {
-      margin-right: 5px;
-    }
   }
 }
 
@@ -114,7 +122,6 @@
   color: $color_accent;
   background: #fff;
 }
-
 .button-follow {
   @extend %button-follow;
   &--following {
