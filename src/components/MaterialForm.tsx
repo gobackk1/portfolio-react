@@ -6,13 +6,9 @@ import {
   postTeachingMaterial,
   updateTeachingMaterial
 } from '@/actions/teachingMaterials'
-import {
-  renderTextarea,
-  renderErrorMessages,
-  renderFile,
-  renderField,
-  encode64
-} from '@/utils/render'
+import { renderFile, renderField, encode64 } from '@/utils/render'
+import { updateTeachingMaterialInStudyRecord } from '@/actions/studyRecords'
+
 interface Props {
   user?: any
   closeModal?: () => void
@@ -72,7 +68,10 @@ class RecordForm extends React.Component<
         id
       })
     )
-    if (res.status === 200) closeModal!()
+    if (res.status === 200) {
+      closeModal!()
+      store.dispatch(updateTeachingMaterialInStudyRecord(res.data))
+    }
   }
 
   render() {

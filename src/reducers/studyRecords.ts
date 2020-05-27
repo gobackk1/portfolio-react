@@ -10,7 +10,8 @@ import {
   searchStudyRecords,
   resetSearchStudyRecordsState,
   resetStudyRecordsState,
-  setStudyRecordsState
+  setStudyRecordsState,
+  updateTeachingMaterialInStudyRecord
 } from '@/actions/studyRecords'
 import _ from 'lodash'
 import store from '@/store'
@@ -65,7 +66,8 @@ const initialState: any = {
       record: {
         user_id: 0,
         comment: '',
-        teaching_material: '',
+        teaching_material_name: '',
+        teaching_material_id: 0,
         study_hours: 0,
         study_record_comments: []
       },
@@ -192,5 +194,18 @@ export default reducerWithInitialState(initialState)
   })
   .case(setStudyRecordsState, (state, { errorMessage }) => {
     if (errorMessage != null) state.errorMessage = errorMessage
+    return { ...state }
+  })
+  .case(updateTeachingMaterialInStudyRecord, (state, params) => {
+    const { id, title, image_url } = params
+    const result = state.records.map(r => {
+      if (r.record.teaching_material_id === id) {
+        r.title = title
+        r.image_url = image_url
+      }
+      return r
+    })
+    state.records = result
+    console.log(state, 'updateTeachingMaterialInStudyRecord')
     return { ...state }
   })

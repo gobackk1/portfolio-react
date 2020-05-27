@@ -39,19 +39,23 @@ class RecordForm extends React.Component<
 
   private dispatchPostStudyRecord = async values => {
     const { material } = this.props
+    console.log(material, 'material')
+
     const { image_select } = values
     const teaching_material_name = material
       ? material.title
       : values.teaching_material_name
     const image_url = material ? material.image_url : null
     const encodedImage = image_select ? await encode64(image_select) : null
+    const material_id = material ? material.id : null
 
     const res = await store.dispatch(
       postStudyRecord({
         ...values,
         teaching_material_name,
         image_url,
-        image_select: encodedImage
+        image_select: encodedImage,
+        material_id
       })
     )
 

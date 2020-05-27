@@ -48,7 +48,12 @@ class StudyRecord extends React.Component<Props, {}> {
       id,
       date,
       record,
-      record: { comment, teaching_material, study_hours, study_genre_list },
+      record: {
+        comment,
+        teaching_material_name,
+        study_hours,
+        study_genre_list
+      },
       comments,
       user
     } = this.props.record
@@ -85,7 +90,7 @@ class StudyRecord extends React.Component<Props, {}> {
               ></MaterialImage>
             </div>
             <div className="material__text">
-              <div className="material__title">{teaching_material}</div>
+              <div className="material__title">{teaching_material_name}</div>
               <div className="material__hours">
                 <i className="far fa-clock large"></i>
                 {study_hours}時間
