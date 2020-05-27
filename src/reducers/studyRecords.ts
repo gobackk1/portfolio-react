@@ -200,8 +200,8 @@ export default reducerWithInitialState(initialState)
     const { id, title, image_url } = params
     const result = state.records.map(r => {
       if (r.record.teaching_material_id === id) {
-        r.title = title
-        r.image_url = image_url
+        r.record.teaching_material_name = title
+        r.record.image_url = image_url
       }
       return r
     })
