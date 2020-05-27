@@ -37,9 +37,10 @@ class MaterialCard extends React.Component<Props> {
     }
   }
 
-  onClickEllipsis = e => {
+  onClickEllipsis = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.stopPropagation()
-    const className = e.nativeEvent.srcElement.className
+    if (!(e.nativeEvent.target instanceof Element)) return
+    const className = e.nativeEvent.target.className
     if (className.indexOf('card-material') === -1) return
     this.setState({ isOpen: !this.state.isOpen })
   }
@@ -79,15 +80,8 @@ class MaterialCard extends React.Component<Props> {
             >
               <div className="card-material__dropdown">
                 <Dropdown open={this.state.isOpen}>
-                  <button
-                    onClick={() => this.onClickDelete(user.id, id)}
-                    type="button"
-                    className="card-material__dropdown-button"
-                  >
-                    削除
-                  </button>
                   <Modal
-                    openButtonText="更新"
+                    openButtonText="編集"
                     buttonClassName="card-material__dropdown-button"
                   >
                     <MaterialForm
@@ -95,6 +89,13 @@ class MaterialCard extends React.Component<Props> {
                       material={material}
                     ></MaterialForm>
                   </Modal>
+                  <button
+                    onClick={() => this.onClickDelete(user.id, id)}
+                    type="button"
+                    className="card-material__dropdown-button clr-danger"
+                  >
+                    削除
+                  </button>
                 </Dropdown>
               </div>
             </div>

@@ -1,7 +1,6 @@
 @import 'sass/reset';
 @import 'sass/variable';
 @import 'sass/base';
-@import 'sass/util';
 @import 'sass/mixin';
 @import 'sass/spinner';
 @import 'sass/icon';
@@ -9,6 +8,7 @@
 @import 'sass/form';
 @import 'sass/layout';
 @import 'sass/block';
+@import 'sass/util';
 
 body {
   margin: 0;

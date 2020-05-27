@@ -20,8 +20,20 @@ $values: 5, 10, 15, 20, 30, 40, 50;
   }
 }
 
-.caution {
+.clr-danger {
   color: $color_danger;
+}
+
+.clr-success {
+  color: $color_success;
+}
+
+.clr-info {
+  color: $color_info;
+}
+
+.clr-warning {
+  color: $color_warning;
 }
 
 .font-sm {
