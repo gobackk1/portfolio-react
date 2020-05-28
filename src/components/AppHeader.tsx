@@ -6,6 +6,7 @@ import { logout } from '@/actions/user'
 import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
 import Render from '@/components/Render'
+import classNames from 'classnames'
 
 interface Props extends RouteComponentProps {
   user?: any
@@ -13,16 +14,27 @@ interface Props extends RouteComponentProps {
 
 class AppHeader extends React.Component<Props, { isLogin: boolean }> {
   static defaultProps: any = {}
+
   componentDidMount() {
     this.setState({
       isLogin: store.getState().user.isLogin
     })
   }
+
   onClickLogout = () => {
     // if (window.confirm('本当にログアウトしますか？')) {
     store.dispatch(logout())
     //   this.props.history.push('/')
     // }
+  }
+
+  menuListClassName = (className: string): any => {
+    const { pathname } = this.props.location
+    const regexp = new RegExp(className)
+    return classNames({
+      'menu-list__item': !regexp.test(pathname),
+      'menu-list__item--active': regexp.test(pathname)
+    })
   }
 
   render() {
@@ -35,16 +47,16 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
         <nav>
           <ul className="app-header__menu menu-list">
             <Render if={token}>
-              <li className="menu-list__item">
+              <li className={this.menuListClassName('/explore')}>
                 <Link to="/explore/users">探す</Link>
               </li>
-              <li className="menu-list__item">
+              <li className={this.menuListClassName('/record')}>
                 <Link to="/record">記録する</Link>
               </li>
-              <li className="menu-list__item">
+              <li className={this.menuListClassName('/report')}>
                 <Link to="/report">レポート</Link>
               </li>
-              <li className="menu-list__item">
+              <li className={this.menuListClassName('/profile')}>
                 <Link to="/profile">プロフィール</Link>
               </li>
               <li className="menu-list__item">
