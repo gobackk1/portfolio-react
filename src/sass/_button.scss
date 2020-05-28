@@ -39,6 +39,19 @@
   }
 }
 
+%button-del-record {
+  @extend %button-cmn-1;
+  color: $color_danger;
+  font-weight: bold;
+}
+.button-del-record {
+  @extend %button-del-record;
+  &--large {
+    @extend %button-del-record;
+    font-size: 20px;
+  }
+}
+
 .button-back {
   @extend %button-cmn-1;
   &--large {

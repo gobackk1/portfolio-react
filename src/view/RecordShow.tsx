@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import {
   getStudyRecord,
   readStudyRecords,
-  deleteComment
+  deleteComment,
+  deleteStudyRecord
 } from '@/actions/studyRecords'
-import { Link, Switch, Route, RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import Modal from '@/components/Modal'
 import CommentForm from '@/components/CommentForm'
 import Render from '@/components/Render'
@@ -13,11 +14,9 @@ import StudyRecord from '@/components/StudyRecord'
 import store from '@/store'
 import RecordForm from '@/components/RecordForm'
 import Comment from '@/components/Comment'
-import axios, { auth } from '@/axios'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   studyRecords: any
-  deleteComment: any
   user: any
 }
 
@@ -30,20 +29,31 @@ class UserShow extends React.Component<Props, {}> {
     await store.dispatch(getStudyRecord(this.id))
   }
 
-  onClickBack: (() => void) | null = () => {
+  onClickBack: () => void = () => {
     this.props.history.goBack()
+  }
+
+  onClickDelete = async () => {
+    if (window.confirm('本当に勉強記録を削除して良いですか？')) {
+      try {
+        await store.dispatch(deleteStudyRecord(this.id))
+        this.props.history.push('/explore/studyrecords')
+      } catch (e) {
+        console.log(e, '削除に失敗しましたmock')
+      }
+    }
   }
 
   render() {
     const { records } = this.props.studyRecords
     const index = records.findIndex(r => r.id === this.id)
     if (index === -1) return <></>
-    const { user, record, comments } = records[index]
+    const { user, comments } = records[index]
     const correctUser = user.id === this.props.user.id
     return (
       <div className="l-inner">
         <button
-          onClick={() => this.onClickBack!()}
+          onClick={this.onClickBack}
           type="button"
           className="button-back--large mb20 mr15"
         >
@@ -59,12 +69,19 @@ class UserShow extends React.Component<Props, {}> {
         <Render if={correctUser}>
           <Modal
             openButtonText="編集"
-            buttonClassName="button-edit--large"
+            buttonClassName="button-edit--large mr15"
             icon={<i className="fas fa-pen dib mr5"></i>}
           >
             <RecordForm type="edit"></RecordForm>
           </Modal>
         </Render>
+        <button
+          onClick={this.onClickDelete}
+          type="button"
+          className="button-del-record--large mb20 mr15"
+        >
+          <i className="fas fa-eraser dib mr5"></i>削除
+        </button>
         <div className="mb40">
           <StudyRecord record={records[index]} link={false}></StudyRecord>
         </div>
@@ -89,6 +106,4 @@ const mapStateToProps = state => ({
   user: state.user
 })
 
-const mapDispatchToProps = { getStudyRecord, readStudyRecords, deleteComment }
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserShow)
+export default connect(mapStateToProps, null)(UserShow)

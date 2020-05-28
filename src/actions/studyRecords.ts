@@ -1,139 +1,184 @@
 import axios, { auth } from '@/axios'
 import { asyncActionCreator, actionCreator } from '@/actions'
 import CustomError from '@/utils/CustomError'
+import IStudyRecord from '@/interfaces/IStudyRecord'
+
+interface IPagerRequest {
+  page: number
+  per: number
+  keyword?: string
+}
+
+interface IRecordsResponse {
+  not_found: boolean
+  records: IStudyRecord[]
+}
+
+interface ICommentResponse {
+  id: number
+  date: string
+  comment_body: string
+  created_at: string
+  updated_at: string
+  study_record_id: number
+  user: {
+    id: number
+    image_url: string
+    name: string
+  }
+}
+
+interface IPostStudyRecordRequest {
+  image_select: string
+  image_url: string
+  material_id: number
+  study_hours: number
+  teaching_material_name: string
+}
 
 const studyRecordUrl = `${process.env.REACT_APP_API_URL}/study_records`
 
-export const readStudyRecords = asyncActionCreator<any, any, CustomError>(
-  'READ_STUDY_RECORDS',
-  async ({ page, per }) => {
-    const res = await axios.get(
-      `${studyRecordUrl}?page=${page}&per=${per}`,
-      auth
-    )
+export const readStudyRecords = asyncActionCreator<
+  IPagerRequest,
+  IRecordsResponse,
+  CustomError
+>('READ_STUDY_RECORDS', async ({ page, per }) => {
+  const res = await axios.get(`${studyRecordUrl}?page=${page}&per=${per}`, auth)
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
-
-    if (!res.data.result.length) {
-      if (res.data.not_found) {
-        throw new CustomError(res.data.messages[0], 'record_not_found')
-      }
-      throw new CustomError('追加するデータがありません', 'any_more_data')
-    }
-
-    return res
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
   }
-)
 
-export const searchStudyRecords = asyncActionCreator<any, any, CustomError>(
-  'SEARCH_STUDY_RECORDS',
-  async params => {
-    const res = await axios.post(`${studyRecordUrl}/search`, params, auth)
-
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
+  if (!res.data.records.length) {
+    if (res.data.not_found) {
+      throw new CustomError(res.data.messages[0], 'record_not_found')
     }
-
-    if (!res.data.result.length) {
-      if (res.data.not_found) {
-        throw new CustomError(res.data.messages[0], 'record_not_found')
-      }
-      throw new CustomError('追加するデータがありません', 'any_more_data')
-    }
-
-    return res
+    throw new CustomError('追加するデータがありません', 'any_more_data')
   }
-)
 
-export const getStudyRecord = asyncActionCreator<any, any, CustomError>(
-  'GET_STUDY_RECORD',
-  async id => {
-    const res = await axios.get(`${studyRecordUrl}/${id}`, auth)
+  console.log(res, 'READ_STUDY_RECORDS')
+  return res.data
+})
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
+export const searchStudyRecords = asyncActionCreator<
+  IPagerRequest,
+  IRecordsResponse,
+  CustomError
+>('SEARCH_STUDY_RECORDS', async params => {
+  const res = await axios.post(`${studyRecordUrl}/search`, params, auth)
 
-    return res
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
   }
-)
 
-export const postStudyRecord = asyncActionCreator<any, any, CustomError>(
-  'POST_STUDY_RECORD',
-  async params => {
-    const res = await axios.post(studyRecordUrl, params, auth)
-
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
+  if (!res.data.result.length) {
+    if (res.data.not_found) {
+      throw new CustomError(res.data.messages[0], 'record_not_found')
     }
-
-    return res
+    throw new CustomError('追加するデータがありません', 'any_more_data')
   }
-)
 
-export const putStudyRecord = asyncActionCreator<any, any, CustomError>(
-  'PUT_STUDY_RECORD',
-  async params => {
-    console.log(params, 'PUT_STUDY_RECORD')
-    const res = await axios.put(`${studyRecordUrl}/${params.id}`, params, auth)
+  console.log(res, 'SEARCH_STUDY_RECORDS')
+  return res.data
+})
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
+export const getStudyRecord = asyncActionCreator<
+  number,
+  IStudyRecord,
+  CustomError
+>('GET_STUDY_RECORD', async id => {
+  const res = await axios.get(`${studyRecordUrl}/${id}`, auth)
 
-    return res
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
   }
-)
 
-export const deleteStudyRecord = asyncActionCreator<any, any, CustomError>(
-  'DELETE_STUDY_RECORD',
-  async id => {
-    const res = await axios.delete(`${studyRecordUrl}/${id}`, auth)
+  console.log(res, 'GET_STUDY_RECORD')
+  return res.data
+})
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
+export const postStudyRecord = asyncActionCreator<
+  IPostStudyRecordRequest,
+  IStudyRecord,
+  CustomError
+>('POST_STUDY_RECORD', async params => {
+  const res = await axios.post(studyRecordUrl, params, auth)
 
-    return res
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
   }
-)
 
-export const postComment = asyncActionCreator<any, any, CustomError>(
-  'POST_STUDY_RECORD_COMMENT',
-  async params => {
-    const { study_record_id } = params
-    console.log(params, 'POST_STUDY_RECORD_COMMENT')
-    const res = await axios.post(
-      `${studyRecordUrl}/${study_record_id}/study_record_comments/`,
-      params,
-      auth
-    )
+  console.log(res, 'POST_STUDY_RECORD')
+  return res.data
+})
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
+export const putStudyRecord = asyncActionCreator<
+  IStudyRecord,
+  IStudyRecord,
+  CustomError
+>('PUT_STUDY_RECORD', async params => {
+  const res = await axios.put(`${studyRecordUrl}/${params.id}`, params, auth)
 
-    return res
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
   }
-)
 
-export const deleteComment = asyncActionCreator<any, any, Error>(
-  'DELETE_COMMENT',
-  async ({ id, study_record_id }) => {
-    const res = await axios.delete(
-      `${studyRecordUrl}/${study_record_id}/study_record_comments/${id}`,
-      auth
-    )
+  console.log(res, 'PUT_STUDY_RECORD')
+  return res.data
+})
 
-    if (res.statusText !== 'OK') {
-      throw new Error(`Error ${res}`)
-    }
+export const deleteStudyRecord = asyncActionCreator<
+  number,
+  number,
+  CustomError
+>('DELETE_STUDY_RECORD', async id => {
+  const res = await axios.delete(`${studyRecordUrl}/${id}`, auth)
 
-    return res
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
   }
-)
+
+  console.log(res, 'DELETE_STUDY_RECORD')
+  return res.data
+})
+
+export const postComment = asyncActionCreator<
+  { comment_body: string; study_record_id: number },
+  ICommentResponse,
+  CustomError
+>('POST_STUDY_RECORD_COMMENT', async params => {
+  const { study_record_id } = params
+  const res = await axios.post(
+    `${studyRecordUrl}/${study_record_id}/study_record_comments/`,
+    params,
+    auth
+  )
+
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
+  }
+
+  console.log(res, 'POST_STUDY_RECORD_COMMENT')
+  return res.data
+})
+
+export const deleteComment = asyncActionCreator<
+  { id: number; study_record_id: number },
+  { id: number; study_record_id: number },
+  CustomError
+>('DELETE_COMMENT', async ({ id, study_record_id }) => {
+  const res = await axios.delete(
+    `${studyRecordUrl}/${study_record_id}/study_record_comments/${id}`,
+    auth
+  )
+
+  if (res.statusText !== 'OK') {
+    throw new Error(`Error ${res}`)
+  }
+
+  console.log(res, 'DELETE_COMMENT')
+  return res.data
+})
 
 export const resetStudyRecordsState = actionCreator('RESET_STUDY_RECORDS_STATE')
 export const resetSearchStudyRecordsState = actionCreator(

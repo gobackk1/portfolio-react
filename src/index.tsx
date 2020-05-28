@@ -8,7 +8,6 @@ import store from '@/store'
 import Explore from '@/view/Explore'
 import AppHeader from '@/components/AppHeader'
 import Record from '@/view/Record'
-import UserShow from '@/view/UserShow'
 import RecordShow from '@/view/RecordShow'
 import Profile from '@/view/Profile'
 import Report from '@/view/Report'
@@ -26,7 +25,6 @@ import RecordEdit from './view/RecordEdit'
         <div className="l-container">
           <Switch>
             <Route path="/explore" component={Explore}></Route>
-            <Route path="/users/:id" component={UserShow}></Route>
             <Route path="/record/:id/edit" component={RecordEdit}></Route>
             <Route path="/record/:id" component={RecordShow}></Route>
             <Route path="/record" component={Record}></Route>

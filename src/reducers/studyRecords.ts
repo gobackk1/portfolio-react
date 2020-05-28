@@ -30,8 +30,12 @@ const dispatchReadStudyRecords: (per: number) => Promise<void> = async per => {
   }
 }
 
-const dispatchSearchStudyRecords = async (keyword: string, per: number) => {
+const dispatchSearchStudyRecords = async (
+  keyword: string | undefined,
+  per: number
+) => {
   try {
+    if (!keyword) return
     await store.dispatch(
       searchStudyRecords({
         keyword,
@@ -59,20 +63,19 @@ const initialState: any = {
   records: [
     {
       id: 1,
+      date: '01/01',
+      user_id: 0,
+      comment: '',
+      teaching_material_name: '',
+      teaching_material_id: 0,
+      study_hours: 0,
+      study_record_comments: [],
+      comments: [],
       user: {
+        id: 0,
         name: '',
         image_url: '/images/user_images/default.png'
-      },
-      date: '01/01',
-      record: {
-        user_id: 0,
-        comment: '',
-        teaching_material_name: '',
-        teaching_material_id: 0,
-        study_hours: 0,
-        study_record_comments: []
-      },
-      comments: []
+      }
     }
   ],
   onLoadStudyRecords: undefined,
@@ -107,7 +110,7 @@ export default reducerWithInitialState(initialState)
     }
     state.isLoading = false
     state.currentPage++
-    state.records = state.records.concat(result.data.result)
+    state.records = state.records.concat(result.records)
     state.loaded = true
     return {
       ...state
@@ -123,7 +126,7 @@ export default reducerWithInitialState(initialState)
     }
     state.search.currentPage++
     state.search.keyword = params.keyword
-    state.records = state.records.concat(result.data.result)
+    state.records = state.records.concat(result.records)
     state.loaded = true
     console.log(state, 'searchStudyRecords.async.done')
     return { ...state }
@@ -131,12 +134,11 @@ export default reducerWithInitialState(initialState)
   .cases(
     [getStudyRecord.async.done, putStudyRecord.async.done],
     (state, { result }) => {
-      const data = result.data
-      const index = state.records.findIndex(r => r.id === data.id)
+      const index = state.records.findIndex(r => r.id === result.id)
       if (index !== -1) {
-        state.records[index] = data
+        state.records[index] = result
       } else {
-        state.records.push(data)
+        state.records.push(result)
       }
 
       console.log(state, 'getStudyRecord or putStudyRecord')
@@ -144,32 +146,26 @@ export default reducerWithInitialState(initialState)
     }
   )
   .case(postStudyRecord.async.done, (state, { result }) => {
-    const data = result.data
-    state.records.unshift(data)
-
+    state.records.unshift(result)
     return { ...state }
   })
   .case(deleteStudyRecord.async.done, (state, { result }) => {
-    const id = result.data
-    const index = state.records.findIndex(r => r.id === id)
+    const index = state.records.findIndex(r => r.id === result)
     state.records.splice(index, 1)
 
     console.log(state, 'deleteStudyRecord')
-    return {
-      ...state
-    }
+    return { ...state }
   })
   .case(postComment.async.done, (state, { result }) => {
-    const study_record_id = result.data.comment.study_record_id
-    const data = result.data
+    const study_record_id = result.study_record_id
     const index = state.records.findIndex(r => r.id === study_record_id)
-    state.records[index].comments.push(data)
+    state.records[index].comments.push(result)
 
     console.log(state, 'postComment')
     return { ...state }
   })
   .case(deleteComment.async.done, (state, { result }) => {
-    const { id, study_record_id } = result.data
+    const { id, study_record_id } = result
     const rindex = state.records.findIndex(r => r.id === study_record_id)
     const { comments } = state.records[rindex]
     const cindex = comments.findIndex(c => c.id === id)
@@ -200,9 +196,9 @@ export default reducerWithInitialState(initialState)
   .case(updateTeachingMaterialInStudyRecord, (state, params) => {
     const { id, title, image_url } = params
     const result = state.records.map(r => {
-      if (r.record.teaching_material_id === id) {
-        r.record.teaching_material_name = title
-        r.record.image_url = image_url
+      if (r.teaching_material_id === id) {
+        r.teaching_material_name = title
+        r.image_url = image_url
       }
       return r
     })
@@ -211,9 +207,7 @@ export default reducerWithInitialState(initialState)
     return { ...state }
   })
   .case(deleteStudyRecordByTeachingMaterialId, (state, id) => {
-    const result = state.records.filter(
-      r => r.record.teaching_material_id !== id
-    )
+    const result = state.records.filter(r => r.teaching_material_id !== id)
     state.records = result
     console.log('deleteStudyRecordByTeachingMaterialId', state)
     return { ...state }

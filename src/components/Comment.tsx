@@ -18,7 +18,7 @@ class Comment extends React.Component<Props> {
 
   render() {
     const {
-      data: { comment, date, user }
+      data: { date, user, comment_body, id }
     } = this.props
 
     return (
@@ -34,16 +34,14 @@ class Comment extends React.Component<Props> {
           </div>
           <div className="card-user__profile-body">
             <div className="card-user__profile-name">{user.name}</div>
-            {comment.comment_body}
+            {comment_body}
           </div>
         </div>
         <div className="card-user__tail">
           <div className="card-user__tail-date">{date}</div>
           <div className="card-user__tail-button">
-            <Render if={comment.user_id === this.props.user.id}>
-              <button onClick={() => this.deleteComment(comment.id)}>
-                削除
-              </button>
+            <Render if={user.id === this.props.user.id}>
+              <button onClick={() => this.deleteComment(id)}>削除</button>
             </Render>
           </div>
         </div>

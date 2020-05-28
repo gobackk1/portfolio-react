@@ -16,11 +16,15 @@ class CommentForm extends React.Component<
   {}
 > {
   onSubmit: any = async (values: any) => {
-    const res = await this.props.postComment({
-      ...values,
-      study_record_id: this.props.recordId
-    })
-    if (res.status === 200) this.props.closeModal!()
+    try {
+      await this.props.postComment({
+        ...values,
+        study_record_id: this.props.recordId
+      })
+      this.props.closeModal!()
+    } catch (e) {
+      console.log(e, 'コメントが正しく送信できませんでしたmock')
+    }
   }
 
   render() {

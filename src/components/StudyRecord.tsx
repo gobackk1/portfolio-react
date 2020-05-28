@@ -37,24 +37,18 @@ class StudyRecord extends React.Component<Props, {}> {
   }
 
   render() {
-    console.log(this.props.record, 'studyrecordstsx')
-
     if (!this.props.record) {
-      console.log('oi')
-
       return <>mock</>
     }
     const {
       id,
       date,
-      record,
-      record: {
-        comment,
-        teaching_material_name,
-        study_hours,
-        study_genre_list
-      },
+      record_comment,
+      teaching_material_name,
+      study_hours,
+      study_genre_list,
       comments,
+      image_url,
       user
     } = this.props.record
 
@@ -81,11 +75,13 @@ class StudyRecord extends React.Component<Props, {}> {
             <div className="record__username">{user.name}</div>
             <div className="record__date">{date}</div>
           </div>
-          {comment && <div className="record__comment">{comment}</div>}
+          {record_comment && (
+            <div className="record__comment">{record_comment}</div>
+          )}
           <div className="record__material material">
             <div className="material__img">
               <MaterialImage
-                bgUrl={`url(${process.env.REACT_APP_API_URL}${record.image_url}) no-repeat center/contain`}
+                bgUrl={`url(${process.env.REACT_APP_API_URL}${image_url}) no-repeat center/contain`}
                 height={100}
               ></MaterialImage>
             </div>
@@ -111,7 +107,7 @@ class StudyRecord extends React.Component<Props, {}> {
                 </span>
               </div>
               <div>
-                <LikeCounter record={record}></LikeCounter>
+                <LikeCounter record={this.props.record}></LikeCounter>
               </div>
             </div>
           </div>

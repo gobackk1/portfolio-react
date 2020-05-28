@@ -49,28 +49,34 @@ class RecordForm extends React.Component<
     const encodedImage = image_select ? await encode64(image_select) : null
     const material_id = material ? material.id : null
 
-    const res = await store.dispatch(
-      postStudyRecord({
-        ...values,
-        teaching_material_name,
-        image_url,
-        image_select: encodedImage,
-        material_id
-      })
-    )
-
-    if (res.status === 200) this.props.closeModal!()
+    try {
+      await store.dispatch(
+        postStudyRecord({
+          ...values,
+          teaching_material_name,
+          image_url,
+          image_select: encodedImage,
+          material_id
+        })
+      )
+      this.props.closeModal!()
+    } catch (e) {
+      console.log(e, 'mock')
+    }
   }
 
   private dispatchUpdateStudyRecord = async values => {
     const { image_select } = values
     const encodedImage = image_select ? await encode64(image_select) : null
 
-    const res = await store.dispatch(
-      putStudyRecord({ ...values, image_select: encodedImage })
-    )
-
-    if (res.status === 200) this.props.closeModal!()
+    try {
+      await store.dispatch(
+        putStudyRecord({ ...values, image_select: encodedImage })
+      )
+      this.props.closeModal!()
+    } catch (e) {
+      console.log(e, 'mock')
+    }
   }
 
   renderMaterial = () => {
@@ -130,7 +136,7 @@ class RecordForm extends React.Component<
           コメント
           <Field
             label="勉強内容をコメントしよう。（100字以内）"
-            name="comment"
+            name="record_comment"
             text="text"
             component={renderTextarea}
           ></Field>
@@ -205,7 +211,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     user: state.user,
-    initialValues: studyRecord.record
+    initialValues: studyRecord
   }
 }
 
