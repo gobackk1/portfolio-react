@@ -8,6 +8,7 @@ import MaterialImage from '@/components/MaterialImage'
 import store from '@/store'
 import { deleteTeachingMaterial } from '@/actions/teachingMaterials'
 import { connect } from 'react-redux'
+import { deleteStudyRecordByTeachingMaterialId } from '@/actions/studyRecords'
 
 const Dropdown: React.SFC<{ open: boolean }> = props => (
   <SlideDown
@@ -31,9 +32,14 @@ class MaterialCard extends React.Component<Props> {
     isOpen: false
   }
 
-  onClickDelete = (userId: number, id: number) => {
-    if (window.confirm('教材を削除しますか？')) {
-      store.dispatch(deleteTeachingMaterial({ userId, id }))
+  onClickDelete = async (userId: number, id: number) => {
+    if (
+      window.confirm(
+        '本当に教材を削除しますか？\nこの教材で記録した勉強記録も合わせて削除されます。'
+      )
+    ) {
+      const res = await store.dispatch(deleteTeachingMaterial({ userId, id }))
+      store.dispatch(deleteStudyRecordByTeachingMaterialId(res.data))
     }
   }
 

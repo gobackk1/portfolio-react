@@ -11,7 +11,8 @@ import {
   resetSearchStudyRecordsState,
   resetStudyRecordsState,
   setStudyRecordsState,
-  updateTeachingMaterialInStudyRecord
+  updateTeachingMaterialInStudyRecord,
+  deleteStudyRecordByTeachingMaterialId
 } from '@/actions/studyRecords'
 import _ from 'lodash'
 import store from '@/store'
@@ -207,5 +208,13 @@ export default reducerWithInitialState(initialState)
     })
     state.records = result
     console.log(state, 'updateTeachingMaterialInStudyRecord')
+    return { ...state }
+  })
+  .case(deleteStudyRecordByTeachingMaterialId, (state, id) => {
+    const result = state.records.filter(
+      r => r.record.teaching_material_id !== id
+    )
+    state.records = result
+    console.log('deleteStudyRecordByTeachingMaterialId', state)
     return { ...state }
   })

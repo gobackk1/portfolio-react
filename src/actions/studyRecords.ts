@@ -145,3 +145,6 @@ export const setStudyRecordsState = actionCreator<any>(
 export const updateTeachingMaterialInStudyRecord = actionCreator<any>(
   'UPDATE_TEACHING_MATERIAL_IN_STUDY_RECORD'
 )
+export const deleteStudyRecordByTeachingMaterialId = actionCreator<number>(
+  'DELETE_STUDY_RECORD_BY_TEACHING_MATERIAL_ID'
+)
