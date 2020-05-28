@@ -49,7 +49,7 @@ export default reducerWithInitialState(initialState)
   .case(readProfileStudyRecords.async.done, (state, { result }) => {
     state.isLoading = false
     state.currentPage++
-    state.records = state.records.concat(result.result)
+    state.records = state.records.concat(result.records)
     return { ...state }
   })
   .case(
