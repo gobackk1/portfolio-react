@@ -64,7 +64,7 @@ class PieChartGraph extends PureComponent<Props, {}> {
           </Pie>
           <Legend
             layout="vertical"
-            formatter={(value, { payload }) => payload.teaching_material}
+            formatter={(value, { payload }) => payload.teaching_material_name}
             verticalAlign="middle"
             iconType="circle"
             wrapperStyle={style}
@@ -83,10 +83,10 @@ const renderLegend = props => {
   return (
     <ul>
       {payload.map(
-        ({ payload: { teaching_material, study_hours, fill } }, index) => (
+        ({ payload: { teaching_material_name, study_hours, fill } }, index) => (
           <li key={index}>
             <span className="icon-circle" style={iconStyle(fill)}></span>
-            {teaching_material}:{study_hours}時間
+            {teaching_material_name}:{study_hours}時間
           </li>
         )
       )}
