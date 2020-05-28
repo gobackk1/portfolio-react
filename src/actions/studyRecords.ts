@@ -71,7 +71,7 @@ export const searchStudyRecords = asyncActionCreator<
     throw new Error(`Error ${res}`)
   }
 
-  if (!res.data.result.length) {
+  if (!res.data.records.length) {
     if (res.data.not_found) {
       throw new CustomError(res.data.messages[0], 'record_not_found')
     }
