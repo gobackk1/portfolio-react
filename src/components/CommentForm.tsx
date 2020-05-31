@@ -3,7 +3,7 @@ import { Field, reduxForm, InjectedFormProps } from 'redux-form'
 import { postComment } from '@/actions/studyRecords'
 import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
-import { renderField } from '@/utils/render'
+import { renderTextarea } from '@/utils/render'
 
 interface Props {
   recordId: number
@@ -37,7 +37,7 @@ class CommentForm extends React.Component<
             type="text"
             name="comment_body"
             label="コメントを返信する。（100字以内）"
-            component={renderField}
+            component={renderTextarea}
           ></Field>
         </div>
         <button
