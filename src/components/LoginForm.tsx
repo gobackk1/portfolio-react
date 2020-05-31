@@ -23,7 +23,7 @@ class LoginForm extends React.Component<
   }
 
   onSubmit: any = async (values: any) => {
-    const res = this.state.isLoginForm
+    this.state.isLoginForm
       ? await store.dispatch(login(values.login))
       : await store.dispatch(register(values.register))
     // XXX: LoginFormだけ、ログイン成功時に閉じるが、理由がわからない

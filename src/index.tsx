@@ -16,7 +16,7 @@ import { login } from '@/actions/user'
 import RecordEdit from './view/RecordEdit'
 ;(async () => {
   // 開発用ログインスキップ
-  await store.dispatch(login({ email: 'auth@example.com', password: 'foobar' }))
+  // await store.dispatch(login({ email: 'auth@example.com', password: 'foobar' }))
 
   ReactDOM.render(
     <Provider store={store}>

@@ -31,7 +31,7 @@ export default reducerWithInitialState(initialState)
     (state, { params, result }) => {
       return {
         ...state,
-        ...result.data,
+        ...result,
         email: params.email,
         loggingIn: false,
         isLogin: true
