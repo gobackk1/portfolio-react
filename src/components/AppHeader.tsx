@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import store from '@/store'
 import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
-import Render from '@/components/Render'
 import classNames from 'classnames'
 
 interface Props extends RouteComponentProps {
@@ -12,7 +11,7 @@ interface Props extends RouteComponentProps {
 }
 
 class AppHeader extends React.Component<Props, { isLogin: boolean }> {
-  static defaultProps: any = {}
+  // static defaultProps: any = {}
 
   componentDidMount() {
     this.setState({
@@ -30,7 +29,7 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
   }
 
   render() {
-    const { token } = this.props.user
+    const { isLogin } = this.props.user
     return (
       <header className="app-header">
         <Link to="/" className="app-header__title">
@@ -38,27 +37,34 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
         </Link>
         <nav>
           <ul className="app-header__menu menu-list">
-            <Render if={token}>
-              <li className={this.menuListClassName('/explore')}>
-                <Link to="/explore/users">探す</Link>
-              </li>
-              <li className={this.menuListClassName('/record')}>
-                <Link to="/record">記録する</Link>
-              </li>
-              <li className={this.menuListClassName('/report')}>
-                <Link to="/report">レポート</Link>
-              </li>
-              <li className={this.menuListClassName('/profile')}>
-                <Link to="/profile">プロフィール</Link>
-              </li>
-            </Render>
-            <Render if={!token}>
-              <li className="menu-list__login">
-                <Modal openButtonText="ログイン" buttonClassName="button-login">
-                  <LoginForm></LoginForm>
-                </Modal>
-              </li>
-            </Render>
+            {isLogin && (
+              <>
+                <li className={this.menuListClassName('/explore')}>
+                  <Link to="/explore/users">探す</Link>
+                </li>
+                <li className={this.menuListClassName('/record')}>
+                  <Link to="/record">記録する</Link>
+                </li>
+                <li className={this.menuListClassName('/report')}>
+                  <Link to="/report">レポート</Link>
+                </li>
+                <li className={this.menuListClassName('/profile')}>
+                  <Link to="/profile">プロフィール</Link>
+                </li>
+              </>
+            )}
+            {!isLogin && (
+              <>
+                <li className="menu-list__login">
+                  <Modal
+                    openButtonText="ログイン"
+                    buttonClassName="button-login"
+                  >
+                    <LoginForm></LoginForm>
+                  </Modal>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>

@@ -9,7 +9,6 @@ import {
 import { RouteComponentProps } from 'react-router-dom'
 import Modal from '@/components/Modal'
 import CommentForm from '@/components/CommentForm'
-import Render from '@/components/Render'
 import StudyRecord from '@/components/StudyRecord'
 import store from '@/store'
 import RecordForm from '@/components/RecordForm'
@@ -66,7 +65,7 @@ class UserShow extends React.Component<Props, {}> {
         >
           <CommentForm recordId={this.id}></CommentForm>
         </Modal>
-        <Render if={correctUser}>
+        {correctUser && (
           <Modal
             openButtonText="編集"
             buttonClassName="button-edit--large mr15"
@@ -74,7 +73,7 @@ class UserShow extends React.Component<Props, {}> {
           >
             <RecordForm type="edit"></RecordForm>
           </Modal>
-        </Render>
+        )}
         <button
           onClick={this.onClickDelete}
           type="button"

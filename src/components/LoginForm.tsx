@@ -3,7 +3,6 @@ import { Field, FormSection, reduxForm, InjectedFormProps } from 'redux-form'
 import { login, register, clearError } from '@/actions/user'
 import { connect } from 'react-redux'
 import store from '@/store'
-import Render from '@/components/Render'
 import { renderField, renderErrorMessages } from '@/utils/render'
 
 interface Props {
@@ -46,6 +45,7 @@ class LoginForm extends React.Component<
       reset,
       user: { error }
     } = this.props
+    const { isLoginForm } = this.state
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)} className="form--login">
@@ -53,7 +53,7 @@ class LoginForm extends React.Component<
           {this.state.isLoginForm ? 'ログイン' : '新規登録'}
         </p>
         {error && renderErrorMessages(error.response.data.messages)}
-        <Render if={this.state.isLoginForm}>
+        {isLoginForm && (
           <FormSection name="login" className="form__section">
             <div className="form__input">
               メール
@@ -74,8 +74,8 @@ class LoginForm extends React.Component<
               ></Field>
             </div>
           </FormSection>
-        </Render>
-        <Render if={!this.state.isLoginForm}>
+        )}
+        {!isLoginForm && (
           <FormSection name="register" className="form__section">
             <div className="form__input">
               ユーザー名
@@ -105,7 +105,7 @@ class LoginForm extends React.Component<
               ></Field>
             </div>
           </FormSection>
-        </Render>
+        )}
         <div className="form__buttons">
           <button
             disabled={pristine || submitting || invalid}

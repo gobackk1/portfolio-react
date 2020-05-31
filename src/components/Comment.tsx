@@ -1,5 +1,4 @@
 import React from 'react'
-import Render from '@/components/Render'
 import { connect } from 'react-redux'
 import store from '@/store'
 import { deleteComment } from '@/actions/studyRecords'
@@ -20,7 +19,7 @@ class Comment extends React.Component<Props> {
     const {
       data: { date, user, comment_body, id }
     } = this.props
-
+    const correctUser = user.id === this.props.user.id
     return (
       <div className="card-user">
         <div className="card-user__profile">
@@ -40,9 +39,9 @@ class Comment extends React.Component<Props> {
         <div className="card-user__tail">
           <div className="card-user__tail-date">{date}</div>
           <div className="card-user__tail-button">
-            <Render if={user.id === this.props.user.id}>
+            {correctUser && (
               <button onClick={() => this.deleteComment(id)}>削除</button>
-            </Render>
+            )}
           </div>
         </div>
       </div>
