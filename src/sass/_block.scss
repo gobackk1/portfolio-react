@@ -228,10 +228,27 @@
   margin: 0 auto 30px;
   text-align: center;
   font-size: 22px;
+  border-collapse: separate;
+  overflow: hidden;
   th,
   td {
     padding: 10px 30px;
-    border: 1px solid $color_gray_1;
+    // border: 1px solid $color_gray_1;
+  }
+  th {
+    background: lighten($color_accent, 5%);
+    color: $color_white;
+    font-weight: bold;
+    &:first-child {
+      border-top-left-radius: 5px;
+    }
+    &:last-child {
+      border-top-right-radius: 5px;
+      border-right: none;
+    }
+  }
+  td {
+    background: $color_gray_0;
   }
 }
 
@@ -461,6 +478,20 @@
   background: $color_info;
   padding: 5px;
   border: 1px solid;
+}
+
+.recharts-legend-wrapper {
+  &.report {
+    padding: 20px;
+    background: $color_gray_0;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  li {
+    margin-right: 30px;
+  }
 }
 
 // react-slidedown {

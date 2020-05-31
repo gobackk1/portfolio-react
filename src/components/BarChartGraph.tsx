@@ -38,7 +38,7 @@ class BarChartGraph extends React.Component<Props, {}> {
           <Bar
             dataKey="study_hour"
             name="勉強時間"
-            fill="#8884d8"
+            fill="#6e85ad"
             barSize={50}
           />
         </BarChart>

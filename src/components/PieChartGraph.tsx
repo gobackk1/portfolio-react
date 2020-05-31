@@ -35,8 +35,10 @@ interface Props {
 
 class PieChartGraph extends PureComponent<Props, {}> {
   componentDidMount() {
-    const list = document.querySelector('h3 + .recharts-wrapper ul')
-    list!.classList.add('test')
+    const list = document.querySelector(
+      '.recharts-wrapper .recharts-legend-wrapper'
+    )
+    list!.classList.add('report')
   }
   render() {
     const { data } = this.props
@@ -65,7 +67,7 @@ class PieChartGraph extends PureComponent<Props, {}> {
           <Legend
             layout="vertical"
             formatter={(value, { payload }) => payload.teaching_material_name}
-            verticalAlign="middle"
+            verticalAlign="none"
             iconType="circle"
             wrapperStyle={style}
             content={renderLegend}
