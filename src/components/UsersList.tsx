@@ -55,9 +55,6 @@ class UsersList extends React.Component<Props, any> {
               </li>
             )
           })}
-          {!dataWithoutCurrentUser.length && (
-            <li className="not-found tac">ユーザーが見つかりませんでした</li>
-          )}
         </ul>
         <Waypoint onEnter={onLoadUsers} bottomOffset="-400px"></Waypoint>
         {isLoading && (
