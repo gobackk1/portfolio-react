@@ -87,10 +87,18 @@ export default reducerWithInitialState(initialState)
   .cases(
     [readStudyRecords.async.started, searchStudyRecords.async.started],
     state => {
+      if (!state.init) {
+        state.records = []
+        state.init = true
+        state.onLoadStudyRecords = () => {
+          dispatchReadStudyRecords(state.perPage)
+        }
+      }
       state.isLoading = true
       return { ...state }
     }
   )
+
   .cases(
     [readStudyRecords.async.failed, searchStudyRecords.async.failed],
     (state, { error }) => {
@@ -101,13 +109,6 @@ export default reducerWithInitialState(initialState)
     }
   )
   .case(readStudyRecords.async.done, (state, { result }) => {
-    if (!state.init) {
-      state.records = []
-      state.init = true
-      state.onLoadStudyRecords = () => {
-        dispatchReadStudyRecords(state.perPage)
-      }
-    }
     state.isLoading = false
     state.currentPage++
     state.records = state.records.concat(result.records)

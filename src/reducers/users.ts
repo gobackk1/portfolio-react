@@ -73,6 +73,14 @@ const initialState: any = {
 
 export default reducerWithInitialState(initialState)
   .case(readUsers.async.started, state => {
+    if (!state.init) {
+      state.data = []
+      state.init = true
+      state.errorMessage = ''
+      state.onLoadUsers = () => {
+        dispatchReadUsers(state.perPage)
+      }
+    }
     return { ...state, isLoading: true }
   })
   .cases(
@@ -85,14 +93,6 @@ export default reducerWithInitialState(initialState)
     }
   )
   .case(readUsers.async.done, (state, { result: { users } }) => {
-    if (!state.init) {
-      state.data = []
-      state.init = true
-      state.errorMessage = ''
-      state.onLoadUsers = () => {
-        dispatchReadUsers(state.perPage)
-      }
-    }
     state.isLoading = false
     state.currentPage++
     state.data = state.data.concat(users)
