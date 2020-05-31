@@ -38,13 +38,17 @@ class Explore extends React.Component<Props, {}> {
   }
 
   componentDidMount() {
-    this.usersSearchInput = document.getElementById(
-      'explore-users-search'
-    ) as HTMLInputElement
-    this.studyRecordsSearchInput = document.getElementById(
-      'explore-records-search'
-    ) as HTMLInputElement
-    this.useLoadingSpinner(this.initialize)
+    if (this.props.user.isLogin) {
+      this.usersSearchInput = document.getElementById(
+        'explore-users-search'
+      ) as HTMLInputElement
+      this.studyRecordsSearchInput = document.getElementById(
+        'explore-records-search'
+      ) as HTMLInputElement
+      this.useLoadingSpinner(this.initialize)
+    } else {
+      this.props.history.push('/')
+    }
   }
 
   useLoadingSpinner = async callback => {

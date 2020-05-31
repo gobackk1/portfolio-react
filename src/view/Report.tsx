@@ -2,8 +2,11 @@ import React from 'react'
 import BarChartGraph from '@/components/BarChartGraph'
 import PieChartGraph from '@/components/PieChartGraph'
 import axios, { auth } from '@/axios'
+import store from '@/store'
+import { RouteComponentProps } from 'react-router-dom'
 
-class Report extends React.Component {
+type Props = {} & RouteComponentProps
+class Report extends React.Component<Props> {
   state = {
     study_hours: {
       today: 0,
@@ -26,7 +29,12 @@ class Report extends React.Component {
     console.log(res.data)
   }
   componentDidMount() {
-    this.fetchData()
+    const { isLogin } = store.getState().user
+    if (isLogin) {
+      this.fetchData()
+    } else {
+      this.props.history.push('/')
+    }
   }
   render() {
     return (

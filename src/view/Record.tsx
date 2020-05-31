@@ -7,9 +7,11 @@ import { readTeachingMaterial } from '@/actions/teachingMaterials'
 import store from '@/store'
 import { connect } from 'react-redux'
 import DotSpinner from '@/components/DotSpinner'
+import { RouteComponentProps } from 'react-router-dom'
 
-interface Props {
+interface Props extends RouteComponentProps {
   teachingMaterials: any
+  user: any
 }
 
 class Record extends React.Component<Props, {}> {
@@ -18,11 +20,15 @@ class Record extends React.Component<Props, {}> {
   }
 
   async componentDidMount() {
-    const { loaded } = this.props.teachingMaterials
-    if (!loaded) {
-      await store.dispatch(readTeachingMaterial(store.getState().user.id))
+    if (this.props.user.isLogin) {
+      const { loaded } = this.props.teachingMaterials
+      if (!loaded) {
+        await store.dispatch(readTeachingMaterial(store.getState().user.id))
+      }
+      this.setState({ isLoading: false })
+    } else {
+      this.props.history.push('/')
     }
-    this.setState({ isLoading: false })
   }
 
   render() {
@@ -71,7 +77,8 @@ class Record extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = state => ({
-  teachingMaterials: state.teachingMaterials
+  teachingMaterials: state.teachingMaterials,
+  user: state.user
 })
 
 export default connect(mapStateToProps, null)(Record)
