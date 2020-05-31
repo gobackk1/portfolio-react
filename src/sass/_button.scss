@@ -144,6 +144,10 @@
   }
 }
 
+.button-logout {
+  @extend %button-cmn-1;
+}
+
 .mock {
   @extend %button-cmn-1;
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import store from '@/store'
-import { logout } from '@/actions/user'
 import Modal from '@/components/Modal'
 import LoginForm from '@/components/LoginForm'
 import Render from '@/components/Render'
@@ -19,13 +18,6 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
     this.setState({
       isLogin: store.getState().user.isLogin
     })
-  }
-
-  onClickLogout = () => {
-    // if (window.confirm('本当にログアウトしますか？')) {
-    store.dispatch(logout())
-    //   this.props.history.push('/')
-    // }
   }
 
   menuListClassName = (className: string): any => {
@@ -58,11 +50,6 @@ class AppHeader extends React.Component<Props, { isLogin: boolean }> {
               </li>
               <li className={this.menuListClassName('/profile')}>
                 <Link to="/profile">プロフィール</Link>
-              </li>
-              <li className="menu-list__item">
-                <button onClick={this.onClickLogout} type="button">
-                  ログアウト
-                </button>
               </li>
             </Render>
             <Render if={!token}>

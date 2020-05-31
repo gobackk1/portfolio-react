@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
-import Render from '@/components/Render'
 import Modal from '@/components/Modal'
 import ProfileForm from '@/components/ProfileForm'
 import FollowButton from '@/components/FollowButton'
@@ -10,6 +9,7 @@ import { readProfileStudyRecords } from '@/actions/userProfile'
 import { getUser } from '@/actions/users'
 import RecordsList from '@/components/RecordsList'
 import DotSpinner from '@/components/DotSpinner'
+import { logout } from '@/actions/user'
 
 interface Props extends RouteComponentProps<{ id: string }> {
   user: any
@@ -57,6 +57,13 @@ class Profile extends React.Component<Props> {
     )
   }
 
+  onClickLogout = () => {
+    if (window.confirm('本当にログアウトしますか？')) {
+      store.dispatch(logout())
+      this.props.history.push('/')
+    }
+  }
+
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
     const { data } = this.props.users
@@ -92,17 +99,31 @@ class Profile extends React.Component<Props> {
               height="120"
               alt="ユーザープロフィール画像"
             />
-            <Render if={correctUser}>
-              <Modal openButtonText="編集" buttonClassName="button-edit">
-                <ProfileForm update={update}></ProfileForm>
-              </Modal>
-            </Render>
-            <Render if={!correctUser}>
-              <FollowButton
-                followId={id}
-                isFollowing={is_following}
-              ></FollowButton>
-            </Render>
+            <div className="profile__head-button">
+              {correctUser && (
+                <>
+                  <Modal
+                    openButtonText="編集"
+                    buttonClassName="button-edit mr20"
+                  >
+                    <ProfileForm update={update}></ProfileForm>
+                  </Modal>
+                  <button
+                    onClick={this.onClickLogout}
+                    type="button"
+                    className="button-logout"
+                  >
+                    ログアウト
+                  </button>
+                </>
+              )}
+              {!correctUser && (
+                <FollowButton
+                  followId={id}
+                  isFollowing={is_following}
+                ></FollowButton>
+              )}
+            </div>
           </div>
           <div className="profile__name">{name}</div>
           <div className="profile__registered">{registered_date} 登録</div>
