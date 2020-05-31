@@ -29,6 +29,9 @@ class RecordsList extends React.Component<Props, {}> {
               <StudyRecord record={record}></StudyRecord>
             </li>
           ))}
+          {!this.props.records.length && (
+            <li className="not-found tac">勉強記録が見つかりませんでした</li>
+          )}
         </ul>
         <Waypoint onEnter={onLoadStudyRecords} bottomOffset="-400px"></Waypoint>
         {isLoading && (

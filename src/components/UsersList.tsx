@@ -5,6 +5,7 @@ import FollowButton from '@/components/FollowButton'
 import DotSpinner from '@/components/DotSpinner'
 import { Waypoint } from 'react-waypoint'
 import store from '@/store'
+import { spawn } from 'child_process'
 
 interface Props extends RouteComponentProps {
   users?: any
@@ -54,6 +55,9 @@ class UsersList extends React.Component<Props, any> {
               </li>
             )
           })}
+          {!dataWithoutCurrentUser.length && (
+            <li className="not-found tac">ユーザーが見つかりませんでした</li>
+          )}
         </ul>
         <Waypoint onEnter={onLoadUsers} bottomOffset="-400px"></Waypoint>
         {isLoading && (
