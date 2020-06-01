@@ -8,22 +8,43 @@ interface Props {
 }
 
 class Home extends React.Component<Props> {
-  constructor(props) {
-    super(props)
+  state = {
+    isLoading: false
+  }
 
-    if (!this.props.home.init) {
-      console.log(this.props.home.init)
-      this.props.home.dispatchReadStudyRecords(10)
+  _isMounted: boolean = false
+
+  get isMounted(): boolean {
+    return this._isMounted
+  }
+
+  set isMounted(param: boolean) {
+    this._isMounted = param
+  }
+
+  async componentDidMount() {
+    this.isMounted = true
+    const { init, dispatchReadStudyRecords } = this.props.home
+    if (!init) {
+      this.setState({ isLoading: true })
+      await dispatchReadStudyRecords(10)
+      //Note: マウントされていないコンポーネントでsetStateを呼び出すとエラーになる
+      if (!this.isMounted) return
+      this.setState({ isLoading: false })
     }
   }
 
-  componentDidMount() {}
+  componentWillUnmount() {
+    this.isMounted = false
+  }
 
   render() {
     const { home } = this.props
+    const { isLoading } = this.state
     return (
       <div className="l-inner">
-        <RecordsList state={home}></RecordsList>
+        <LoadSpinner active={isLoading}></LoadSpinner>
+        {!isLoading && <RecordsList state={home}></RecordsList>}
       </div>
     )
   }
