@@ -11,6 +11,7 @@ import Record from '@/view/Record'
 import RecordShow from '@/view/RecordShow'
 import Profile from '@/view/Profile'
 import Report from '@/view/Report'
+import Home from '@/view/Home'
 
 import { login } from '@/actions/user'
 import RecordEdit from './view/RecordEdit'
@@ -31,6 +32,7 @@ import RecordEdit from './view/RecordEdit'
             <Route path="/profile/:id" component={Profile}></Route>
             <Route path="/profile" component={Profile}></Route>
             <Route path="/report" component={Report}></Route>
+            <Route path="/" component={Home}></Route>
           </Switch>
         </div>
       </BrowserRouter>
