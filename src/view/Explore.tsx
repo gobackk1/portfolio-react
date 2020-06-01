@@ -159,7 +159,7 @@ class Explore extends React.Component<Props, {}> {
       match,
       users,
       studyRecords,
-      studyRecords: { records }
+      studyRecords: { records, onLoadStudyRecords, isLoading: isLoadingState }
     } = this.props
     const { isLoading } = this.state
     const userTabClassName = classNames({
@@ -223,7 +223,15 @@ class Explore extends React.Component<Props, {}> {
                 <ErrorMessages
                   messages={[studyRecords.errorMessage]}
                 ></ErrorMessages>
-                <RecordsList records={records}></RecordsList>
+                <RecordsList
+                  data={records}
+                  onLoadStudyRecords={onLoadStudyRecords}
+                ></RecordsList>
+                {isLoadingState && (
+                  <div className="tac">
+                    <DotSpinner></DotSpinner>
+                  </div>
+                )}
               </Route>
             </Switch>
           )}

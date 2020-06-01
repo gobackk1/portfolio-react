@@ -67,7 +67,7 @@ class Profile extends React.Component<Props> {
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
     const { data } = this.props.users
-    const { records, isLoading } = this.props.userProfile
+    const { records, isLoading, onLoadStudyRecords } = this.props.userProfile
     const index = data.findIndex(d => d.id === this.userId)
     if (index === -1)
       return (
@@ -145,7 +145,10 @@ class Profile extends React.Component<Props> {
             <DotSpinner></DotSpinner>
           </div>
         )}
-        <RecordsList records={records} page="profile"></RecordsList>
+        <RecordsList
+          data={records}
+          onLoadStudyRecords={onLoadStudyRecords}
+        ></RecordsList>
         {isLoading && (
           <div className="tac">
             <DotSpinner></DotSpinner>
