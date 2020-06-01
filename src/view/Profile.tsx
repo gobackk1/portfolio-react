@@ -8,7 +8,7 @@ import store from '@/store'
 import { readProfileStudyRecords } from '@/actions/userProfile'
 import { getUser } from '@/actions/users'
 import RecordsList from '@/components/RecordsList'
-import DotSpinner from '@/components/DotSpinner'
+import LoadSpinner from '@/components/LoadSpinner'
 import { logout } from '@/actions/user'
 
 interface Props extends RouteComponentProps<{ id: string }> {
@@ -67,13 +67,13 @@ class Profile extends React.Component<Props> {
   render() {
     const correctUser = Number(this.userId) === this.props.user.id
     const { data } = this.props.users
-    const { records, isLoading, onLoadStudyRecords } = this.props.userProfile
+    const { userProfile } = this.props
     const index = data.findIndex(d => d.id === this.userId)
     if (index === -1)
       return (
         <div className="l-inner">
           <div className="tac">
-            <DotSpinner></DotSpinner>
+            <LoadSpinner active={true}></LoadSpinner>
           </div>
         </div>
       )
@@ -140,20 +140,7 @@ class Profile extends React.Component<Props> {
             </span>
           </div>
         </div>
-        {isLoading && (
-          <div className="tac">
-            <DotSpinner></DotSpinner>
-          </div>
-        )}
-        <RecordsList
-          data={records}
-          onLoadStudyRecords={onLoadStudyRecords}
-        ></RecordsList>
-        {isLoading && (
-          <div className="tac">
-            <DotSpinner></DotSpinner>
-          </div>
-        )}
+        <RecordsList state={userProfile}></RecordsList>
       </div>
     )
   }

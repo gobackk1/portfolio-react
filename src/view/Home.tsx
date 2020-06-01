@@ -1,8 +1,7 @@
 import React from 'react'
 import RecordsList from '@/components/RecordsList'
-import store from '@/store'
 import { connect } from 'react-redux'
-import { readFollowUserStudyRecords } from '@/actions/home'
+import LoadSpinner from '@/components/LoadSpinner'
 
 interface Props {
   home: any
@@ -11,17 +10,20 @@ interface Props {
 class Home extends React.Component<Props> {
   constructor(props) {
     super(props)
-    store.dispatch(readFollowUserStudyRecords({ page: 1, per: 10 }))
+
+    if (!this.props.home.init) {
+      console.log(this.props.home.init)
+      this.props.home.dispatchReadStudyRecords(10)
+    }
   }
 
+  componentDidMount() {}
+
   render() {
-    const { records, onLoadStudyRecords } = this.props.home
+    const { home } = this.props
     return (
       <div className="l-inner">
-        <RecordsList
-          data={records}
-          onLoadStudyRecords={onLoadStudyRecords}
-        ></RecordsList>
+        <RecordsList state={home}></RecordsList>
       </div>
     )
   }

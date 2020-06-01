@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import FollowButton from '@/components/FollowButton'
-import DotSpinner from '@/components/DotSpinner'
+import LoadSpinner from '@/components/LoadSpinner'
 import { Waypoint } from 'react-waypoint'
 import store from '@/store'
 import { spawn } from 'child_process'
@@ -57,11 +57,7 @@ class UsersList extends React.Component<Props, any> {
           })}
         </ul>
         <Waypoint onEnter={onLoadUsers} bottomOffset="-400px"></Waypoint>
-        {isLoading && (
-          <div className="tac">
-            <DotSpinner></DotSpinner>
-          </div>
-        )}
+        <LoadSpinner active={isLoading}></LoadSpinner>
       </>
     )
   }

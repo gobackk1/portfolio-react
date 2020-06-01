@@ -40,7 +40,7 @@ export const readFollowUserStudyRecords = asyncActionCreator<
   }
 
   console.log(res, 'READ_FOLLOW_USER_STUDY_RECORDS')
-  return res.data as any
+  return res.data
 })
 
 // export const putStudyRecord = asyncActionCreator<

@@ -6,7 +6,7 @@ import MaterialCard from '@/components/MaterialCard'
 import { readTeachingMaterial } from '@/actions/teachingMaterials'
 import store from '@/store'
 import { connect } from 'react-redux'
-import DotSpinner from '@/components/DotSpinner'
+import LoadSpinner from '@/components/LoadSpinner'
 import { RouteComponentProps } from 'react-router-dom'
 
 interface Props extends RouteComponentProps {
@@ -53,11 +53,7 @@ class Record extends React.Component<Props, {}> {
             <MaterialForm type="post"></MaterialForm>
           </Modal>
           <h3 className="title-m mb20">教材一覧</h3>
-          {isLoading && (
-            <div className="tac">
-              <DotSpinner></DotSpinner>
-            </div>
-          )}
+          <LoadSpinner active={isLoading}></LoadSpinner>
           {!isLoading && (
             <ul className="material-list">
               {!materials.length && (

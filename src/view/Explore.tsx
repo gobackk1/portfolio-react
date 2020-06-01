@@ -6,7 +6,7 @@ import {
   resetStudyRecordsState
 } from '@/actions/studyRecords'
 import UsersList from '@/components/UsersList'
-import DotSpinner from '@/components/DotSpinner'
+import LoadSpinner from '@/components/LoadSpinner'
 import RecordsList from '@/components/RecordsList'
 import ErrorMessages from '@/components/ErrorMessages'
 import classNames from 'classnames'
@@ -155,12 +155,7 @@ class Explore extends React.Component<Props, {}> {
   }
 
   render() {
-    const {
-      match,
-      users,
-      studyRecords,
-      studyRecords: { records, onLoadStudyRecords, isLoading: isLoadingState }
-    } = this.props
+    const { match, users, studyRecords } = this.props
     const { isLoading } = this.state
     const userTabClassName = classNames({
       'tab__list-item': !this.isUsersPage(),
@@ -208,11 +203,7 @@ class Explore extends React.Component<Props, {}> {
           </div>
         </div>
         <div className="tab__body">
-          {isLoading && (
-            <div className="tac">
-              <DotSpinner></DotSpinner>
-            </div>
-          )}
+          <LoadSpinner active={isLoading}></LoadSpinner>
           {!isLoading && (
             <Switch>
               <Route path={`${match.url}/users`}>
@@ -223,15 +214,7 @@ class Explore extends React.Component<Props, {}> {
                 <ErrorMessages
                   messages={[studyRecords.errorMessage]}
                 ></ErrorMessages>
-                <RecordsList
-                  data={records}
-                  onLoadStudyRecords={onLoadStudyRecords}
-                ></RecordsList>
-                {isLoadingState && (
-                  <div className="tac">
-                    <DotSpinner></DotSpinner>
-                  </div>
-                )}
+                <RecordsList state={studyRecords}></RecordsList>
               </Route>
             </Switch>
           )}
